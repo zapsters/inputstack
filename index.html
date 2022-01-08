@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html>
+   <body>
+      <head>
+	<title>Input Game!</title>
+      	<link rel="icon" href="https://zapsters.github.io/Home/images/ZapsterGames.png">
+         <style>
+            body{
+            	background-position: center;
+              background-color: #ffe6f4;
+            	margin: 0px 0px;
+            	padding: 0px 0px;
+            	font-family: 'supria_sans';
+            }
+
+            /*  FONTS  */
+        		@font-face { /* MAIN FONT */
+      				font-family: supria_sans;
+      				src: url('https://zapsters.github.io/Home/fonts/SupriaSans-Bold.woff') format('woff');
+      				font-weight: normal;
+      				font-style: normal;
+        		}
+
+            /* TITLE SCREEN */
+            .header {
+              position: relative;
+              background-color: #d98d9f;
+              width:100%;
+              text-align: center;
+              padding: 20px 0;
+              border-bottom: 2px solid black;
+            }
+
+            .header p {
+              font-family: 'supria_sans';
+              color: #000;
+              text-decoration: none;
+              font-size: 30px;
+              margin: 0px 0px;
+              padding: 0px 0px;
+            }
+
+            .bottom_div {
+              font-family: 'supria_sans';
+              bottom: 0;
+              width:100%;
+              height: 40px;
+            }
+
+            .bottom_div p {
+              font-size: 15px;
+              position: absolute;
+              bottom: 0;
+              padding: 0px 3px;
+              margin: 0;
+              position: fixed;
+              z-index: 10;
+            }
+
+            .debug_div {
+              font-family: 'arial';
+              position: absolute;
+              padding: 0px 3px;
+              height: auto;
+              background-color: rgba(255, 255, 255, 0.4);
+              z-index: 120;
+            }
+            .debug_div p {
+              font-family: 'arial';
+            }
+
+            .centered_div {
+              padding: 0px 0px;
+              position: fixed;
+              top: 50%;
+              left: 50%;
+              width: 100%;
+              height: 100px;
+              margin-top: -10%;
+              margin-left: -50%;
+              text-align: center;
+            }
+
+            .centeredHoriz {
+              padding: 0px 0px;
+              position: absolute;
+              width: 100%;
+            }
+
+            .writableContent { 		/* Used with Centered_div for content */
+              margin: auto;
+              width: 60%;
+              padding: 0px;
+            }
+
+            @media (max-width:700px){
+              .writableContent { 		/* Used with Centered_div for content */
+                margin: auto;
+                width: 90%;
+                padding: 0px;
+              }
+            }
+
+            .messagebox { 			/* INPUT BOXES */
+              font-family: 'supria_sans';
+              text-align: center;
+              font-size: 30px;
+              width: 99%;
+              margin: 0px 0px;
+              padding: 0px;
+              background-color: #fff;
+              border: solid 1px black;
+            }
+            .buttonMain {			/* BUTTONS */
+              font-family: 'supria_sans';
+              background: #222;
+              color: #fff;
+              border: 0px;
+              padding: 10px 10px;
+              margin: 10px 1px;
+              float: right;
+              font-size: 20px;
+              -webkit-transition-duration: 0.1s; /* Safari */
+              transition-duration: 0.1s;
+            }
+
+            .buttonMain:hover {
+              box-shadow: 0 4px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+              border: 2px solid #ededed;
+            }
+
+            .startbtn {
+            	position: relative;
+            	font-family: 'supria_sans';
+            	background: #222;
+            	color: #fff;
+            	padding: 0px 0px;
+            	float: bottom;
+            	width: 50%;
+            	font-size: 35px;
+              -webkit-transition-duration: 0.1s; /* Safari */
+              transition-duration: 0.1s;
+            }
+
+            .startbtn:hover {
+            	box-shadow: 0 4px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+            	border: 2px solid #ededed;
+            }
+
+            .playerlist {
+              width: 100%;
+              height: 0px;
+              list-style: none;
+              margin: 0px 0px 0 0;
+              padding: 0px 0px;
+              position: relative;
+              text-align: center;
+              display: block;
+              float: left;
+              clear: left;
+            }
+            .playerlist div {
+              font-family: 'supria_sans';
+              font-weight: 800;
+              background: #222;
+              padding: 0px 0px;
+              color: #fff;
+              font-size: 35px;
+              text-align: center;
+              text-decoration: none;
+              display: block;
+              margin: auto;
+              max-width: 700px;
+              width: 65%;
+              margin-bottom: 10px;
+              margin-top: 10px;
+            }
+            .playerlist div:first-child {
+            	background-color: #222;
+            	color: #ebb134;
+            }
+
+            /* SUB CLASSES */
+            .noSpace {
+              padding: 0;
+              margin: 0;
+            }
+
+
+            /* screen_main_gameplay STYLE SHEET =============================*/
+            .indented {
+              padding-left:10px;
+              margin-top:0;
+            }
+            .moduleContainer {
+              border: 1px solid black;
+              padding: 4px 0px 4px 0px;
+              margin: 0px 9px 0px 9px;
+              text-align: center;
+              font-size:0px;
+            }
+            .inputGroup {
+              text-align: left;
+              width: 240px;
+              height: 240px;
+              border: 3px solid black;
+              background-color: #ededed;
+              padding: 0;
+              margin: 0;
+              display: inline-block;
+              font-size:16px; /* For some god damn reason, this fixes the space issues of JAVASCRIPT created divs and hardcoded divs... */
+              vertical-align:top;
+              position: relative;
+            }
+            .flashing {
+              animation: redFlash 1s linear infinite;
+            }
+            @keyframes redFlash {
+              0% {
+              background-color: #ffe3e3;
+              }
+              10% {
+              background-color: #f72a2a;
+              }
+              100% {
+              background-color: #ffe3e3;
+              }
+            }
+            .inputmodule_DEVtitle {
+              margin-top: -21px;
+              font-weight: bold;
+              font-size:14px;
+              pointer-events: none;
+              background-color: rgba(255, 255, 255, 0.6);
+              color: rgba(0, 0, 0, 0.6);
+            }
+            .inputmodule_title {
+              padding: 8px 0px 2px 8px;
+              margin: 0;
+              font-weight: bold;
+              font-size: 14px;
+              position: absolute;
+              top: 0;
+            }
+            .inputGroup hr {
+              border: 1px solid black;
+              position: absolute;
+              width: 100%;
+            }
+            .RangeGroup {
+              line-height: 0px;
+              position: absolute;
+              padding: 0;
+              margin: 0;
+            }
+            .slider {
+              border: 2px solid black;
+              -webkit-appearance: none;
+              width: 100%;
+              height: 20px;
+              background: #d3d3d3;
+              outline: none;
+              opacity: 0.7;
+              -webkit-transition: .2s;
+              transition: opacity .2s;
+            }
+            .slider:hover {
+              opacity: 1;
+            }
+            .slider::-webkit-slider-thumb {
+              -webkit-appearance: none;
+              appearance: none;
+              width: 20px;
+              height: 20px;
+              background: #04AA6D;
+              cursor: pointer;
+            }
+            .button {
+              border: 2px solid black;
+              background-color: #303030;
+              cursor: pointer;
+              font-weight: bold;
+              font-size: 17px;
+              height: 26px;
+              color: white;
+            }
+            .button:hover {
+              background-color: #5e5e5e;
+              box-shadow: 0 4px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+              border: 2px solid #000;
+            }
+            .input {
+              border: 2px solid black;
+              background-color: #303030;
+              font-size: 17px;
+              color: white;
+              height: 23px;
+            }
+            .input:disabled {
+              opacity: 0.5;
+            }
+            .headerContainer {
+              z-index: 100;
+              background-color: white;
+              font-weight: bold;
+              border: 2px solid black;
+              margin: 1rem;
+              padding-top: 4px;
+              text-align: center;
+              transition: background-color 100ms linear;
+              height: 50px;
+            }
+            .headerSTICKY {
+              position: sticky;
+              top: 5px;
+            }
+         </style>
+      </head>
+      <!-- TITLE SCREEN -->
+      <div id="screen_title">
+        <!-- HEADER -->
+        <div class="header">
+        	<p onclick="toggleDebugMenu()">Input Game!</p>
+        </div>
+      </div>
+
+        <!-- DEBUG MENU -->
+        <div class="debug_div" id="debug_menu_div" style="display: none;">
+        	<p class="noSpace">DEBUG</p>
+            <p id="debug_menu_text" class="noSpace">Hi</p></br>
+          <p class="noSpace" onclick="if(extraDEBUG.style.display == 'block') {extraDEBUG.style.display = 'none';} else {extraDEBUG.style.display = 'block';}"><u>Click for extraDebug</u></p>
+        </div>
+        <center>
+        <!-- BOTTOM DIV -->
+        <div class="bottom_div" id="game_info" style="margin: 0; padding: 0; display: block; position=absolute; backgroundColor: 'black'">
+        	<p class="noSpace" style="right: 0;">V 0.9</p>
+        	<p class="noSpace" style="left: 0; bottom: 30px; display: none; font-size: 20px" id="footer_username">Logged in as: *username*</p>
+        	<p class="noSpace" style="left: 0; display: none; font-size: 20px; bottom: 7px;" id="footer_roomcode">Roomcode: *roomcode*</p>
+        </div>
+
+        <div id="screen_joinGame">
+          <!-- Front Page Message -->
+          <div class="centeredHoriz" id="front_page_message_div" style="display: block; height:10px;">
+          	<p class="noSpace" id="front_page_mainText" style="font-size: 20px; height: 20px; padding: 3px 0px;">In Development</p>
+          	<p class="noSpace" id="front_page_subText" style="font-size: 20px; height: 20px; padding: 3px 0px;"></p>
+          </div>
+
+          <!-- Front Page Join Game -->
+          <div class="centered_div" style="display: block;" id="joingame_div">
+          	<div class="writableContent">
+          		<p class="noSpace" style="font-size: 40px;">JOIN GAME</p>
+          		<input id="username_input" class="messagebox" maxlength="30" placeholder="USERNAME" style="margin: 10px 0px;" autocomplete='off'></input><br>
+          		<input id="roomcode_input" class="messagebox" maxlength="6" placeholder="ROOM CODE" autocomplete='off';></input><br>
+          		<button id="joingame_btnid" class="buttonMain" onclick="joingameFunction()" style="cursor: pointer;">JOIN GAME</button>
+          		<button id="creategame_btnid" class="buttonMain" onclick="creategameFunction()" style="cursor: pointer; float: left;">CREATE GAME</button><br><br><br><br>
+          		<p id="subtext_joingame" class="question" style="font-size: 20px;"></p>
+          	</div>
+          </div>
+        </div>
+        <br><br>
+        </center>
+
+        <center>
+        <!-- PLAYER SCREEN -->
+        <div class="writableContent horizontal" style="display: none;" id="playerlist_div">
+          <p class="" style="font-size: 40px; margin: 0 0px; padding: 0px 0px;"><u>PLAYERS</u></p><br>
+        	<p id="subtext2_players" class="question" style="font-size: 30px; padding: 0px 0px 10px 0px; margin: 0;">WAITING FOR HOST<br>TO START</p>
+        	<button class="startbtn" onclick="firebase.database().ref(databasePrefix + roomcode + '/users').update({_startgame: 1});" id="startbtn" style="cursor: pointer; display: none;">START GAME</button>
+        	<li class="playerlist" id="playerlist_li">
+        		<div>player example</div>
+        		<div>player example</div>
+        	</li>
+        </div>
+      </center>
+
+
+      <!-- MAIN GAMEPLAY SCREEN ==================================== -->
+      <div id="screen_main_gameplay" style="position: flex; margin: auto; text-align: center; max-width: 1000px; display: none; position: relative; top: -80px;">
+        <!--
+           Next step, developing the game. Idea is that the host will have a health bar that can't hit zero. The game slowly drains the sliders / changes the inputs, forcing the host to slowly get more and more overwhelmed.
+           Each new faze will spawn a new set of input fields, each time a new set spawns, host gets one point.
+           -->
+        <div class="headerContainer headerSTICKY" id="header">
+           <p id="game_health_text" style="position: flex; margin-right: auto; top: 4px;">HEALTH: 100</p>
+           <p id="game_gameTimer_text" style="position: absolute; right: 0px; padding-right:10px; top: 4px;">00:00</p>
+           <p id="game_moduleCount_text" style="position: absolute; left: 0px; padding-left:10px; top: 4px;">Modules: 0</p>
+        </div>
+        <div class="moduleContainer" id="TEMPLATEmoduleContainer" style="display: none">
+           <!-- TEMPLATE_module_simple_01 -->
+           <div class="inputGroup" id="TEMPLATE_module_simple_01">
+              <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_simple_01</p>
+              <p class="inputmodule_title" id="title">KEEP ABOVE!</p>
+              <hr style="top:25px">
+              <div class="RangeGroup" style="width: 80%; position: absolute; top: 41px; left: 10px;">
+                 <p style="margin-bottom:12px; text-decoration: underline; font-weight: bold; margin-left: 3px">Keep High</p>
+                 <input type="range" class="slider" id="input_range_01" value="100"></input>
+                 <input type="range" class="slider" id="input_range_02" value="100"></input>
+              </div>
+           </div>
+           <!-- TEMPLATE_module_simple_01 -->
+           <div class="inputGroup" id="TEMPLATE_module_reset_module_01">
+              <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_reset_module_01</p>
+              <p class="inputmodule_title" id="title">TIMER!</p>
+              <p class="inputmodule_title" style="right:10px" id="timer" onclick="this.innerHTML = '3';">30</p>
+              <hr style="top:25px">
+              <button id="input_reset_button" class="button" style="width:70%; height: 60%; margin: 0; position: absolute; bottom: 50%; left: 50%; -ms-transform: translate(-50%, 60%); transform: translate(-50%, 60%);">RESET!!</button>
+           </div>
+           <!-- TEMPLATE_module_unscramble_01 -->
+           <div class="inputGroup" id="TEMPLATE_module_unscramble_01">
+              <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_unscramble_01</p>
+              <p class="inputmodule_title" id="title">UNSCRAMBLE!</p>
+              <p class="inputmodule_title" style="right:10px" id="timer" onclick="this.innerHTML = '3';">60</p>
+              <hr style="top:25px">
+              <center>
+                 <p class="center" id="results_text" style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 22%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;"></p>
+                 <p class="center" id="scrambled_word_text" style="width: 100%; height: 40px; font-weight: bold; font-size: 20px; margin: 0; position: absolute; bottom: 45%; left: 50%; -ms-transform: translate(-50%, 0%); transform: translate(-50%, 0%);">WORD</p>
+                 <p class="center" id="UNscrambled_word_text" style="display: none; font-size: 20px; margin: 0; position: absolute; bottom: 70px; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);">WORD</p>
+                 <div class="RangeGroup" style="margin: auto; width: 100%; display: inline; bottom: 20px; left: 0px;">
+                    <input type="text" style="width:95%; text-align: center; margin-bottom: 6px; -ms-transform: translate(50%, 60%); transform: translate(-0px, 0%); font-size:16px;" class="input" id="input_unscrambledWord" placeholder="Type Here..."></input>
+                    <input type="button" style="width: 95%;" class="button" value="Submit" id="input_submit_button"></input>
+                 </div>
+              </center>
+           </div>
+           <!-- TEMPLATE_module_math_01 -->
+           <div class="inputGroup" id="TEMPLATE_module_math_01">
+              <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_math_01</p>
+              <p class="inputmodule_title" id="title">SIMPLE MATH!</p>
+              <p class="inputmodule_title" style="right:10px" id="timer" onclick="this.innerHTML = '3';">60</p>
+              <hr style="top:25px">
+              <center>
+                 <p class="center" id="results_text" style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 22%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;"></p>
+                 <p class="center" id="math_question_text" style="width: 100%; height: 40px; font-weight: bold; font-size: 20px; margin: 0; position: absolute; bottom: 45%; left: 50%; -ms-transform: translate(-50%, 0%); transform: translate(-50%, 0%);">MATH QUESTION</p>
+                 <p class="center" id="math_answer_text" style="display: none; font-size: 20px; margin: 0; position: absolute; bottom: 70px; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);">ANSWER</p>
+                 <div class="RangeGroup" style="margin: auto; width: 100%; display: inline; bottom: 20px; left: 0px;">
+                    <input type="text" style="width:95%; text-align: center; margin-bottom: 6px; -ms-transform: translate(50%, 60%); transform: translate(-0px, 0%); font-size:16px;" class="input" id="input_math_response" placeholder="Type Here..."></input>
+                    <input type="button" style="width: 95%;" class="button" value="Submit" id="input_submit_button"></input>
+                 </div>
+              </center>
+           </div>
+        </div>
+        <br>
+        <div class="moduleContainer" id="moduleContainer">
+           <!-- DIV for all inputGroups -->
+        </div>
+        <br><br>
+          <div id="extraDEBUG" style="display: none">
+            <hr>
+            <button id="input_box_send" onclick="initializeModule();">Create Module</button>
+            <button id="input_box_send" onclick="initializeGame();">initializeGame()</button>
+            <button id="input_box_send" onclick="host = !host; createText(' ---- host = '+host); this.innerHTML = 'Set host = ' + !host;">Set host = true</button>
+            <button id="input_box_send" onclick="takeDamage(5)">Deal 5 damage</button>
+            <button id="input_box_send" onclick="takeDamage(-5)">Heal by 5</button>
+            <button id="input_box_send" onclick="var display = document.getElementById('TEMPLATEmoduleContainer').style.display; if(display == 'block'){document.getElementById('TEMPLATEmoduleContainer').style.display='none'}else{document.getElementById('TEMPLATEmoduleContainer').style.display='block'}">ToggleTemplate Div</button><br>
+            <br>
+            <br>
+            <p style="padding:0px; margin: 0px;">MODULE LIST</p>
+            <button id="input_box_send" onclick="initializeModule('module_simple_01')">Spawn Slider Div</button>
+            <button id="input_box_send" onclick="initializeModule('module_reset_module_01')">Spawn Reset Div</button>
+            <button id="input_box_send" onclick="initializeModule('module_unscramble_01')">Spawn Unscramble Div</button>
+            <button id="input_box_send" onclick="initializeModule('module_math_01')">Spawn Math Div</button>
+            <br>
+            <p onclick="resetInputFields()">resetInputFields() [Click to reset the database and current fields]</p>
+            <p onclick="resetGame()">GAME_RESET() [Database and local]</p>
+            <hr>
+            <input type="text" id="input_textbox_01" value="testing input"></input>
+            <input type="checkbox" id="input_checkbox_01" checked="true"></input>
+            <hr>
+            <div>
+               <p style="margin-bottom:3px;"><u>INPUT-OBJECTS</u></p>
+               <p id="INPUT_OBJECTS" class="indented">UserInputObjects = </p>
+               <p id="CURRENT_GROUPSDIV" class="indented">CurrentGroups = </p>
+            </div>
+            <hr>
+            <div>
+               <p style="margin-bottom:3px;"><u>DATABASE-STUFF</u></p>
+               <p id="DATABASE_OBJECTS" class="indented">DatabaseObjects</p>
+            </div>
+            <hr>
+            <p style="margin-bottom:0px;padding-bottom:0px;">TODO:</p>
+            <p class="indented">
+              AUTOMATIC MODULE SPAWNING! Have a random timer or something.<br>
+              End game screen - Total Time and Modules!<br>
+              Restart button / Functions on the End Game Screen!<br>
+              Then possibly a modifier tab! Change Tick Speed, Initial Module Count ETC.
+            </p>
+            <hr>
+            <p>LOG</p>
+            <div id="textLayer" style="white-space: nowrap"></div>
+        </div>
+      </div>
+      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-auth.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-functions.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-database.js"></script>
+      <script>
+         //FIREBASE DATABASE ---------------------------
+         		  var firebaseConfig = {
+         		    apiKey: "AIzaSyBTnT9iIONR7BLIaOstRXdl_VlIwxYRA24",
+         		    authDomain: "zapsterdatabase.firebaseapp.com",
+         		    databaseURL: "https://zapsterdatabase-default-rtdb.firebaseio.com",
+         		    projectId: "zapsterdatabase",
+         		    storageBucket: "zapsterdatabase.appspot.com",
+         		    messagingSenderId: "847821198477",
+         		    appId: "1:847821198477:web:82f54828105fe50229bec4",
+         		    measurementId: "G-YC79MNPTH4"
+         		  };
+         		  // Initialize Firebase
+         		  firebase.initializeApp(firebaseConfig);
+         			var database = firebase.database();
+         			var databaseRef = firebase.database().ref();
+         			//END OF DATABASE CODE
+
+
+         /* ======================================================== */
+
+         var host = false;
+
+         var databasePrefix = "InputGame/";
+         var roomcode = "DEV";
+         var databaseObjects = [];
+         var inputObjects = [];
+
+         //List of all InputGroups that can be created.
+         var groupTypeList = ["module_simple_01", "module_reset_module_01", "module_unscramble_01", "module_math_01"];
+
+         //Debug Variables
+         var DEV_showGroupTitles = false;
+
+         var health = 100;
+         var defaultTickSpeed = 1000;
+         var tickSpeed = 1000;
+         var healthDiv = document.getElementById("game_health_text");
+         var timer = document.getElementById("game_gameTimer_text");
+         var timerActive = false;
+         var groupReferences = []; //References to each group container.
+         var currentGroups = [];
+         var groupTypes = [];
+         var currentModuleNUM = 0;
+
+         var isCreatingRoom = false;
+         var isJoining = false;
+         var starting = false;
+         var state = 0;
+            //State 0: Not in a room
+            //State 1: In room, wait screen
+            //State 2: Beginning of game.
+         create();
+
+         //GAME VARIABLES
+         	//MODULES
+         		//module_simple_01
+         		var_simple01_healthPenalty = 1;
+         		//module_reset_module_01
+         		var reset_timer_graceTime = 3; //When to start flashing red.
+         		var_reset_module_01_healthPenalty = 10;
+         		var_reset_timerLength = 25;
+         		//module_unscramble_01
+         		unscramble_timer_graceTime = 3;
+         		var_unscramble_healthPenalty = 10;
+         		var_unscramble_timerLength = 20;
+         		scrambled_words_list = ["test", "dev", "computer", "zapster", "jeremy", "apollo", "space", "tara", "fortnite", "minecraft", "roblox", "gachalife", "bedrock"];
+
+                 //module_math_01
+                 math_problem_list = [["2 + 2", "4"], ["1 + 2", "3"], ["8 * 3", "24"], ["200 - 48", "152"], ["948 - 483", "465"], ["48 x 3", "144"], ["93 - 21", "72"], ["92 + 3", "95"], ["200 / 4", "50"], ["567 / 9", "63"]]
+                 var_math_01_timerLength = 60;
+                 var_math_01_healthPenalty = 10;
+                 math_01_timer_graceTime = 3;
+
+         onTick();
+
+         function create() {
+           switch(state) {
+             case 0:
+              screen_main_gameplay.style.display = "none";
+              screen_joinGame.style.display = "block";
+              playerlist_div.style.display = "none";
+
+              break;
+             case 1:
+              screen_main_gameplay.style.display = "none";
+              screen_joinGame.style.display = "none";
+              playerlist_div.style.display = "block";
+              document.getElementById("footer_username").innerHTML = "Logged in as: " + username;
+              document.getElementById("footer_roomcode").innerHTML = "Roomcode: " + roomcode;
+              document.getElementById("footer_username").style.display = 'block';
+              document.getElementById("footer_roomcode").style.display = 'block';
+
+              break;
+             case 2:
+              screen_main_gameplay.style.display = "block";
+              screen_joinGame.style.display = "none";
+              playerlist_div.style.display = "none";
+
+              break;
+             default:
+              alert("ERROR WITH STATE VAL OF " + state);
+              break;
+           }
+         }
+
+         //Debug STUFF =====
+          debug_vars = ['state', 'roomcode', 'host', 'username', 'userscount_read', 'usersArray', 'isJoining', 'starting', 'timerActive', 'DEV_showGroupTitles']
+          debug_menu = document.getElementById("debug_menu_div");
+          debug_menu_text = document.getElementById("debug_menu_text");
+          debug_menu_open = false;
+          if(debug_menu.style.display != "none") debug_menu_open = true;
+          function toggleDebugMenu() {
+          	if(debug_menu_open) {
+                debug_menu_open = false;
+                debug_menu.style.display = "none";
+              } else if(!debug_menu_open) {
+                debug_menu_open = true;
+                debug_menu.style.display = "block";
+              }
+          }
+
+          function gameOver() {
+            timerActive = false;
+            alert("YOU HAVE DIED!");
+          }
+
+          function updateDebug() {
+            //Debug Text
+            debug_text = [];
+            //debug_vars
+            for (i = 0; i < debug_vars.length; i++) {
+            	debug_text[i] = debug_vars[i] + ': ' + window[debug_vars[i]];
+            }
+            debug_menu_text.innerHTML = debug_text.join('<br>');
+          }
+          setInterval(updateDebug,100);
+
+          //KEY PRESS CHECK (For dev mode and such)
+          document.addEventListener("keydown", keyDownTextField, false);
+          function keyDownTextField(e) {
+          var keyCode = e.which;
+            if(keyCode==192) { //Open debug with ~
+          		toggleDebugMenu()
+            }
+          }
+
+          //Update Header and Timer Text
+          function updateHeader() {
+            game_moduleCount_text.innerHTML = "Modules: " + currentModuleNUM;
+          }
+
+         //======================================================================
+
+         //CREATE GAME BUTTON
+        function creategameFunction() {
+          if(isCreatingRoom) return;
+        	username = document.getElementById("username_input").value;
+        	response_text_obj = document.getElementById("subtext_joingame");
+        		//Check if username and roomcode are filled out
+        		if (username == "") {
+        			showTextForTime(response_text_obj, "ENTER A USERNAME", 1200); return;
+        		}
+
+        	var room_to_create = Math.random().toString(20).substr(2, 6);
+        	document.getElementById("roomcode_input").value = room_to_create;
+        	create_roomcode_ref = firebase.database().ref(databasePrefix + room_to_create + '/users');
+        	create_roomcode_ref.once('value', function(doc) {
+        		create_roomcode_data = doc.val();
+        		if(create_roomcode_data == null) {
+              isCreatingRoom = true;
+              roomcode = create_roomcode_data;
+        			showTextForTime(response_text_obj, "Creating room '" + room_to_create + "'", 1200);
+        			setTimeout(() => {
+        				document.getElementById("joingame_btnid").click();
+        			}, 1000);
+        			createRoom(room_to_create);
+        		} else {
+        			showTextForTime(response_text_obj, "That Room Already Exists", 5000);
+        			return;
+        		}
+        	})
+        }
+
+         //Create room data in the database. Allows players to join said roomcode.
+          function createRoom(roomcode) {
+          	console.log('CREATING ROOM!')
+          	firebase.database().ref(databasePrefix + roomcode + '/users').set({
+          		_startgame: 0,
+          		_usercount: 0
+          	});
+          	firebase.database().ref(databasePrefix + roomcode + '/data').update({
+          		_roomcode_reload: 0
+          	});
+          }
+
+         //JOIN GAME BUTTON
+          function joingameFunction() {
+            if(isJoining) return;
+          	username = document.getElementById("username_input").value;
+          	roomcode = document.getElementById("roomcode_input").value;
+          	response_text_obj = document.getElementById("subtext_joingame");
+          		//Check if username and roomcode are filled out
+          		if (username == "") {
+          			showTextForTime(response_text_obj, "ENTER A USERNAME", 1200); return;
+          		}
+          		if(roomcode == "") {
+          			showTextForTime(response_text_obj, "ENTER A ROOMCODE", 1200);	return;
+          		}
+
+          		//Get Room Data!
+          		room_data_ref = firebase.database().ref(databasePrefix + roomcode + '/users');
+          		room_data_ref.once('value', function(doc) {
+          			room_data = doc.val();
+          			roomcode_users_data = doc.val();
+          			if(room_data!=null) {
+                  isJoining = true;
+          				showTextForTime(response_text_obj, "Joining Room!", 1200);
+          					userscount_read = roomcode_users_data._usercount;
+          					newusercount = userscount_read + 1;
+          					usernum = newusercount;
+          					//Writes user info as roomcode/users/user[usernum]
+          					firebase.database().ref(databasePrefix + roomcode + '/users/user' + usernum).set({
+          						username: username
+          					});
+          					//Adds one to the usercount
+          					firebase.database().ref(databasePrefix + roomcode + '/users/').update({
+          						_usercount: newusercount
+          					});
+          					state = 1;
+          					create();
+
+          					//Start the check to check if _startgame is updated!
+          					roomcode_users_startgame_ref = firebase.database().ref(databasePrefix + roomcode + '/users/_startgame');
+          					roomcode_users_startgame_ref.on('value', function(snapshot) {
+          						if(state==1) {
+          							startGameFunction();
+          						}
+          					});
+
+          					//Start the check for _roomcode_reload = 1. If it is, quit the game
+          					roomcode_data_reload_ref = firebase.database().ref(databasePrefix + roomcode + '/data/_roomcode_reload');
+          					roomcode_data_reload_ref.on('value', function(doc) {
+                      roomcodeReloadval = doc.val();
+                      if(roomcodeReloadval == 1) {
+                        roomcodeReload(roomcodeReloadval);
+                      }
+          					});
+
+          					//Start to check if Roomcode/users/_usercount is updated. If updated, call the playerlist_reload() function
+          					roomcode_users_usercount_ref = firebase.database().ref(databasePrefix + roomcode + '/users/_usercount');
+          					roomcode_users_usercount_ref.on('value', function(snapshot) {
+          						if(state == 1) {
+          								playerlist_reload();
+          						}
+          					});
+          			} else {
+          				showTextForTime(response_text_obj, "Room does not exist", 1200);	return;
+          			}
+          		})
+          }
+
+          //Delete Room in database
+          function deleteRoom(roomcode) {
+          	firebase.database().ref(databasePrefix + roomcode).set({
+          	});
+          }
+
+          //Called whenever a player joins the room (INCLUDING SELF)
+          function playerlist_reload() {
+          	if (state == 1) {
+          		document.getElementById("playerlist_li").innerHTML = "";
+          		roomcode_users_ref = firebase.database().ref(databasePrefix + roomcode + '/users');
+          		roomcode_users_ref.once('value', function(doc) {
+          			if (state == 1) {
+          				roomcode_users_data = doc.val();
+          				userscount_read = roomcode_users_data._usercount;
+          				//If the current user is the first user in the room, give them the start button and make vip=1
+          				if(userscount_read == 1) {
+          					document.getElementById('startbtn').style.display = 'inline-block';
+          					host = true;
+          				}
+                  usersArray = [];
+          				for (i = 1; i <= userscount_read; i++) {
+          					roomcode_users_user_ref = firebase.database().ref(databasePrefix + roomcode + '/users/user' + i);
+          					roomcode_users_user_ref.once('value', function(doc) {
+          						roomcode_users_user_data = doc.val();
+          						roomcode_users_user_username_data = roomcode_users_user_data.username;
+                      usersArray.push(roomcode_users_user_username_data);
+          						//Create a div with the player's name inside of it
+          						var node = document.createElement("div");
+          						var textnode = document.createTextNode(roomcode_users_user_username_data);
+          						node.appendChild(textnode);
+          						document.getElementById("playerlist_li").appendChild(node);
+          					})
+          				}
+          			}
+          		})
+          	}
+          }
+
+
+
+          //startGameFunction-CALLED ANYTIME ROOMCODE/USERS IS UPDATED! USED FOR STARTINGTHEGAME
+          function startGameFunction() {
+          	if (state == 1 && starting == 0) {
+          		roomcode_users_startgame_ref = firebase.database().ref(databasePrefix + roomcode + '/users');
+          		roomcode_users_startgame_ref.on('value', function(doc) {
+          			roomcode_users_startgame_data = doc.val();
+          			roomcode_users_startgame_value = roomcode_users_startgame_data._startgame;
+          			if (roomcode_users_startgame_value == 1 && starting == 0 && state == 1) {
+          				starting = 1;
+          				document.getElementById('subtext2_players').innerHTML = "STARTING IN<br>3..."
+          				setTimeout(function () {
+          					document.getElementById('subtext2_players').innerHTML = "STARTING IN<br>2..."
+          					setTimeout(function () {
+          						document.getElementById('subtext2_players').innerHTML = "STARTING IN<br>1..."
+          						setTimeout(function () {
+          							document.getElementById('subtext2_players').innerHTML = "STARTING!<br>"
+          							setTimeout(function () {
+          								document.getElementById('playerlist_div').style.display = 'none';
+          								setTimeout(function () {
+          									//Ran by everyone to start the game on their end.
+                            console.log("STARTING GAME!")
+                            state = 2;
+                            create();
+                            initializeGame();
+          									setTimeout(function () {
+          										create();
+
+                              //Little delay before starting the game...
+                              setTimeout(function () {
+                                if (host == true) {
+                                  initializeModuleMultiple(4);
+                                  timerActive = true;
+              									}
+
+                              }, 1000);
+          									}, 1000);
+          								}, 1000);
+          							}, 1000);
+          						}, 1000);
+          					}, 1000);
+          				}, 1000);
+          			}
+          		})
+          	}
+          }
+
+
+
+         //===========================================================================
+
+         //Used At the start of gameplay to start checking for database updates.
+         function initializeGame() {
+           initInput("input_textbox_01");
+           initInput("input_checkbox_01");
+
+           //CHECKS AND CREATES ANY MODULES IN THE GROUPS FOLDER!!! ===================================
+           //Check for when the group folder is updated in the database. ==================
+           database_groups_instances_ref = firebase.database().ref(databasePrefix + roomcode + "/modules/");
+           database_groups_instances_ref.on('value', function(doc) {
+             inputData = doc.val();
+
+             //Get each group folder in the database's /modules/
+             try{groupList = Object.keys(doc.val());} //WILL THROW ERROR IF NO DATA IN DATABASE.
+           	catch(err){groupList = undefined};
+           	if(groupList === undefined) { //If no data in the groups folder, delete all current group.
+           		createText("# NO GROUP DATA! Deleting all groups.");
+           		groupList = [];
+           		currentGroups = [];
+           		groupTypes = [];
+           		currentModuleNUM = 0;
+           			//Update current groups DIV.
+           		CURRENT_GROUPSDIV = document.getElementById("CURRENT_GROUPSDIV");
+           		CURRENT_GROUPSDIV.innerHTML = "CurrentGroups = " + currentGroups.join(" | ");
+           		groupReferences.forEach(groupReference => {
+           			groupReference.remove();
+           		});
+           		removeDeletedInputFields();
+           		groupReferences = [];
+           	} else {
+           	  var inputmoduleContainer = document.getElementById("moduleContainer");
+
+           	  //Update the currentModuleNUM
+           	  currentModuleNUM = groupList.length;
+
+           	  //For every module_## in the database...
+           	  groupList.forEach(groupInDatabase => {
+           	    if(!currentGroups.includes(groupInDatabase)) { //Check if the group already exists, if not...
+           	      groupType = doc.child(groupInDatabase).child("groupType").val();
+           	      createText("# CREATE THE GROUP! TYPE of '<i>" + groupType + "</i>' as " + groupInDatabase);
+
+           				//CREATING A NEW DIV FROM TEMPLATE
+           				var templateGroup = document.getElementById("TEMPLATE_"+groupType);
+           				var createdGroup = templateGroup.cloneNode(true);
+           				createdGroup.id = "MODULE_ENTRY_" + groupInDatabase;
+           				createdGroup.querySelector("#DEVtitle").innerHTML = groupType;
+           				if(!DEV_showGroupTitles) {createdGroup.querySelector("#DEVtitle").style.display = "none";}
+           				document.getElementById("moduleContainer").appendChild(createdGroup);
+           				var children = createdGroup.getElementsByTagName("*");
+           				for(let i = 0;i < children.length; i++) {
+           				    children[i].id = groupInDatabase + "_" + children[i].id;
+           				}
+
+           				var inputChildren = createdGroup.getElementsByTagName("input");
+           				for(let i = 0;i < inputChildren.length; i++) {
+           						initInput(inputChildren[i].id);
+           				}
+
+           				fullyInitGroup(createdGroup, groupInDatabase, groupType);
+
+           				groupReferences.push(createdGroup);
+           				currentGroups.push(groupInDatabase);
+           				groupTypes.push(groupType);
+           	    }
+           		});
+           	}
+
+           	//Update current groups DIV.
+           	CURRENT_GROUPSDIV = document.getElementById("CURRENT_GROUPSDIV");
+           	CURRENT_GROUPSDIV.innerHTML = "CurrentGroups = " + currentGroups.join(" | ");
+           });
+
+
+           //Check for when a field is updated! =================================================
+           database_objects_instances_ref = firebase.database().ref(databasePrefix + roomcode + "/objects/");
+             database_objects_instances_ref.on('value', function(doc) {
+               inputData = doc.val();
+
+               //Get each input field in the database folder
+               try{inputObjectList = Object.keys(doc.val());}
+              catch(err){inputObjectList = []};
+              if(typeof inputObjectList == undefined) { //If no data...
+                inputObjectList = []
+                  //Update current groups DIV.
+                DEVobjectList = document.getElementById("DATABASE_OBJECTS");
+                DEVobjectList.innerHTML = "Updated: " + dateTime(1) + "<br>";
+              } else {
+                //Print the object list to the DEV div.
+                DEVobjectList = document.getElementById("DATABASE_OBJECTS");
+                DEVobjectList.innerHTML = "Updated: " + dateTime(1) + "<br>";
+
+                //Get the element for each entry in the 'objects/' folder.
+                inputObjectList.forEach(objectID => {
+                  if (!databaseObjects.includes(objectID)) databaseObjects.push(objectID);
+                  if(document.getElementById(objectID)) {
+                   inputObject = document.getElementById(objectID); //Get the coresponding input field.
+
+                   databaseInputValue = doc.child(objectID).child("value").val();
+
+                   switch(inputObject.type) {
+                    case "checkbox":
+                      inputObject.checked = databaseInputValue
+                      break;
+                    default:
+                      inputObject.value = databaseInputValue
+                      break;
+                   }
+                   //Add object to array, then update list
+
+                   DEVobjectList = document.getElementById("DATABASE_OBJECTS");
+                   DEVobjectList.innerHTML += objectID + " = " + databaseInputValue + "<br>";
+                  } else {
+                    alert(objectID + " doesn't exist.");
+                  }
+                });
+              }
+               DEVobjectList.innerHTML += "<br>" + databaseObjects.join(" | ");
+           }); //=================================================================================
+
+
+           //Check for when the MainVars folder is updated in the database. ==================
+           database_important_vars_ref = firebase.database().ref(databasePrefix + roomcode + "/MainVars/");
+           database_important_vars_ref.on('value', function(doc) {
+            inputData = doc.val();
+            varList = Object.keys(doc.val());
+            varList.forEach((variable, i) => {
+              switch(variable) {
+                case "health":
+                  newHealth = doc.child(variable).child("value").val();
+                  healthChangeAnimation(newHealth - health, newHealth); //Updates the look of the header.
+                  health = newHealth;
+                  healthDiv.innerHTML = "HEALTH: " + health;
+                  break;
+                case "tickSpeed":
+                  tickSpeed = doc.child(variable).child("value").val();
+                  break;
+                default:
+                  createText("UNKOWN IMPORTANT VARIABLE IN DATABASE - " + variable);
+                  break;
+              }
+            });
+           });
+
+
+           //Check for when the textObject folder is updated in the database. ==================
+           database_gamevar_instances_ref = firebase.database().ref(databasePrefix + roomcode + "/textObjects/");
+           database_gamevar_instances_ref.on('value', function(doc) {
+             inputData = doc.val();
+             groupList = Object.keys(doc.val()); //WILL THROW ERROR IF NO DATA IN DATABASE.
+            groupList.forEach(textObjectInDatabase => {
+              textObjectData = doc.child(textObjectInDatabase).child("data").val();
+              document.getElementById(textObjectInDatabase).innerHTML = textObjectData;
+            });
+           });
+
+
+         } //END OF INITGAME==========================================================================
+
+
+         //HOST - takeDamageFunction Can take negative damage to heal.
+         function takeDamage(amount) {
+         	if(host) {
+         	   if(health - amount <= 0) {
+               newHealth = 0;
+             } else {
+               newHealth = health - amount;
+             }
+
+            firebase.database().ref(databasePrefix + roomcode + "/MainVars/health").update({
+         			value: newHealth
+         		});
+         	}
+         }
+
+         //Used to animate the header's backgroundColor indicating damage
+         function healthChangeAnimation(healthChange, newHealth) {
+           var headerDIV = document.getElementById('header');
+            if(healthChange <= 0) { //If taking damage
+              flashColor = '#fc3030'
+            } else { //If Healed
+              flashColor = '#42d4ad'
+            }
+
+            if(newHealth == 0) {
+              let damageHeaderAnimation = document.getElementById('header').animate(
+              [
+                { backgroundColor: flashColor}
+              ], {
+                fill: 'forwards',
+                easing: 'steps(20, end)',
+                duration: 70,
+                iterationStart: 0,
+                playbackRate: 0
+              });
+              gameOver();
+            } else {
+              let damageHeaderAnimation = document.getElementById('header').animate(
+              [
+                { backgroundColor: flashColor },
+                { backgroundColor: 'white' }
+              ], {
+                fill: 'forwards',
+                easing: 'steps(20, end)',
+                duration: 800,
+                iterationStart: 0,
+                playbackRate: 0
+              });
+            }
+         }
+
+
+         //Sets the speed of the game and it's timers.
+         function setTickSpeed(tickSpeed) {
+         	firebase.database().ref(databasePrefix + roomcode + "/MainVars/tickSpeed").update({
+         		value: tickSpeed
+         	});
+         }
+
+
+         //Called whenever the user manually updates a field. It communicates to the database to update the field to the new value. Data is saved used the inputField's id.
+         function userUpdateField(fieldID) {
+         	var fieldID_OBJ = document.getElementById(fieldID);
+             switch(fieldID_OBJ.type) {
+             case "checkbox":
+             	firebase.database().ref(databasePrefix + roomcode + "/objects/" + fieldID).update({
+                 value: fieldID_OBJ.checked
+               	});
+             	break;
+             default:
+               firebase.database().ref(databasePrefix + roomcode + "/objects/" + fieldID).update({
+                   value: fieldID_OBJ.value
+               });
+               break;
+             }
+         }
+
+         function createText(string) {
+         	var div = document.createElement("div");
+         	div.classList.add("textDivObject");
+         	div.innerHTML = string;
+         	document.getElementById("textLayer").appendChild(div);
+         }
+
+         //This takes the input object and adds eventlisteners to sync it with the database.
+         //Allows the user's changes to call "userUpdateField()" to update database value.
+         function initInput(fieldID) {
+           if(document.getElementById(fieldID)) {
+         		fieldOBJ = document.getElementById(fieldID);
+
+         		switch(fieldOBJ.type) {
+         		case "checkbox":
+         			fieldOBJ.addEventListener("change", function(){ userUpdateField(fieldID)});
+         			break;
+         		default:
+         			fieldOBJ.addEventListener("input", function(){ userUpdateField(fieldID)});
+         			break;
+         		}
+
+         		//Add object to array, then update list
+         		inputObjects.push(fieldID);
+         		InputObjectsList = document.getElementById("INPUT_OBJECTS");
+         		InputObjectsList.innerHTML = "UserInputObjects = " + inputObjects.join(" | ");
+         		//userUpdateField(fieldID);
+         	} else {
+             	alert("Problem initInput for " + fieldID + " (Doesn't Exist?)");
+             }
+         }
+
+         //Inputs come in groups. This will spawn a group of inputs.
+         //This will create a new folder in the database with the needed input fields.
+         function initializeModule(groupType) {
+         	if(host==false) {createText("<b>YOU ARE NOT THE HOST... WHY INITIZALIZEINPUTGROUP()???</b>")}
+           if(groupType == undefined) {
+             //var groupTypeList = ["module_simple_01", "module_reset_module_01"];
+             var groupType = groupTypeList[Math.floor(Math.random()*groupTypeList.length)];
+           }
+         	 var groupID = currentModuleNUM;
+           createText("<br>[] initializeModule("+groupType+") " + "as module_"+groupID + " | ");
+           firebase.database().ref(databasePrefix + roomcode + "/modules/" + "module_" + groupID).update({
+             groupType: groupType
+           });
+           updateHeader();
+         }
+
+         function initializeModuleMultiple(count) {
+           for(i=0; i<count; i++) {
+             initializeModule();
+           }
+         }
+
+
+         //Runs every tick
+         function onTick() {
+         	//HOST MANAGES THE GAME, REST IS FORMATTING.
+         	groupTypes.forEach(function(value, i) {
+         		var module_id = "module_"+i;
+         		var module_type = value;
+         		switch(value) {
+         			case "module_simple_01":
+         				var slider01 = groupReferences[i].querySelector("#"+module_id+"_input_range_01");
+         				var slider02 = groupReferences[i].querySelector("#"+module_id+"_input_range_02");
+         				if(host) {
+         					if(slider01.value <= 0 && slider02.value > 0) {
+         						console.log("TAKING DAMAGE!");
+         						takeDamage(var_simple01_healthPenalty);
+         					}
+         					if(slider02.value <= 0 && slider01.value > 0) {
+         						console.log("TAKING DAMAGE!");
+         						takeDamage(var_simple01_healthPenalty);
+         					}
+         					if(slider02.value <= 0 && slider01.value <= 0) {
+         						console.log("TAKING DAMAGE!");
+         						takeDamage(var_simple01_healthPenalty * 2);
+         					}
+
+         					slider01.value -= 5;
+         					userUpdateField(module_id+"_input_range_01");
+         					slider02.value -= 5;
+         					userUpdateField(module_id+"_input_range_02");
+         				}
+
+         				if(slider01.value <= 10 || slider02.value <= 10) {
+         					if(!groupReferences[i].classList.contains("flashing")) groupReferences[i].classList.add("flashing");
+         				} else {
+         					if(groupReferences[i].classList.contains("flashing")) groupReferences[i].classList.remove("flashing");
+         				}
+         				break;
+         			//
+         			case "module_reset_module_01":
+         				timer_current = parseInt(groupReferences[i].querySelector("#"+module_id+"_timer").innerHTML);
+         				//The host will tick down the timer of the module/group.
+         				if(host) {
+         					if(timer_current > 0) {
+         						timer_current--;
+         						groupReferences[i].querySelector("#"+module_id+"_timer").innerHTML = timer_current;
+         						databaseTextObjects(module_id+"_timer", timer_current);
+         					} else {
+         						console.log("TAKING DAMAGE!");
+         						takeDamage(var_reset_module_01_healthPenalty);
+         					}
+         				}
+         				//The module will flash red is low on time.
+         				if(timer_current > 0) {
+         					groupReferences[i].querySelector("#"+module_id+"_timer").style.color = "#000";
+         					if(timer_current <= reset_timer_graceTime) {
+         						if(!groupReferences[i].classList.contains("flashing")) groupReferences[i].classList.add("flashing");
+         					} else {
+         						if(groupReferences[i].classList.contains("flashing")) groupReferences[i].classList.remove("flashing");
+         					}
+         				} else {
+         					if(!groupReferences[i].classList.contains("flashing")) groupReferences[i].classList.add("flashing");
+         				}
+         				if(host)databaseTextObjects(module_id+"_timer", timer_current);
+         				break;
+         			case "module_unscramble_01":
+         				resultsText = groupReferences[i].querySelector("#"+module_id+"_results_text");
+         				timer_current = parseInt(groupReferences[i].querySelector("#"+module_id+"_timer").innerHTML);
+
+         				//The host will tick down the timer of the module/group.
+         				if(host) {
+         					if(timer_current > 0) {
+
+         						timer_current--;
+
+         groupReferences[i].querySelector("#"+module_id+"_timer").innerHTML = timer_current;
+         						databaseTextObjects(module_id+"_timer", timer_current);
+         					} else {
+         						timer_current = var_unscramble_timerLength;
+         						groupReferences[i].querySelector("#"+module_id+"_timer").innerHTML = var_unscramble_timerLength;
+         						databaseTextObjects(module_id+"_timer", timer_current);
+
+         						if(resultsText.innerHTML != "CORRECT!") {
+         							console.log("DEALING DAMAGE!");
+         							takeDamage(var_unscramble_healthPenalty);
+         							resultsText.innerHTML = "";
+         						} else {
+         							resultsText.innerHTML = "";
+         						}
+
+         						ScrambledtextOBJ = groupReferences[i].querySelector("#"+module_id+"_scrambled_word_text");
+         						UNScrambledtextOBJ = groupReferences[i].querySelector("#"+module_id+"_UNscrambled_word_text");
+         						inputfield = groupReferences[i].querySelector("#"+module_id+"_input_unscrambledWord");
+         						randomWORD = scrambled_words_list[Math.floor(Math.random()*scrambled_words_list.length)];
+
+         						writeToDatabase("modules/" + module_id + "/isCorrect", null, false);
+         						//Scrambledtext.innerHTML = randomWORD;
+         						databaseTextObjects(ScrambledtextOBJ.id, randomWORD.shuffle());
+         						databaseTextObjects(UNScrambledtextOBJ.id, randomWORD);
+
+         					}
+         				}
+
+         				//The module will flash red is low on time.
+         				if(timer_current > 0) {
+         					if(timer_current <= unscramble_timer_graceTime && resultsText.innerHTML != "CORRECT!") {
+         						if(!groupReferences[i].classList.contains("flashing")) groupReferences[i].classList.add("flashing");
+         					} else {
+         						if(groupReferences[i].classList.contains("flashing")) groupReferences[i].classList.remove("flashing");
+         					}
+         				} else {
+         					setTimeout(function () {	if(groupReferences[i].classList.contains("flashing"))groupReferences[i].classList.remove("flashing");
+                         }, 1000);
+         					if(host!=true) resultsText.innerHTML = "";
+         					inputfield = groupReferences[i].querySelector("#"+module_id+"_input_unscrambledWord");
+         					inputfield.value = "";
+                         }
+
+         				break;
+
+                     case "module_math_01":
+                         resultsText = groupReferences[i].querySelector("#"+module_id+"_results_text");
+         				timer_current = parseInt(groupReferences[i].querySelector("#"+module_id+"_timer").innerHTML);
+         				//The host will tick down the timer of the module/group.
+
+         				if(host) {
+         					if(timer_current > 0) {
+         						timer_current--;
+         						groupReferences[i].querySelector("#"+module_id+"_timer").innerHTML = timer_current;
+         						databaseTextObjects(module_id+"_timer", timer_current);
+         					} else {
+         						timer_current = var_math_01_timerLength;
+         						groupReferences[i].querySelector("#"+module_id+"_timer").innerHTML = var_unscramble_timerLength;
+         						databaseTextObjects(module_id+"_timer", timer_current);
+
+         						if(resultsText.innerHTML != "CORRECT!") {
+         							console.log("DEALING DAMAGE!");
+         							takeDamage(var_math_01_healthPenalty);
+         							resultsText.innerHTML = "";
+         						} else {
+         							resultsText.innerHTML = "";
+         						}
+
+         						//GET A NEW PROBLEM
+                                 randomPROBLEM = math_problem_list[Math.floor(Math.random()*math_problem_list.length)];
+         						math_question_text = groupReferences[i].querySelector("#"+module_id+"_math_question_text");
+                                 math_answer_text = groupReferences[i].querySelector("#"+module_id+"_math_answer_text");
+
+                                 writeToDatabase("modules/" + module_id + "/isCorrect", null, false);
+
+                                 //SET THE QUESTION TEXT
+                                 databaseTextObjects(math_question_text.id, randomPROBLEM[0]);
+                                 //SET THE ANSWER TEXT
+                                 databaseTextObjects(math_answer_text.id, randomPROBLEM[1]);
+
+         					}
+         				}
+         				//The module will flash red is low on time.
+         				if(timer_current > 0) {
+         					if(timer_current <= math_01_timer_graceTime && resultsText.innerHTML != "CORRECT!") {
+         						if(!groupReferences[i].classList.contains("flashing")) groupReferences[i].classList.add("flashing");
+         					} else {
+                                   if(groupReferences[i].classList.contains("flashing")) groupReferences[i].classList.remove("flashing");
+         					}
+         				} else {
+         				setTimeout(function () {	if(groupReferences[i].classList.contains("flashing"))groupReferences[i].classList.remove("flashing");
+                         }, 1000);
+         					if(host!=true) resultsText.innerHTML = "";
+         					inputfield = groupReferences[i].querySelector("#"+module_id+"_input_math_response");
+         					inputfield.value = "";
+         					inputfield.disabled = false;
+                         }
+
+                         break;
+         			default:
+         				console.log(value + " failed in the ONTICK function.")
+         				break;
+         		}
+         		//console.log(module_id + " is type " + value);
+         	});
+
+         	//Recall Function
+         	if(tickSpeed>0) {
+         		setTimeout( function() { onTick(); }, tickSpeed);
+         	}
+         }
+
+
+
+         //add functions to buttons and such.
+         function fullyInitGroup(createdGroupRef, module_id, groupType) {
+         	switch(groupType) {
+         		case "module_simple_01":
+
+         			break;
+         		case "module_reset_module_01":
+         			ResetButton = createdGroupRef.querySelector("#"+module_id+"_input_reset_button");
+         			ResetButton.addEventListener("click", function(){
+         				createdGroupRef.querySelector("#"+module_id+"_timer").innerHTML = var_reset_timerLength;
+         				databaseTextObjects(module_id+"_timer", var_reset_timerLength);
+         				if(createdGroupRef.classList.contains("flashing")) createdGroupRef.classList.remove("flashing");
+         			});
+         			timer_current = var_reset_timerLength;
+         			createdGroupRef.querySelector("#"+module_id+"_timer").innerHTML = var_reset_timerLength;
+         			break;
+         		case "module_unscramble_01":
+         			//TEXT OBJECT CODE
+         			ScrambledtextOBJ = createdGroupRef.querySelector("#"+module_id+"_scrambled_word_text");
+         			UNScrambledtextOBJ = createdGroupRef.querySelector("#"+module_id+"_UNscrambled_word_text");
+         			resultsText = createdGroupRef.querySelector("#"+module_id+"_results_text");
+         			inputfield = createdGroupRef.querySelector("#"+module_id+"_input_unscrambledWord");
+
+
+         			timer_current = var_unscramble_timerLength;
+         			createdGroupRef.querySelector("#"+module_id+"_timer").innerHTML = var_unscramble_timerLength;
+
+         			//Add event listener for the "isCorrect" var in the database
+         			unscrambleIsCorrectEvent = firebase.database().ref(databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect");
+         			unscrambleIsCorrectEvent.on('value', function(doc) {
+         				resultsText = createdGroupRef.querySelector("#"+module_id+"_results_text");
+         				inputfield = createdGroupRef.querySelector("#"+module_id+"_input_unscrambledWord");
+
+         				inputData = doc.val();
+         				isCorrect = doc.child("data").val();
+         				//console.log(module_id + " trigged isCorrect event, isCorrect is = " + doc.child("data").val());
+         				if(isCorrect == true) {
+         					inputfield.disabled  = true;
+         					resultsText.innerHTML = "CORRECT!";
+         					resultsText.style.color = "green";
+         				} else if(isCorrect == false) {
+         					resultsText.innerHTML = "WRONG!";
+         					setTimeout(function () {
+                             	if(resultsText.innerHTML == "CORRECT!") return;
+                                 resultsText = createdGroupRef.querySelector("#"+module_id+"_results_text");
+         						resultsText.innerHTML = "";
+         						inputfield.disabled  = false;
+         					}, 1000);
+         					resultsText.style.color = "#b50000";
+         					inputfield.disabled  = false;
+         				} else if(isCorrect == undefined) {
+         					inputfield.disabled  = false;
+         				}
+         			});
+
+         			if(host) { //GET A NEW TEXT
+         				randomWORD = scrambled_words_list[Math.floor(Math.random()*scrambled_words_list.length)];
+         				//Scrambledtext.innerHTML = randomWORD;
+         				databaseTextObjects(ScrambledtextOBJ.id, randomWORD.shuffle());
+         				databaseTextObjects(UNScrambledtextOBJ.id, randomWORD);
+         			}
+
+         			//BUTTON
+         			submitButton = createdGroupRef.querySelector("#"+module_id+"_input_submit_button");
+         			submitButton.addEventListener("click", function(){
+         				resultsText = createdGroupRef.querySelector("#"+module_id+"_results_text");
+         				inputfield = createdGroupRef.querySelector("#"+module_id+"_input_unscrambledWord");
+         				if(inputfield.value == "") return;
+         				UNScrambledtextOBJ = createdGroupRef.querySelector("#"+module_id+"_UNscrambled_word_text");
+         				if(inputfield.value.toLowerCase() == UNScrambledtextOBJ.innerHTML.toLowerCase()) {
+         					writeToDatabase("modules/" + module_id + "/isCorrect", true, false);
+         					if(createdGroupRef.classList.contains("flashing")) createdGroupRef.classList.remove("flashing");
+         				} else {
+         					writeToDatabase("modules/" + module_id + "/isCorrect", false, true);
+         				}
+         				inputfield.value = '';
+         				userUpdateField(inputfield.id);
+         			});
+
+         			//WHEN PRESSING ENTER IN INPUT FIELD
+         			inputfield.addEventListener("keypress", function(e){
+         				if (e.key === 'Enter') {
+         					submitButton = createdGroupRef.querySelector("#"+module_id+"_input_submit_button");
+         					submitButton.click();
+         				}
+         			});
+         			break;
+
+
+
+         		case "module_math_01":
+                     //TEXT OBJECT CODE
+         			math_question_text = createdGroupRef.querySelector("#"+module_id+"_math_question_text");
+         			math_answer_text = createdGroupRef.querySelector("#"+module_id+"_math_answer_text");
+         			resultsText = createdGroupRef.querySelector("#"+module_id+"_results_text");
+         			inputfield = createdGroupRef.querySelector("#"+module_id+"_input_math_response");
+
+
+         			timer_current = var_math_01_timerLength;
+         			createdGroupRef.querySelector("#"+module_id+"_timer").innerHTML = timer_current;
+
+
+                     //Add event listener for the "isCorrect" var in the database
+         			mathIsCorrectEvent = firebase.database().ref(databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect");
+         			mathIsCorrectEvent.on('value', function(doc) {
+         				resultsText = createdGroupRef.querySelector("#"+module_id+"_results_text");
+         				inputfield = createdGroupRef.querySelector("#"+module_id+"_input_math_response");
+
+         				inputData = doc.val();
+         				isCorrect = doc.child("data").val();
+         				//console.log(module_id + " trigged isCorrect event, isCorrect is = " + doc.child("data").val());
+         				if(isCorrect == true) {
+         					inputfield.disabled  = true;
+         					resultsText.innerHTML = "CORRECT!";
+         					resultsText.style.color = "green";
+         				} else if(isCorrect == false) {
+         					resultsText.innerHTML = "WRONG!";
+         					setTimeout(function () {
+                             	if(resultsText.innerHTML == "CORRECT!") return;
+                                 resultsText = createdGroupRef.querySelector("#"+module_id+"_results_text");
+         						resultsText.innerHTML = "";
+         						inputfield.disabled  = false;
+         					}, 1000);
+         					resultsText.style.color = "#b50000";
+         					inputfield.disabled  = false;
+         				} else if(isCorrect == undefined) {
+         					inputfield.disabled  = false;
+         				}
+         			});
+
+                     if(host) { //GET A NEW PROBLEM
+         				randomPROBLEM = math_problem_list[Math.floor(Math.random()*math_problem_list.length)];
+
+         //SET THE QUESTION TEXT
+         databaseTextObjects(math_question_text.id, randomPROBLEM[0]);
+         //SET THE ANSWER TEXT
+         databaseTextObjects(math_answer_text.id, randomPROBLEM[1]);
+         			}
+
+                     //BUTTON
+         			submitButton = createdGroupRef.querySelector("#"+module_id+"_input_submit_button");
+         			submitButton.addEventListener("click", function(){
+         				resultsText = createdGroupRef.querySelector("#"+module_id+"_results_text");
+         				inputfield = createdGroupRef.querySelector("#"+module_id+"_input_math_response");
+         				if(inputfield.value == "") return;
+         				math_answer_text = createdGroupRef.querySelector("#"+module_id+"_math_answer_text");
+         				if(inputfield.value.toLowerCase() == math_answer_text.innerHTML.toLowerCase()) {
+         					writeToDatabase("modules/" + module_id + "/isCorrect", true, false);
+         					if(createdGroupRef.classList.contains("flashing")) createdGroupRef.classList.remove("flashing");
+         				} else {
+         					writeToDatabase("modules/" + module_id + "/isCorrect", false, true);
+         				}
+         				inputfield.value = '';
+         				userUpdateField(inputfield.id);
+         			});
+
+         			//WHEN PRESSING ENTER IN INPUT FIELD
+         			inputfield.addEventListener("keypress", function(e){
+         				if (e.key === 'Enter') {
+         					submitButton = createdGroupRef.querySelector("#"+module_id+"_input_submit_button");
+         					submitButton.click();
+         				}
+         			});
+
+         			break;
+         	}
+         }
+
+
+
+         //Reset Database and Reset health and tickSpeed (From Losing)
+         function resetGame() {
+         	document.getElementById('textLayer').innerHTML = '';
+         	createText("<br>----  DATABASE RESET!  ----");
+         	document.getElementById("textLayer").innerHTML += "<br>";
+
+         	firebase.database().ref(databasePrefix + roomcode).set({
+         	});
+
+         	currentModuleNUM = 0;
+          updateHeader();
+
+         	//RESET HEALTH VARIABLE
+         	firebase.database().ref(databasePrefix + roomcode + "/MainVars/health").update({
+         		value: 100
+         	});
+
+         	//RESET TICKSPEED
+       		tickSpeed = defaultTickSpeed;
+          firebase.database().ref(databasePrefix + roomcode + "/MainVars/tickSpeed").update({
+         		value: tickSpeed
+         	});
+       		setTickSpeed(tickSpeed);
+       		setTimeout( function() { onTick(); }, tickSpeed);
+         }
+
+         //UpdateGameVars, used for timers and other NON-INPORTANT variables to be synced
+         function databaseTextObjects(name, value) {
+         	firebase.database().ref(databasePrefix + roomcode + "/textObjects/" + name).update({
+         			data: value
+         	});
+         }
+
+         //Allows anything to be written into database.
+         function writeToDatabase(destination, value, resetAfterSend) {
+         	firebase.database().ref(databasePrefix + roomcode + "/" + destination).update({
+         			data: value
+         	}, (error) => {
+         	  if (error) {
+         	    // The write failed...
+         	  } else {
+         	    if(resetAfterSend) {
+         				firebase.database().ref(databasePrefix + roomcode + "/" + destination).update({
+         						data: null
+         				});
+         			}
+         	  }
+         	});
+         }
+
+         //Take all inputObjects and set them to default values, then sync it with the database.
+         function resetInputFields() {
+         	inputObjects.forEach(objectID => {
+             if(document.getElementById(objectID)) {
+         			inputObject = document.getElementById(objectID); //Get the coresponding input field.
+         			switch(inputObject.type) {
+         			case "range":
+         				inputObject.value=0;
+         				break;
+         			case "text":
+         				inputObject.value="";
+         				break;
+         			case "checkbox":
+         				inputObject.checked = false;
+         				break;
+         			default:
+         				inputObject.value="";
+         				break;
+         			}
+
+         			userUpdateField(objectID);
+
+         		}
+         	});
+         	removeDeletedInputFields();
+         }
+
+
+         //Code used for the timer!
+         var totalSeconds = 0;
+         setInterval(setTime, 1000);
+
+         function setTime() {
+           if(!host) return;
+           if(timerActive) ++totalSeconds;
+           secondsText = pad(totalSeconds % 60);
+           minutesText = pad(parseInt(totalSeconds / 60));
+           if(!timerActive) {
+             if(minutesText == "00" && secondsText == "00") {
+               timerText = minutesText + ":" + secondsText;
+             } else {
+               var timerText = "PAUSED -- " + minutesText + ":" + secondsText;
+             }
+             databaseTextObjects("game_gameTimer_text", timerText);
+           } else {
+             var timerText = minutesText + ":" + secondsText;
+             databaseTextObjects("game_gameTimer_text", timerText);
+           }
+         }
+
+         function pad(val) {
+           var valString = val + "";
+           if (valString.length < 2) {
+             return "0" + valString;
+           } else {
+             return valString;
+           }
+         }
+
+
+
+         function removeDeletedInputFields() {
+         	inputObjects.forEach(objectID => {
+         		if(!document.getElementById(objectID)) {
+         			var inputIndexToRemove = inputObjects.indexOf(objectID)
+         			inputObjects[inputIndexToRemove] = null;
+         			inputObjects = inputObjects.filter(n => n); //Remove null in array
+         		}
+         	});
+         	InputObjectsList = document.getElementById("INPUT_OBJECTS");
+         	InputObjectsList.innerHTML = "UserInputObjects = " + inputObjects.join(" | ");
+         }
+
+         //Random int with min and max
+         function randomIntFromInterval(min, max) { // min and max included
+           return Math.floor(Math.random() * (max - min + 1) + min)
+         }
+
+         //Get date and time
+         function dateTime(style) {
+         	var today = new Date();
+             var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+             var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+             switch(style) {
+                 case 1:
+                 	return time;
+                     break;
+         		case 2:
+                 	return date;
+                     break;
+                 default:
+                 	return date+' '+time;
+             		break;
+             }
+         }
+
+         //Use with "lol".shuffle()
+         String.prototype.shuffle = function () {
+            var a = this.split(""),
+                n = a.length;
+
+            for(var i = n - 1; i > 0; i--) {
+                var j = Math.floor(Math.random() * (i + 1));
+                var tmp = a[i];
+                a[i] = a[j];
+                a[j] = tmp;
+            }
+            return a.join("");
+        }
+
+        //ShowTextForTime Function
+        lastShowTextForTimeRan = null;
+        function showTextForTime(textObject, text, time) {
+          var d = new Date();
+          var n = d.getTime();
+        	lastShowTextForTimeRan = n;
+        	textObject.style.visibility = "visible";
+        	textObject.innerHTML = text;
+        	setTimeout(() => {
+        		if(lastShowTextForTimeRan != n) return;
+        		textObject.style.visibility = "hidden";
+        	}, time);
+        }
+      </script>
+   </body>
+</html>
