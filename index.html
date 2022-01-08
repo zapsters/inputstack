@@ -352,8 +352,8 @@
           		<p class="noSpace" style="font-size: 40px;">JOIN GAME</p>
           		<input id="username_input" class="messagebox" maxlength="30" placeholder="USERNAME" style="margin: 10px 0px;" autocomplete='off'></input><br>
           		<input id="roomcode_input" class="messagebox" maxlength="6" placeholder="ROOM CODE" autocomplete='off';></input><br>
-          		<button id="joingame_btnid" class="buttonMain" onclick="joingameFunction()" style="cursor: pointer;">JOIN GAME</button>
-          		<button id="creategame_btnid" class="buttonMain" onclick="creategameFunction()" style="cursor: pointer; float: left;">CREATE GAME</button><br><br><br><br>
+          		<button id="joingame_btnid" class="buttonMain" onclick="joinroomFunction()" style="cursor: pointer;">JOIN ROOM</button>
+          		<button id="creategame_btnid" class="buttonMain" onclick="createroomFunction()" style="cursor: pointer; float: left;">CREATE ROOM</button><br><br><br><br>
           		<p id="subtext_joingame" class="question" style="font-size: 20px;"></p>
           	</div>
           </div>
@@ -382,6 +382,7 @@
            <p id="game_gameTimer_text" style="position: absolute; right: 0px; padding-right:10px; top: 4px;">00:00</p>
            <p id="game_moduleCount_text" style="position: absolute; left: 0px; padding-left:10px; top: 4px;">Modules: 0</p>
         </div>
+        <!-- TEMPLATE DIV -->
         <div class="moduleContainer" id="TEMPLATEmoduleContainer" style="display: none">
            <!-- TEMPLATE_module_simple_01 -->
            <div class="inputGroup" id="TEMPLATE_module_simple_01">
@@ -398,7 +399,7 @@
            <div class="inputGroup" id="TEMPLATE_module_reset_module_01">
               <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_reset_module_01</p>
               <p class="inputmodule_title" id="title">TIMER!</p>
-              <p class="inputmodule_title" style="right:10px" id="timer" onclick="this.innerHTML = '3';">30</p>
+              <p class="inputmodule_title" style="right:10px" id="timer">30</p>
               <hr style="top:25px">
               <button id="input_reset_button" class="button" style="width:70%; height: 60%; margin: 0; position: absolute; bottom: 50%; left: 50%; -ms-transform: translate(-50%, 60%); transform: translate(-50%, 60%);">RESET!!</button>
            </div>
@@ -406,7 +407,7 @@
            <div class="inputGroup" id="TEMPLATE_module_unscramble_01">
               <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_unscramble_01</p>
               <p class="inputmodule_title" id="title">UNSCRAMBLE!</p>
-              <p class="inputmodule_title" style="right:10px" id="timer" onclick="this.innerHTML = '3';">60</p>
+              <p class="inputmodule_title" style="right:10px" id="timer">60</p>
               <hr style="top:25px">
               <center>
                  <p class="center" id="results_text" style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 22%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;"></p>
@@ -422,7 +423,7 @@
            <div class="inputGroup" id="TEMPLATE_module_math_01">
               <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_math_01</p>
               <p class="inputmodule_title" id="title">SIMPLE MATH!</p>
-              <p class="inputmodule_title" style="right:10px" id="timer" onclick="this.innerHTML = '3';">60</p>
+              <p class="inputmodule_title" style="right:10px" id="timer">60</p>
               <hr style="top:25px">
               <center>
                  <p class="center" id="results_text" style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 22%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;"></p>
@@ -436,12 +437,19 @@
            </div>
         </div>
         <br>
+          <span>
+          <p id="game_timeTillNextModule_text" style="display: inline; padding: 0px; margin: 0px;">Time till next module: 30</p>
+          <p style="display: inline; padding: 0px 10px 0px 10px; margin: 0px;"> | </p>
+          <p style="display: inline; padding: 0px; margin: 0px;">Unused Text Here.</p>
+        </span>
         <div class="moduleContainer" id="moduleContainer">
            <!-- DIV for all inputGroups -->
         </div>
         <br><br>
           <div id="extraDEBUG" style="display: none">
             <hr>
+            <button id="input_box_send" onclick="startGame();">Start Game</button>
+            <button id="input_box_send" onclick="resetGame();">Reset Game</button>
             <button id="input_box_send" onclick="initializeModule();">Create Module</button>
             <button id="input_box_send" onclick="initializeGame();">initializeGame()</button>
             <button id="input_box_send" onclick="host = !host; createText(' ---- host = '+host); this.innerHTML = 'Set host = ' + !host;">Set host = true</button>
@@ -534,17 +542,21 @@
          var currentGroups = [];
          var groupTypes = [];
          var currentModuleNUM = 0;
+         var totalSeconds = 0; //Used for in game realtime timer
 
          var isCreatingRoom = false;
          var isJoining = false;
          var starting = false;
-         var state = 0;
+         var state = 2;
             //State 0: Not in a room
             //State 1: In room, wait screen
             //State 2: Beginning of game.
          create();
 
          //GAME VARIABLES
+         var moduleStartCount = 4;
+         var game_timeTillNextModule = 30;
+
          	//MODULES
          		//module_simple_01
          		var_simple01_healthPenalty = 1;
@@ -558,14 +570,107 @@
          		var_unscramble_timerLength = 20;
          		scrambled_words_list = ["test", "dev", "computer", "zapster", "jeremy", "apollo", "space", "tara", "fortnite", "minecraft", "roblox", "gachalife", "bedrock"];
 
-                 //module_math_01
-                 math_problem_list = [["2 + 2", "4"], ["1 + 2", "3"], ["8 * 3", "24"], ["200 - 48", "152"], ["948 - 483", "465"], ["48 x 3", "144"], ["93 - 21", "72"], ["92 + 3", "95"], ["200 / 4", "50"], ["567 / 9", "63"]]
-                 var_math_01_timerLength = 60;
-                 var_math_01_healthPenalty = 10;
-                 math_01_timer_graceTime = 3;
+           //module_math_01
+           math_problem_list = [["2 + 2", "4"], ["1 + 2", "3"], ["8 * 3", "24"], ["200 - 48", "152"], ["948 - 483", "465"], ["48 x 3", "144"], ["93 - 21", "72"], ["92 + 3", "95"], ["200 / 4", "50"], ["567 / 9", "63"]]
+           var_math_01_timerLength = 60;
+           var_math_01_healthPenalty = 10;
+           math_01_timer_graceTime = 3;
 
-         onTick();
+          var game_loop_interval = null; //Responsible for calling onTick() and gameplay_loop() every TickSpeed / Second.
+          var game_onTick_interval = null;
+          var game_timer_interval = null; //Does the timer during the game.
 
+          function toggleGameLoop(flag) {
+            if(flag) {
+              //Call GAMELOOP FUNCTION
+              clearInterval(game_loop_interval);
+              game_loop_interval = window.setInterval(function(){
+                gameplay_loop();
+              }, 1000);
+
+              //Call ONTICK FUNCTIONS
+              clearInterval(game_onTick_interval);
+              game_onTick_interval = window.setInterval(function(){
+                onTick();
+              }, tickSpeed);
+
+              //Start Timer!
+              clearInterval(game_timer_interval);
+              game_timer_interval = window.setInterval(function(){
+                timerFunction()
+              }, 1000);
+            } else {
+              clearInterval(game_loop_interval);
+              clearInterval(game_onTick_interval);
+              clearInterval(game_timer_interval);
+            }
+          }
+
+
+          function timerFunction() {
+            if(!host) return;
+            if(timerActive) ++totalSeconds;
+            secondsText = pad(totalSeconds % 60);
+            minutesText = pad(parseInt(totalSeconds / 60));
+            if(!timerActive) {
+              if(minutesText == "00" && secondsText == "00") {
+                timerText = minutesText + ":" + secondsText;
+              } else {
+                var timerText = "PAUSED -- " + minutesText + ":" + secondsText;
+              }
+              databaseTextObjects("game_gameTimer_text", timerText);
+            } else {
+              var timerText = minutesText + ":" + secondsText;
+              databaseTextObjects("game_gameTimer_text", timerText);
+            }
+          }
+
+
+          //Called every tickSpeed, deals with Module Spawning.
+         function gameplay_loop() {
+           if(state != 2 || !host) {return;}
+
+           if(health == 0) {
+             gameOver();
+           }
+
+           if(game_timeTillNextModule == 0) {
+
+           } else {
+             game_timeTillNextModule--;
+             game_timeTillNextModule_text.innerHTML = "Time till next module: (Add Functionality) " +  game_timeTillNextModule;
+           }
+
+           console.log("GAMEPLAY LOOP!");
+
+         }
+
+         function startGame() {
+           //Spawn default Module count
+           //Begin the game with default # of modules. (4?)
+           setTimeout(function () {
+             initializeModuleMultiple(moduleStartCount);
+           }, 50);
+
+           //Begin gameplay functions
+           toggleGameLoop(true);
+
+           //Turn on timer and Start TimerLoop
+           timerActive = true;
+           clearInterval(game_timer_interval);
+           game_timer_interval = window.setInterval(function(){
+             timerFunction()
+           }, 1000);
+         }
+
+         function gameOver() {
+           toggleGameLoop(false);
+           timerActive = false;
+           timerFunction();
+
+         }
+
+         //Create gameplay screens at different states.
          function create() {
            switch(state) {
              case 0:
@@ -618,11 +723,8 @@
               }
           }
 
-          function gameOver() {
-            timerActive = false;
-            alert("YOU HAVE DIED!");
-          }
 
+          //Called every second. Updates Debug div.
           function updateDebug() {
             //Debug Text
             debug_text = [];
@@ -639,7 +741,7 @@
           function keyDownTextField(e) {
           var keyCode = e.which;
             if(keyCode==192) { //Open debug with ~
-          		toggleDebugMenu()
+          		toggleDebugMenu();
             }
           }
 
@@ -651,7 +753,7 @@
          //======================================================================
 
          //CREATE GAME BUTTON
-        function creategameFunction() {
+        function createroomFunction() {
           if(isCreatingRoom) return;
         	username = document.getElementById("username_input").value;
         	response_text_obj = document.getElementById("subtext_joingame");
@@ -693,7 +795,7 @@
           }
 
          //JOIN GAME BUTTON
-          function joingameFunction() {
+          function joinroomFunction() {
             if(isJoining) return;
           	username = document.getElementById("username_input").value;
           	roomcode = document.getElementById("roomcode_input").value;
@@ -758,8 +860,8 @@
           		})
           }
 
+          //Called by all players when _roomcode_reload == 1. Reloads page when the host leaves.
           function roomcodeReload() {
-            //If host delete room!
             alert("Host left the game... Leaving Room.");
             if(host) {
               deleteRoom(roomcode);
@@ -767,7 +869,7 @@
             location.reload();
           }
 
-          /* CHECK IF WINDOW IS CLOSED */
+          /* CHECK IF WINDOW IS CLOSED... If host, tell database you left and to delete the room*/
           window.onbeforeunload = function(){
             if(host) {
               firebase.database().ref(databasePrefix + roomcode + "/data").update({
@@ -845,18 +947,9 @@
                             state = 2;
                             create();
                             initializeGame();
-          									setTimeout(function () {
-          										create();
-
-                              //Little delay before starting the game...
-                              setTimeout(function () {
-                                if (host == true) {
-                                  initializeModuleMultiple(4);
-                                  timerActive = true;
-              									}
-
-                              }, 1000);
-          									}, 1000);
+                            if (host == true) {
+                              startGame();
+          									}
           								}, 1000);
           							}, 1000);
           						}, 1000);
@@ -900,8 +993,6 @@
            		removeDeletedInputFields();
            		groupReferences = [];
            	} else {
-           	  var inputmoduleContainer = document.getElementById("moduleContainer");
-
            	  //Update the currentModuleNUM
            	  currentModuleNUM = groupList.length;
               updateHeader();
@@ -1006,6 +1097,7 @@
                   break;
                 case "tickSpeed":
                   tickSpeed = doc.child(variable).child("value").val();
+                  toggleGameLoop(true); //Update the gameplayLoop for new tickspeed.
                   break;
                 default:
                   createText("UNKOWN IMPORTANT VARIABLE IN DATABASE - " + variable);
@@ -1065,7 +1157,6 @@
                 iterationStart: 0,
                 playbackRate: 0
               });
-              gameOver();
             } else {
               let damageHeaderAnimation = document.getElementById('header').animate(
               [
@@ -1339,11 +1430,6 @@
          		}
          		//console.log(module_id + " is type " + value);
          	});
-
-         	//Recall Function
-         	if(tickSpeed>0) {
-         		setTimeout( function() { onTick(); }, tickSpeed);
-         	}
          }
 
 
@@ -1524,11 +1610,25 @@
          	createText("<br>----  DATABASE RESET!  ----");
          	document.getElementById("textLayer").innerHTML += "<br>";
 
-         	firebase.database().ref(databasePrefix + roomcode).set({
+         	//firebase.database().ref(databasePrefix + roomcode).set({
+          //
+         	//});
+
+          firebase.database().ref(databasePrefix + roomcode + "/modules").set({
+         	});
+          firebase.database().ref(databasePrefix + roomcode + "/objects").set({
+         	});
+          firebase.database().ref(databasePrefix + roomcode + "/textObjects").set({
          	});
 
+          //Reset Modules
          	currentModuleNUM = 0;
           updateHeader();
+
+          //Reset Timer
+          totalSeconds = 0;
+          timerActive = false;
+          timerFunction();
 
          	//RESET HEALTH VARIABLE
          	firebase.database().ref(databasePrefix + roomcode + "/MainVars/health").update({
@@ -1541,7 +1641,7 @@
          		value: tickSpeed
          	});
        		setTickSpeed(tickSpeed);
-       		setTimeout( function() { onTick(); }, tickSpeed);
+       		startGame(true);
          }
 
          //UpdateGameVars, used for timers and other NON-INPORTANT variables to be synced
@@ -1595,28 +1695,6 @@
          	removeDeletedInputFields();
          }
 
-
-         //Code used for the timer!
-         var totalSeconds = 0;
-         setInterval(setTime, 1000);
-
-         function setTime() {
-           if(!host) return;
-           if(timerActive) ++totalSeconds;
-           secondsText = pad(totalSeconds % 60);
-           minutesText = pad(parseInt(totalSeconds / 60));
-           if(!timerActive) {
-             if(minutesText == "00" && secondsText == "00") {
-               timerText = minutesText + ":" + secondsText;
-             } else {
-               var timerText = "PAUSED -- " + minutesText + ":" + secondsText;
-             }
-             databaseTextObjects("game_gameTimer_text", timerText);
-           } else {
-             var timerText = minutesText + ":" + secondsText;
-             databaseTextObjects("game_gameTimer_text", timerText);
-           }
-         }
 
          function pad(val) {
            var valString = val + "";
