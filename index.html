@@ -2,7 +2,7 @@
 <html>
    <body>
       <head>
-	<title>Input Game!</title>
+	<title>Input Stack!</title>
       	<link rel="icon" href="https://zapsters.github.io/Home/images/ZapsterGames.png">
          <style>
             body{
@@ -320,7 +320,7 @@
       <div id="screen_title">
         <!-- HEADER -->
         <div class="header">
-        	<p onclick="toggleDebugMenu()">Input Game!</p>
+        	<p onclick="toggleDebugMenu()">Input Stack!</p>
         </div>
       </div>
 
@@ -334,7 +334,8 @@
         <!-- BOTTOM DIV -->
         <div class="bottom_div" id="game_info" style="margin: 0; padding: 0; display: block; position=absolute; backgroundColor: 'black'">
         	<p class="noSpace" style="right: 0;">V 0.9</p>
-        	<p class="noSpace" style="left: 0; bottom: 30px; display: none; font-size: 20px" id="footer_username">Logged in as: *username*</p>
+          <p class="noSpace" style="left: 0; bottom: 57px; display: none; font-size: 20px" id="footer_host"><u>You are the host!</u></p>
+        	<p class="noSpace" style="left: 0; bottom: 32px; display: none; font-size: 20px" id="footer_username">Logged in as: *username*</p>
         	<p class="noSpace" style="left: 0; display: none; font-size: 20px; bottom: 7px;" id="footer_roomcode">Roomcode: *roomcode*</p>
         </div>
 
@@ -342,7 +343,7 @@
           <!-- Front Page Message -->
           <div class="centeredHoriz" id="front_page_message_div" style="display: block; height:10px;">
           	<p class="noSpace" id="front_page_mainText" style="font-size: 20px; height: 20px; padding: 3px 0px;">In Development</p>
-          	<p class="noSpace" id="front_page_subText" style="font-size: 20px; height: 20px; padding: 3px 0px;"></p>
+          	<p class="noSpace" id="front_page_subText" style="font-size: 20px; height: 20px; padding: 3px 0px;">Beta 0.9<br><br>(NOTE) Currently the game will not automatically spawn new modules.</p>
           </div>
 
           <!-- Front Page Join Game -->
@@ -376,10 +377,6 @@
 
       <!-- MAIN GAMEPLAY SCREEN ==================================== -->
       <div id="screen_main_gameplay" style="position: flex; margin: auto; text-align: center; max-width: 1000px; display: none; position: relative; top: -80px;">
-        <!--
-           Next step, developing the game. Idea is that the host will have a health bar that can't hit zero. The game slowly drains the sliders / changes the inputs, forcing the host to slowly get more and more overwhelmed.
-           Each new faze will spawn a new set of input fields, each time a new set spawns, host gets one point.
-           -->
         <div class="headerContainer headerSTICKY" id="header">
            <p id="game_health_text" style="position: flex; margin-right: auto; top: 4px;">HEALTH: 100</p>
            <p id="game_gameTimer_text" style="position: absolute; right: 0px; padding-right:10px; top: 4px;">00:00</p>
@@ -581,11 +578,7 @@
               screen_main_gameplay.style.display = "none";
               screen_joinGame.style.display = "none";
               playerlist_div.style.display = "block";
-              document.getElementById("footer_username").innerHTML = "Logged in as: " + username;
-              document.getElementById("footer_roomcode").innerHTML = "Roomcode: " + roomcode;
-              document.getElementById("footer_username").style.display = 'block';
-              document.getElementById("footer_roomcode").style.display = 'block';
-
+              updateFooter();
               break;
              case 2:
               screen_main_gameplay.style.display = "block";
@@ -597,6 +590,16 @@
               alert("ERROR WITH STATE VAL OF " + state);
               break;
            }
+         }
+
+         function updateFooter() {
+            if(state <= 1) {
+              document.getElementById("footer_username").innerHTML = "Logged in as: " + username;
+              document.getElementById("footer_roomcode").innerHTML = "Roomcode: " + roomcode;
+              document.getElementById("footer_username").style.display = 'block';
+              document.getElementById("footer_roomcode").style.display = 'block';
+              if(host) document.getElementById("footer_host").style.display = 'block';
+            }
          }
 
          //Debug STUFF =====
@@ -737,8 +740,8 @@
           					roomcode_data_reload_ref = firebase.database().ref(databasePrefix + roomcode + '/data/_roomcode_reload');
           					roomcode_data_reload_ref.on('value', function(doc) {
                       roomcodeReloadval = doc.val();
-                      if(roomcodeReloadval == 1) {
-                        roomcodeReload(roomcodeReloadval);
+                      if(roomcodeReloadval == "1" || roomcodeReloadval == 1) {
+                        roomcodeReload();
                       }
           					});
 
@@ -755,9 +758,29 @@
           		})
           }
 
+          function roomcodeReload() {
+            //If host delete room!
+            alert("Host left the game... Leaving Room.");
+            if(host) {
+              deleteRoom(roomcode);
+            }
+            location.reload();
+          }
+
+          /* CHECK IF WINDOW IS CLOSED */
+          window.onbeforeunload = function(){
+            if(host) {
+              firebase.database().ref(databasePrefix + roomcode + "/data").update({
+             			_roomcode_reload: 1
+             	});
+              deleteRoom(roomcode);
+            }
+          }
+
           //Delete Room in database
           function deleteRoom(roomcode) {
           	firebase.database().ref(databasePrefix + roomcode).set({
+
           	});
           }
 
@@ -774,6 +797,8 @@
           				if(userscount_read == 1) {
           					document.getElementById('startbtn').style.display = 'inline-block';
           					host = true;
+
+                    updateFooter();
           				}
                   usersArray = [];
           				for (i = 1; i <= userscount_read; i++) {
@@ -879,6 +904,7 @@
 
            	  //Update the currentModuleNUM
            	  currentModuleNUM = groupList.length;
+              updateHeader();
 
            	  //For every module_## in the database...
            	  groupList.forEach(groupInDatabase => {
@@ -1126,7 +1152,6 @@
            firebase.database().ref(databasePrefix + roomcode + "/modules/" + "module_" + groupID).update({
              groupType: groupType
            });
-           updateHeader();
          }
 
          function initializeModuleMultiple(count) {
