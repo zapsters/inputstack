@@ -483,7 +483,7 @@
            <p id="game_moduleCount_text" style="position: absolute; left: 0px; padding-left:10px; top: 4px;">Modules: 0</p>
         </div>
         <!-- TEMPLATE DIV -->
-        <div class="moduleContainer" id="TEMPLATEmoduleContainer" style="display: block">
+        <div class="moduleContainer" id="TEMPLATEmoduleContainer" style="display: none">
            <!-- TEMPLATE_module_simple_01 -->
            <div class="inputGroup" id="TEMPLATE_module_simple_01">
               <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_simple_01</p>
@@ -665,7 +665,7 @@
          var isCreatingRoom = false;
          var isJoining = false;
          var starting = false;
-         var state = 2;
+         var state = 0;
             //State 0: Not in a room
             //State 1: In room, wait screen
             //State 2: Beginning of game.
