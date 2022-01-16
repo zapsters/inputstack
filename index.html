@@ -356,11 +356,12 @@
 
               padding: 0px 0px;
               position: fixed;
-              top: 50%;
+              top: 55%;
               left: 50%;
-              width: 65%;
-              min-width: 440px;
-              max-width: 800px;
+              width: 90%;
+              min-width: 400px;
+              max-width: 1200px;
+              max-height: 700px;
               margin: auto;
               text-align: center;
               border: solid 2px;
@@ -369,8 +370,9 @@
               -ms-transform: translate(-50%, 60%); transform: translate(-50%, -50%);
               -ms-overflow-style: none;  /* IE and Edge */
               scrollbar-width: none;  /* Firefox */
+              overflow: scroll;
 
-              display: none;
+              display: block;
             }
 
             .popupDiv::-webkit-scrollbar {
@@ -383,17 +385,41 @@
               min-height: 40px;
             }
 
+            .popupDiv .closeButton {
+              position: absolute;
+              right: 0;
+              margin-right: 10px;
+              font-size: 20px;
+              top: 9px;
+              border: #d62b2b solid 2px;
+              background-color: white;
+              cursor: pointer;
+              height: 30px;
+              width: 30px;
+              overflow: none;
+            }
+
+            .popupDiv .closeButton:hover {
+              background-color: #d62b2b;
+              border: #d62b2b solid 2px;
+            }
+
+            .popupDiv .closeButton p {
+              margin: auto;
+              padding-top: 4px;
+            }
+
             .popupDivTable li {
               text-align: left;
             }
 
             .popupDivTable ul {
               text-align: left;
-              -moz-column-count: 4;
+              -moz-column-count: 6;
               -moz-column-gap: 20px;
-              -webkit-column-count: 4;
+              -webkit-column-count: 6;
               -webkit-column-gap: 20px;
-              column-count: 4;
+              column-count: 6;
               column-gap: 20px;
             }
 
@@ -409,16 +435,18 @@
          <!-- GOOGLE'S MATERIAL ICONS SHEET!!! https://fonts.google.com/icons -->
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       </head>
-      <!-- TITLE SCREEN -->
-      <div class="grayOutDivScreen" onclick="closeDiv();" id="grayOutDivScreen" style="display: none;">
+      <!-- DIV POPUPS -->
+      <div class="grayOutDivScreen" onclick="closeDiv();" id="grayOutDivScreen" style="display: block;">
         <p style="color:white;text-align:center;text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);">Click anywhere to close...</p>
         <div class="popupDiv" onclick="event.stopPropagation();" id="unscrambleKey">
+          <div class="closeButton" onclick="this.parentElement.style.display='none'; closeDiv();"><p>X</p></div>
           <p>UNSCRAMBLE KEY!</p>
           <hr>
           <div class="popupDivTable" id="uncrambleKey_content"></div>
         </div>
       </div>
 
+      <!-- TITLE SCREEN -->
       <div id="screen_title">
         <!-- HEADER -->
         <div class="header">
@@ -612,11 +640,15 @@
             <div id="textLayer" style="white-space: nowrap"></div>
         </div>
       </div>
+      <!-- DATABASE SCRIPTS -->
       <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
       <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-auth.js"></script>
       <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
       <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-functions.js"></script>
       <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-database.js"></script>
+
+      <!-- CUSTOMS SCRIPTS -->
+      <script src="moduleVars.js"></script>
       <script>
          //FIREBASE DATABASE ---------------------------
          		  var firebaseConfig = {
@@ -689,7 +721,10 @@
          		unscramble_timer_graceTime = 3;
          		var_unscramble_healthPenalty = 10;
          		var_unscramble_timerLength = 20;
-         		scrambled_words_list = ["test", "dev", "computer", "zapster", "jeremy", "apollo", "space", "tara", "fortnite", "minecraft", "roblox", "gachalife", "bedrock"];
+
+            /* scrambled_words_list MOVED TO moduleVARS.js!!!!! */
+            //scrambled_words_list = ["test", "dev", "computer", "zapster", "jeremy", "apollo", "space", "tara", "fortnite", "minecraft", "roblox", "gachalife", "bedrock"];
+
 
             ul = document.createElement('ul');
 
@@ -703,7 +738,7 @@
              });
 
            //module_math_01
-           math_problem_list = [["2 + 2", "4"], ["1 + 2", "3"], ["8 * 3", "24"], ["200 - 48", "152"], ["948 - 483", "465"], ["48 x 3", "144"], ["93 - 21", "72"], ["92 + 3", "95"], ["200 / 4", "50"], ["567 / 9", "63"]]
+           math_problem_list = [["2 + 2", "4"], ["1 + 2", "3"], ["8 * 3", "24"], ["200 - 48", "152"], ["184 - 73", "111"], ["12 x 3", "36"], ["93 - 21", "72"], ["92 + 3", "95"], ["200 / 4", "50"], ["100 * 9", "900"]]
            var_math_01_timerLength = 60;
            var_math_01_healthPenalty = 10;
            math_01_timer_graceTime = 3;
@@ -1839,6 +1874,8 @@
          			case "checkbox":
          				inputObject.checked = false;
          				break;
+              case "button":
+                break;
          			default:
          				inputObject.value="";
          				break;
