@@ -194,9 +194,10 @@
             .moduleContainer {
               border: 1px solid black;
               padding: 4px 0px 4px 0px;
-              margin: 0px 9px 0px 9px;
+              margin: auto;
               text-align: center;
               font-size:0px;
+              max-width: 1100px;
             }
             .inputGroup {
               text-align: left;
@@ -315,11 +316,13 @@
               background-color: white;
               font-weight: bold;
               border: 2px solid black;
-              margin: 1rem;
+              margin: auto;
+              margin-top: 10px;
               padding-top: 4px;
               text-align: center;
               transition: background-color 100ms linear;
               height: 50px;
+              max-width: 1150px;
             }
             .headerSTICKY {
               position: sticky;
@@ -372,7 +375,7 @@
               scrollbar-width: none;  /* Firefox */
               overflow: scroll;
 
-              display: block;
+              display: none;
             }
 
             .popupDiv::-webkit-scrollbar {
@@ -436,7 +439,7 @@
          <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
       </head>
       <!-- DIV POPUPS -->
-      <div class="grayOutDivScreen" onclick="closeDiv();" id="grayOutDivScreen" style="display: block;">
+      <div class="grayOutDivScreen" onclick="closeDiv();" id="grayOutDivScreen" style="display: none;">
         <p style="color:white;text-align:center;text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);">Click anywhere to close...</p>
         <div class="popupDiv" onclick="event.stopPropagation();" id="unscrambleKey">
           <div class="closeButton" onclick="this.parentElement.style.display='none'; closeDiv();"><p>X</p></div>
@@ -462,7 +465,7 @@
         <center>
         <!-- BOTTOM DIV -->
         <div class="bottom_div" id="game_info" style="margin: 0; padding: 0; display: block; position=absolute; backgroundColor: 'black'">
-        	<p class="noSpace" style="right: 0;">V 0.91</p>
+        	<p class="noSpace" style="right: 0;">V 0.92</p>
           <p class="noSpace" style="left: 0; bottom: 57px; display: none; font-size: 20px" id="footer_host"><u>You are the host!</u></p>
         	<p class="noSpace" style="left: 0; bottom: 32px; display: none; font-size: 20px" id="footer_username">Logged in as: *username*</p>
         	<p class="noSpace" style="left: 0; display: none; font-size: 20px; bottom: 7px;" id="footer_roomcode">Roomcode: *roomcode*</p>
@@ -505,7 +508,7 @@
 
 
       <!-- MAIN GAMEPLAY SCREEN ==================================== -->
-      <div id="screen_main_gameplay" style="position: flex; margin: auto; text-align: center; max-width: 1000px; display: none; position: relative; top: -80px;">
+      <div id="screen_main_gameplay" style="position: flex; margin: auto; text-align: center; max-width: 1300px; display: none; position: relative; top: -80px;">
         <div class="headerContainer headerSTICKY" id="header">
            <p id="game_health_text" style="position: flex; margin-right: auto; top: 4px;">HEALTH: 100</p>
            <p id="game_gameTimer_text" style="position: absolute; right: 0px; padding-right:10px; top: 4px;">00:00</p>
