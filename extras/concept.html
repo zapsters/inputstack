@@ -1,211 +1,238 @@
 <!DOCTYPE html>
 <html>
-<body>
-<style>
-.indented {
-	padding-left:10px;
-    margin-top:0;
-}
-</style>
-<h1>Proof of Concept -- Input Game</h1>
-<p>This is updated in real time, loosely in the same way that the official game uses. This will send data to the database and is fully functional to the point of concept.</p>
+  <body>
+    <style>
+      .indented {
+        padding-left: 10px;
+        margin-top: 0;
+      }
+    </style>
+    <h1>Proof of Concept -- Input Game</h1>
+    <p>
+      This is updated in real time, loosely in the same way that the official
+      game uses. This will send data to the database and is fully functional to
+      the point of concept.
+    </p>
 
-<p onclick="resetInputFields()">Click to reset the database and current fields.</p>
-<p onclick="resetDatabase()">Delete all fields.</p>
+    <p onclick="resetInputFields()">
+      Click to reset the database and current fields.
+    </p>
+    <p onclick="resetDatabase()">Delete all fields.</p>
 
-<input type="range" id="input_range_01" value="0"></input>
-<input type="range" id="input_range_02" value="0"></input>
-<input type="text" id="input_textbox_01"></input>
-<input type="checkbox" id="input_checkbox_01"></input>
+    <input type="range" id="input_range_01" value="0" />
+    <input type="range" id="input_range_02" value="0" />
+    <input type="text" id="input_textbox_01" />
+    <input type="checkbox" id="input_checkbox_01" />
 
-<button id="input_box_send" onclick="">Click me</button><br>
+    <button id="input_box_send" onclick="">Click me</button><br />
 
-<div><p style="margin-bottom:3px;"><u>INPUT-OBEJECTS</u></p>
-<p id="INPUT_OBJECTS" class="indented">List</p></div>
+    <div>
+      <p style="margin-bottom: 3px"><u>INPUT-OBEJECTS</u></p>
+      <p id="INPUT_OBJECTS" class="indented">List</p>
+    </div>
 
-<div><p style="margin-bottom:3px;"><u>DATABASE-OBEJECTS</u></p>
-<p id="DATABASE_OBJECTS" class="indented">List</p></div>
+    <div>
+      <p style="margin-bottom: 3px"><u>DATABASE-OBEJECTS</u></p>
+      <p id="DATABASE_OBJECTS" class="indented">List</p>
+    </div>
 
-<div id="textLayer"></div>
+    <div id="textLayer"></div>
 
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-functions.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-database.js"></script>
 
-<script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-functions.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-database.js"></script>
+    <script>
+      //FIREBASE DATABASE ---------------------------
+      var firebaseConfig = {
+        apiKey: "AIzaSyBTnT9iIONR7BLIaOstRXdl_VlIwxYRA24",
+        authDomain: "zapsterdatabase.firebaseapp.com",
+        databaseURL: "https://zapsterdatabase-default-rtdb.firebaseio.com",
+        projectId: "zapsterdatabase",
+        storageBucket: "zapsterdatabase.appspot.com",
+        messagingSenderId: "847821198477",
+        appId: "1:847821198477:web:82f54828105fe50229bec4",
+        measurementId: "G-YC79MNPTH4",
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      var database = firebase.database();
+      var databaseRef = firebase.database().ref();
+      //END OF DATABASE CODE
 
-<script>
-//FIREBASE DATABASE ---------------------------
-		  var firebaseConfig = {
-		    apiKey: "AIzaSyBTnT9iIONR7BLIaOstRXdl_VlIwxYRA24",
-		    authDomain: "zapsterdatabase.firebaseapp.com",
-		    databaseURL: "https://zapsterdatabase-default-rtdb.firebaseio.com",
-		    projectId: "zapsterdatabase",
-		    storageBucket: "zapsterdatabase.appspot.com",
-		    messagingSenderId: "847821198477",
-		    appId: "1:847821198477:web:82f54828105fe50229bec4",
-		    measurementId: "G-YC79MNPTH4"
-		  };
-		  // Initialize Firebase
-		  firebase.initializeApp(firebaseConfig);
-			var database = firebase.database();
-			var databaseRef = firebase.database().ref();
-			//END OF DATABASE CODE
+      /* ======================================================== */
 
+      var databasePrefix = "InputGame/";
+      var roomcode = "DEV_CONCEPT";
+      var databaseObjects = [];
+      var inputObjects = [];
 
-/* ======================================================== */
-
-var databasePrefix = "InputGame/";
-var roomcode = "DEV_CONCEPT";
-var databaseObjects = [];
-var inputObjects = [];
-
-//Called whenever the user manually updates a field. It communicates to the database to update the field to the new value. Data is saved used the inputField's id.
-function userUpdateField(fieldID) {
-	var fieldID_OBJ = document.getElementById(fieldID);   
-    switch(fieldID_OBJ.type) {
-    case "checkbox":
-    	firebase.database().ref(databasePrefix + roomcode + "/objects/" + fieldID).update({
-        value: fieldID_OBJ.checked
-      	});
-    	break;
-    default:
-      firebase.database().ref(databasePrefix + roomcode + "/objects/" + fieldID).update({
-          value: fieldID_OBJ.value
-      });	
-      break;
-    }
-}
-
-function createText(string) {
-	var div = document.createElement("div");
-	div.classList.add("textDivObject");
-	div.innerHTML = string;
-	document.getElementById("textLayer").appendChild(div);
-}
-
-function initInput(fieldID) {
-  if(document.getElementById(fieldID)) {		
-        fieldOBJ = document.getElementById(fieldID);
-        
-        switch(fieldOBJ.type) {
-        	case "checkbox":
-            	fieldOBJ.addEventListener("change", function(){ userUpdateField(fieldID)});
-            	break;
-            default:
-            	fieldOBJ.addEventListener("input", function(){ userUpdateField(fieldID)});
-        		break;
+      //Called whenever the user manually updates a field. It communicates to the database to update the field to the new value. Data is saved used the inputField's id.
+      function userUpdateField(fieldID) {
+        var fieldID_OBJ = document.getElementById(fieldID);
+        switch (fieldID_OBJ.type) {
+          case "checkbox":
+            firebase
+              .database()
+              .ref(databasePrefix + roomcode + "/objects/" + fieldID)
+              .update({
+                value: fieldID_OBJ.checked,
+              });
+            break;
+          default:
+            firebase
+              .database()
+              .ref(databasePrefix + roomcode + "/objects/" + fieldID)
+              .update({
+                value: fieldID_OBJ.value,
+              });
+            break;
         }
-        
-        //Add object to array, then update list
-        inputObjects.push(fieldID);
-        InputObjectsList = document.getElementById("INPUT_OBJECTS");
-    	InputObjectsList.innerHTML = inputObjects.join(" | ");
-        
-	} else {
-    	alert("Problem initInput for " + fieldID);
-    }
-}
-initInput("input_textbox_01");
-initInput("input_range_01");
-initInput("input_range_02");
-initInput("input_checkbox_01");
+      }
 
+      function createText(string) {
+        var div = document.createElement("div");
+        div.classList.add("textDivObject");
+        div.innerHTML = string;
+        document.getElementById("textLayer").appendChild(div);
+      }
 
-//Check for when a field is updated!
-database_objects_instances_ref = firebase.database().ref(databasePrefix + roomcode + "/objects/");
-  database_objects_instances_ref.on('value', function(doc) {
-    inputData = doc.val();
-    
-    //Get each input field in the database folder 
-    inputObjectList = Object.keys(doc.val());
-    	//Print the object list to the DEV div.
-    	DEVobjectList = document.getElementById("DATABASE_OBJECTS");
-    	DEVobjectList.innerHTML = "Updated: " + dateTime(1) + "<br>";
-    
-    //Get the element for each entry in the 'objects/' folder.
-    inputObjectList.forEach(objectID => {
-    	if (!databaseObjects.includes(objectID)) databaseObjects.push(objectID); 
-    	if(document.getElementById(objectID)) {
-          inputObject = document.getElementById(objectID); //Get the coresponding input field.
-          
-          databaseInputValue = doc.child(objectID).child("value").val(); 
-          
-          switch(inputObject.type) {
-          	case "checkbox":
-          		inputObject.checked = databaseInputValue
-          		break;
-			default:
-          		inputObject.value = databaseInputValue
-            	break;
+      function initInput(fieldID) {
+        if (document.getElementById(fieldID)) {
+          fieldOBJ = document.getElementById(fieldID);
+
+          switch (fieldOBJ.type) {
+            case "checkbox":
+              fieldOBJ.addEventListener("change", function () {
+                userUpdateField(fieldID);
+              });
+              break;
+            default:
+              fieldOBJ.addEventListener("input", function () {
+                userUpdateField(fieldID);
+              });
+              break;
           }
+
           //Add object to array, then update list
-
-          DEVobjectList = document.getElementById("DATABASE_OBJECTS");
-          DEVobjectList.innerHTML += objectID + " = " + databaseInputValue + "<br>";
-          } else {
-          	alert(objectID + " doesn't exist.");
-          }
-    });
-    DEVobjectList.innerHTML += "<br>" + databaseObjects.join(" | ");
-    
-});
-
-//Reset the database section.
-function resetInputFields() {
-	inputObjects.forEach(objectID => {
-    			
-if(document.getElementById(objectID)) {
-           inputObject = document.getElementById(objectID); //Get the coresponding input field.
-            switch(inputObject.type) {
-            	case "range":
-            		inputObject.value=0;
-                    break;
-                case "text":
-            		inputObject.value="";
-                    break;
-                case "checkbox":
-                	inputObject.checked = false;
-                	break;
-                default:
-                	inputObject.value="";
-                    break;
-            }
-            
-            userUpdateField(objectID);
-            
+          inputObjects.push(fieldID);
+          InputObjectsList = document.getElementById("INPUT_OBJECTS");
+          InputObjectsList.innerHTML = inputObjects.join(" | ");
         } else {
-          	alert(objectID + " doesn't exist.");
-        }    
-          
-	});
-}
+          alert("Problem initInput for " + fieldID);
+        }
+      }
+      initInput("input_textbox_01");
+      initInput("input_range_01");
+      initInput("input_range_02");
+      initInput("input_checkbox_01");
 
-//Reset
-function resetDatabase() {
-	firebase.database().ref(databasePrefix + roomcode + "/objects/").set({
-	});
-}
+      //Check for when a field is updated!
+      database_objects_instances_ref = firebase
+        .database()
+        .ref(databasePrefix + roomcode + "/objects/");
+      database_objects_instances_ref.on("value", function (doc) {
+        inputData = doc.val();
 
-//Get date and time
-function dateTime(style) {
-	var today = new Date();
-    var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
-    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-    switch(style) {
-        case 1:
-        	return time;
+        //Get each input field in the database folder
+        inputObjectList = Object.keys(doc.val());
+        //Print the object list to the DEV div.
+        DEVobjectList = document.getElementById("DATABASE_OBJECTS");
+        DEVobjectList.innerHTML = "Updated: " + dateTime(1) + "<br>";
+
+        //Get the element for each entry in the 'objects/' folder.
+        inputObjectList.forEach((objectID) => {
+          if (!databaseObjects.includes(objectID))
+            databaseObjects.push(objectID);
+          if (document.getElementById(objectID)) {
+            inputObject = document.getElementById(objectID); //Get the coresponding input field.
+
+            databaseInputValue = doc.child(objectID).child("value").val();
+
+            switch (inputObject.type) {
+              case "checkbox":
+                inputObject.checked = databaseInputValue;
+                break;
+              default:
+                inputObject.value = databaseInputValue;
+                break;
+            }
+            //Add object to array, then update list
+
+            DEVobjectList = document.getElementById("DATABASE_OBJECTS");
+            DEVobjectList.innerHTML +=
+              objectID + " = " + databaseInputValue + "<br>";
+          } else {
+            alert(objectID + " doesn't exist.");
+          }
+        });
+        DEVobjectList.innerHTML += "<br>" + databaseObjects.join(" | ");
+      });
+
+      //Reset the database section.
+      function resetInputFields() {
+        inputObjects.forEach((objectID) => {
+          if (document.getElementById(objectID)) {
+            inputObject = document.getElementById(objectID); //Get the coresponding input field.
+            switch (inputObject.type) {
+              case "range":
+                inputObject.value = 0;
+                break;
+              case "text":
+                inputObject.value = "";
+                break;
+              case "checkbox":
+                inputObject.checked = false;
+                break;
+              default:
+                inputObject.value = "";
+                break;
+            }
+
+            userUpdateField(objectID);
+          } else {
+            alert(objectID + " doesn't exist.");
+          }
+        });
+      }
+
+      //Reset
+      function resetDatabase() {
+        firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/objects/")
+          .set({});
+      }
+
+      //Get date and time
+      function dateTime(style) {
+        var today = new Date();
+        var date =
+          today.getFullYear() +
+          "-" +
+          (today.getMonth() + 1) +
+          "-" +
+          today.getDate();
+        var time =
+          today.getHours() +
+          ":" +
+          today.getMinutes() +
+          ":" +
+          today.getSeconds();
+        switch (style) {
+          case 1:
+            return time;
             break;
-		case 2:
-        	return date;
+          case 2:
+            return date;
             break;
-        default:
-        	return date+' '+time;
-    		break;
-    }
-}
-</script>
-
-</body>
+          default:
+            return date + " " + time;
+            break;
+        }
+      }
+    </script>
+  </body>
 </html>
