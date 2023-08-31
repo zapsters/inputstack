@@ -147,7 +147,6 @@ function setTickSpeed(tickSpeed) {
 
 //Runs every tick ============================
 function onTick() {
-  console.log("running tick function.");
   //HOST MANAGES THE GAME, REST IS FORMATTING.
   groupTypes.forEach(function (value, i) {
     var module_id = "module_" + i;
@@ -162,15 +161,15 @@ function onTick() {
         );
         if (host) {
           if (slider01.value <= 0 && slider02.value > 0) {
-            console.log("TAKING DAMAGE!");
+            //console.log("TAKING DAMAGE!");
             takeDamage(var_simple01_healthPenalty);
           }
           if (slider02.value <= 0 && slider01.value > 0) {
-            console.log("TAKING DAMAGE!");
+            //console.log("TAKING DAMAGE!");
             takeDamage(var_simple01_healthPenalty);
           }
           if (slider02.value <= 0 && slider01.value <= 0) {
-            console.log("TAKING DAMAGE!");
+            //console.log("TAKING DAMAGE!");
             takeDamage(var_simple01_healthPenalty * 2);
           }
 
@@ -202,7 +201,7 @@ function onTick() {
             ).innerHTML = timer_current;
             databaseTextObjects(module_id + "_timer", timer_current);
           } else {
-            console.log("TAKING DAMAGE!");
+            //console.log("TAKING DAMAGE!");
             takeDamage(var_reset_module_01_healthPenalty);
           }
         }
@@ -249,7 +248,7 @@ function onTick() {
             databaseTextObjects(module_id + "_timer", timer_current);
 
             if (resultsText.innerHTML != "CORRECT!") {
-              console.log("DEALING DAMAGE!");
+              //console.log("DEALING DAMAGE!");
               takeDamage(var_unscramble_healthPenalty);
               resultsText.innerHTML = "";
             } else {
@@ -327,7 +326,7 @@ function onTick() {
             databaseTextObjects(module_id + "_timer", timer_current);
 
             if (resultsText.innerHTML != "CORRECT!") {
-              console.log("DEALING DAMAGE!");
+              //console.log("DEALING DAMAGE!");
               takeDamage(var_math_01_healthPenalty);
               resultsText.innerHTML = "";
             } else {
@@ -420,8 +419,6 @@ debug_vars = [
   "DEV_showGroupTitles",
 ];
 var debug_menu = document.getElementById("debug_menu_div");
-console.log(debug_menu);
-console.log(document.getElementById("debug_menu_div"));
 var debug_menu_text = document.getElementById("debug_menu_text");
 var debug_menu_open = false;
 if (debug_menu.style.display != "none") debug_menu_open = true;
@@ -580,8 +577,7 @@ function joinroomFunction() {
         .database()
         .ref(databasePrefix + roomcode + "/data/_state");
       roomcode_data_startgame_ref.on("value", function (snapshot) {
-        state = snapshot.val();
-        createGameScreen();
+        recieveStateUpdate(snapshot.val());
       });
 
       //Start the check for _roomcode_reload = 1. If it is, quit the game
@@ -613,9 +609,10 @@ function joinroomFunction() {
 
 //Called by all players when _roomcode_reload == 1. Reloads page when the host leaves.
 function roomcodeReload() {
-  alert("Host left the game... Leaving Room.");
   if (host) {
     deleteRoom(roomcode);
+  } else {
+    alert("Host left the game... Leaving Room.");
   }
   location.reload();
 }
@@ -737,7 +734,7 @@ function startGameFunction() {
                   if (host) databaseSetState(2);
                   //state = 2;
                   //createGameScreen();
-                  initializeGame();
+                  //initializeGame();
                   if (host == true) {
                     startGame();
                   }
@@ -772,6 +769,7 @@ function gameplay_loop() {
 
   if (health == 0) {
     gameOver();
+    databaseSetState(3);
   }
 
   if (game_timeTillNextModule == 0) {
@@ -799,8 +797,6 @@ function gameOver() {
   toggleGameLoop(false);
   timerActive = false;
   timerFunction();
-  databaseSetState(3);
-  createGameScreen();
 }
 
 //Health logic
@@ -866,6 +862,19 @@ function databaseSetState(val) {
     .update({
       _state: val,
     });
+}
+
+function recieveStateUpdate(value) {
+  state = value;
+  createGameScreen();
+  switch (value) {
+    case 2:
+      initializeGame();
+      break;
+    case 3:
+      gameOver();
+      break;
+  }
 }
 
 //Used At the start of gameplay to start checking for database updates.
