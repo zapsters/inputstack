@@ -28,22 +28,22 @@
       <div class="popupDiv gameoverDiv" id="gameover_div">
             <div class="gameoverHeader">
                   <h1>Game Over!</h1>
-                  <p id="scoreText">Score: ####</p>
+                  <p>Score: <span id="gameover_scoreText">####</span></p>
             </div>
             <div class="statsScreen">
                   <div>
                         <h2>Stats</h2>
-                        <p>Time Survived: ##</p>
-                        <p>Module Count: ##</p>
-                        <p>Words Unscrambled: ##</p>
-                        <p>Math Problems Solved: ##</p>
-                        <p>Reset Buttons Clicked: ##</p>
+                        <p>Time Survived: <span id="gameover_timerText"></span></p>
+                        <p>Module Count: <span id="gameover_moduleCount"></span></p>
+                        <p id="gameover_totalWordsUnscrambled">Words Unscrambled: ##</p>
+                        <p id="gameover_totalProblemsSolved">Math Problems Solved: ##</p>
+                        <p id="gameover_totalResetBtnClicks">Reset Buttons Clicked: ##</p>
                   </div>
                   <div>
                         <h2>Player Data</h2>
                         <p>Most Active Player: ##</p>
-                        <p>Math Genius: ##</p>
                         <p>Word Master: ##</p>
+                        <p>Math Genius: ##</p>
                         <p>Reset Button Camper: ##</p>
                         <p>Least Active: ##</p>
                   </div>
@@ -326,6 +326,8 @@
       <script src="firebase.js"></script>
       <script src="wordBank.js"></script>
       <script src="gameScreens.js"></script>
+      <script src="gameoverScreen.js"></script>
+      <script src="userDatabaseData.js"></script>
 
       <script src="gameData.js"></script>
       <script>

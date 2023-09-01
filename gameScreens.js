@@ -36,7 +36,7 @@ function createGameScreen() {
 
       break;
     default:
-      alert("ERROR WITH STATE VAL OF " + state);
+      console.log("ERROR WITH STATE VAL OF " + state);
 
       break;
   }

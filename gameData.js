@@ -44,6 +44,9 @@ var state = 0;
 //State 3: GameOver screen
 createGameScreen();
 
+//Database User Path
+var userPath = "null";
+
 //GAME VARIABLES =============================================================
 var moduleStartCount = 4;
 var modules_per_spawnCycle = 2; // # of modules that spawn when the game_timeTillNextModule reaches 0
@@ -95,19 +98,17 @@ function toggleGameLoop(flag) {
       gameplay_loop();
     }, 1000);
 
-    /*
     //Call ONTICK FUNCTIONS
     clearInterval(game_onTick_interval);
     game_onTick_interval = window.setInterval(function () {
       onTick();
     }, tickSpeed);
-    */
 
     //Start Timer!
     timerActive = true;
     clearInterval(game_timer_interval);
     game_timer_interval = window.setInterval(function () {
-      timerFunction();
+      timerToggle();
     }, 1000);
   } else {
     timerActive = false;
@@ -117,22 +118,9 @@ function toggleGameLoop(flag) {
   }
 }
 
-function timerFunction() {
+function timerToggle() {
   if (!host) return;
   if (timerActive) ++totalSeconds;
-  secondsText = pad(totalSeconds % 60);
-  minutesText = pad(parseInt(totalSeconds / 60));
-  if (!timerActive) {
-    if (minutesText == "00" && secondsText == "00") {
-      timerText = minutesText + ":" + secondsText;
-    } else {
-      var timerText = "PAUSED -- " + minutesText + ":" + secondsText;
-    }
-    databaseTextObjects("game_gameTimer_text", timerText);
-  } else {
-    var timerText = minutesText + ":" + secondsText;
-    databaseTextObjects("game_gameTimer_text", timerText);
-  }
 }
 
 //Sets the speed of the game and it's timers.
@@ -189,28 +177,28 @@ function onTick() {
         break;
       //
       case "module_reset_module_01":
-        timer_current = parseInt(
+        module_timer_current = parseInt(
           groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML
         );
         //The host will tick down the timer of the module/group.
         if (host) {
-          if (timer_current > 0) {
-            timer_current--;
+          if (module_timer_current > 0) {
+            module_timer_current--;
             groupReferences[i].querySelector(
               "#" + module_id + "_timer"
-            ).innerHTML = timer_current;
-            databaseTextObjects(module_id + "_timer", timer_current);
+            ).innerHTML = module_timer_current;
+            databaseTextObjects(module_id + "_timer", module_timer_current);
           } else {
             //console.log("TAKING DAMAGE!");
             takeDamage(var_reset_module_01_healthPenalty);
           }
         }
         //The module will flash red is low on time.
-        if (timer_current > 0) {
+        if (module_timer_current > 0) {
           groupReferences[i].querySelector(
             "#" + module_id + "_timer"
           ).style.color = "#000";
-          if (timer_current <= reset_timer_graceTime) {
+          if (module_timer_current <= reset_timer_graceTime) {
             if (!groupReferences[i].classList.contains("flashing"))
               groupReferences[i].classList.add("flashing");
           } else {
@@ -221,31 +209,34 @@ function onTick() {
           if (!groupReferences[i].classList.contains("flashing"))
             groupReferences[i].classList.add("flashing");
         }
-        if (host) databaseTextObjects(module_id + "_timer", timer_current);
+
+        if (host)
+          databaseTextObjects(module_id + "_timer", module_timer_current);
         break;
+
       case "module_unscramble_01":
         resultsText = groupReferences[i].querySelector(
           "#" + module_id + "_results_text"
         );
-        timer_current = parseInt(
+        module_timer_current = parseInt(
           groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML
         );
 
         //The host will tick down the timer of the module/group.
         if (host) {
-          if (timer_current > 0) {
-            timer_current--;
+          if (module_timer_current > 0) {
+            module_timer_current--;
 
             groupReferences[i].querySelector(
               "#" + module_id + "_timer"
-            ).innerHTML = timer_current;
-            databaseTextObjects(module_id + "_timer", timer_current);
+            ).innerHTML = module_timer_current;
+            databaseTextObjects(module_id + "_timer", module_timer_current);
           } else {
-            timer_current = var_unscramble_timerLength;
+            module_timer_current = var_unscramble_timerLength;
             groupReferences[i].querySelector(
               "#" + module_id + "_timer"
             ).innerHTML = var_unscramble_timerLength;
-            databaseTextObjects(module_id + "_timer", timer_current);
+            databaseTextObjects(module_id + "_timer", module_timer_current);
 
             if (resultsText.innerHTML != "CORRECT!") {
               //console.log("DEALING DAMAGE!");
@@ -277,9 +268,9 @@ function onTick() {
         }
 
         //The module will flash red is low on time.
-        if (timer_current > 0) {
+        if (module_timer_current > 0) {
           if (
-            timer_current <= unscramble_timer_graceTime &&
+            module_timer_current <= unscramble_timer_graceTime &&
             resultsText.innerHTML != "CORRECT!"
           ) {
             if (!groupReferences[i].classList.contains("flashing"))
@@ -306,24 +297,24 @@ function onTick() {
         resultsText = groupReferences[i].querySelector(
           "#" + module_id + "_results_text"
         );
-        timer_current = parseInt(
+        module_timer_current = parseInt(
           groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML
         );
         //The host will tick down the timer of the module/group.
 
         if (host) {
-          if (timer_current > 0) {
-            timer_current--;
+          if (module_timer_current > 0) {
+            module_timer_current--;
             groupReferences[i].querySelector(
               "#" + module_id + "_timer"
-            ).innerHTML = timer_current;
-            databaseTextObjects(module_id + "_timer", timer_current);
+            ).innerHTML = module_timer_current;
+            databaseTextObjects(module_id + "_timer", module_timer_current);
           } else {
-            timer_current = var_math_01_timerLength;
+            module_timer_current = var_math_01_timerLength;
             groupReferences[i].querySelector(
               "#" + module_id + "_timer"
             ).innerHTML = var_unscramble_timerLength;
-            databaseTextObjects(module_id + "_timer", timer_current);
+            databaseTextObjects(module_id + "_timer", module_timer_current);
 
             if (resultsText.innerHTML != "CORRECT!") {
               //console.log("DEALING DAMAGE!");
@@ -354,9 +345,9 @@ function onTick() {
           }
         }
         //The module will flash red is low on time.
-        if (timer_current > 0) {
+        if (module_timer_current > 0) {
           if (
-            timer_current <= math_01_timer_graceTime &&
+            module_timer_current <= math_01_timer_graceTime &&
             resultsText.innerHTML != "CORRECT!"
           ) {
             if (!groupReferences[i].classList.contains("flashing"))
@@ -382,6 +373,15 @@ function onTick() {
       default:
         console.log(value + " failed in the ONTICK function.");
         break;
+    }
+
+    if (host) {
+      firebase
+        .database()
+        .ref(databasePrefix + roomcode + "/data")
+        .update({
+          _timerCurrent: totalSeconds,
+        });
     }
     //console.log(module_id + " is type " + value);
   });
@@ -505,16 +505,17 @@ function createRoom(roomcode) {
   firebase
     .database()
     .ref(databasePrefix + roomcode + "/users")
-    .set({
-      _usercount: 0,
-    });
+    .set({});
   firebase
     .database()
     .ref(databasePrefix + roomcode + "/data")
     .update({
+      _usercount: 0,
       _state: 1,
       _startgame: 0,
       _roomcode_reload: 0,
+      _timerCurrent: 0,
+      _moduleTimer: 0,
     });
 }
 
@@ -535,27 +536,32 @@ function joinroomFunction() {
   }
 
   //Get Room Data!
-  room_data_ref = firebase.database().ref(databasePrefix + roomcode + "/users");
+  room_data_ref = firebase.database().ref(databasePrefix + roomcode + "/data");
   room_data_ref.once("value", function (doc) {
     room_data = doc.val();
-    roomcode_users_data = doc.val();
+    roomcode_data_data = doc.val();
     if (room_data != null) {
       isJoining = true;
       showTextForTime(response_text_obj, "Joining Room!", 1200);
-      userscount_read = roomcode_users_data._usercount;
+      userscount_read = roomcode_data_data._usercount;
       newusercount = userscount_read + 1;
       usernum = newusercount;
+      userPath = "user" + usernum;
       //Writes user info as roomcode/users/user[usernum]
       firebase
         .database()
         .ref(databasePrefix + roomcode + "/users/user" + usernum)
         .set({
           username: username,
+          interactions: 0,
+          wordsUnscrambled: 0,
+          resetButtonClicks: 0,
+          problemsSolved: 0,
         });
       //Adds one to the usercount
       firebase
         .database()
-        .ref(databasePrefix + roomcode + "/users/")
+        .ref(databasePrefix + roomcode + "/data/")
         .update({
           _usercount: newusercount,
         });
@@ -594,7 +600,7 @@ function joinroomFunction() {
       //Start to check if Roomcode/users/_usercount is updated. If updated, call the playerlist_reload() function
       roomcode_users_usercount_ref = firebase
         .database()
-        .ref(databasePrefix + roomcode + "/users/_usercount");
+        .ref(databasePrefix + roomcode + "/data/_usercount");
       roomcode_users_usercount_ref.on("value", function (snapshot) {
         if (state == 1) {
           playerlist_reload();
@@ -649,7 +655,7 @@ function playerlist_reload() {
     document.getElementById("playerlist_li").innerHTML = "";
     roomcode_users_ref = firebase
       .database()
-      .ref(databasePrefix + roomcode + "/users");
+      .ref(databasePrefix + roomcode + "/data");
     roomcode_users_ref.once("value", function (doc) {
       if (state == 1) {
         roomcode_users_data = doc.val();
@@ -768,7 +774,7 @@ function gameplay_loop() {
   }
 
   if (health == 0) {
-    gameOver();
+    //gameOver();
     databaseSetState(3);
   }
 
@@ -796,7 +802,8 @@ function updateHeader() {
 function gameOver() {
   toggleGameLoop(false);
   timerActive = false;
-  timerFunction();
+  timerToggle();
+  initializeGameOverScreen();
 }
 
 //Health logic
@@ -881,6 +888,8 @@ function recieveStateUpdate(value) {
 function initializeGame() {
   initInput("input_textbox_01");
   initInput("input_checkbox_01");
+
+  timerActive = true;
 
   //Call ONTICK FUNCTIONS
   clearInterval(game_onTick_interval);
@@ -1061,6 +1070,20 @@ function initializeGame() {
       document.getElementById(textObjectInDatabase).innerHTML = textObjectData;
     });
   });
+
+  //Check for data updates.
+  database_data_instances_ref = firebase
+    .database()
+    .ref(databasePrefix + roomcode + "/data/");
+  database_data_instances_ref.on("value", function (doc) {
+    gameData = doc.val();
+    //Timer
+    totalSeconds = gameData._timerCurrent;
+    secondsText = pad(totalSeconds % 60);
+    minutesText = pad(parseInt(totalSeconds / 60));
+    timerText = minutesText + ":" + secondsText;
+    game_gameTimer_text.innerHTML = timerText;
+  });
 }
 //END OF INITGAME=====
 
@@ -1155,6 +1178,20 @@ function initializeModuleMultiple(count) {
 function fullyInitGroup(createdGroupRef, module_id, groupType) {
   switch (groupType) {
     case "module_simple_01":
+      range1 = createdGroupRef.querySelector(
+        "#" + module_id + "_input_range_01"
+      );
+      range2 = createdGroupRef.querySelector(
+        "#" + module_id + "_input_range_02"
+      );
+      range1.addEventListener("click", function () {
+        interactions++;
+        updateUserStats();
+      });
+      range2.addEventListener("click", function () {
+        interactions++;
+        updateUserStats();
+      });
       break;
     case "module_reset_module_01":
       ResetButton = createdGroupRef.querySelector(
@@ -1166,8 +1203,11 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         databaseTextObjects(module_id + "_timer", var_reset_timerLength);
         if (createdGroupRef.classList.contains("flashing"))
           createdGroupRef.classList.remove("flashing");
+        resetButtonClicks += 1;
+        interactions += 1;
+        updateUserStats();
       });
-      timer_current = var_reset_timerLength;
+      module_timer_current = var_reset_timerLength;
       createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
         var_reset_timerLength;
       break;
@@ -1186,7 +1226,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         "#" + module_id + "_input_unscrambledWord"
       );
 
-      timer_current = var_unscramble_timerLength;
+      module_timer_current = var_unscramble_timerLength;
       createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
         var_unscramble_timerLength;
 
@@ -1261,6 +1301,9 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
           writeToDatabase("modules/" + module_id + "/isCorrect", true, false);
           if (createdGroupRef.classList.contains("flashing"))
             createdGroupRef.classList.remove("flashing");
+          wordsUnscrambled += 1;
+          interactions += 1;
+          updateUserStats();
         } else {
           writeToDatabase("modules/" + module_id + "/isCorrect", false, true);
         }
@@ -1278,7 +1321,6 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         }
       });
       break;
-
     case "module_math_01":
       //TEXT OBJECT CODE
       math_question_text = createdGroupRef.querySelector(
@@ -1294,9 +1336,9 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         "#" + module_id + "_input_math_response"
       );
 
-      timer_current = var_math_01_timerLength;
+      module_timer_current = var_math_01_timerLength;
       createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
-        timer_current;
+        module_timer_current;
 
       //Add event listener for the "isCorrect" var in the database
       mathIsCorrectEvent = firebase
@@ -1371,6 +1413,9 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
           writeToDatabase("modules/" + module_id + "/isCorrect", true, false);
           if (createdGroupRef.classList.contains("flashing"))
             createdGroupRef.classList.remove("flashing");
+          problemsSolved += 1;
+          interactions += 1;
+          updateUserStats();
         } else {
           writeToDatabase("modules/" + module_id + "/isCorrect", false, true);
         }
@@ -1463,7 +1508,7 @@ function resetGame() {
   //Reset Timer
   totalSeconds = 0;
   timerActive = false;
-  timerFunction();
+  timerToggle();
 
   //Reset module spawn timers
   game_timeTillNextModule = game_timeTillNextModule_default;
