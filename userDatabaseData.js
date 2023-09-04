@@ -20,4 +20,5 @@ function resetUserStats() {
   resetButtonClicks = 0;
   wordsUnscrambled = 0;
   problemsSolved = 0;
+  updateUserStats();
 }

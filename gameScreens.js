@@ -21,6 +21,7 @@ function createGameScreen() {
       screen_joinGame.style.display = "none";
       playerlist_div.style.display = "none";
       gameover_div.style.display = "none";
+      resetUserStats();
 
       break;
     case 3:

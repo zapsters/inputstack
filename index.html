@@ -35,17 +35,17 @@
                         <h2>Stats</h2>
                         <p>Time Survived: <span id="gameover_timerText"></span></p>
                         <p>Module Count: <span id="gameover_moduleCount"></span></p>
-                        <p id="gameover_totalWordsUnscrambled">Words Unscrambled: ##</p>
-                        <p id="gameover_totalProblemsSolved">Math Problems Solved: ##</p>
-                        <p id="gameover_totalResetBtnClicks">Reset Buttons Clicked: ##</p>
+                        <p>Words Unscrambled: <span id="gameover_totalWordsUnscrambled"></span></p>
+                        <p>Math Problems Solved: <span id="gameover_totalProblemsSolved"></span></p>
+                        <p>Reset Buttons Clicked: <span id="gameover_totalResetBtnClicks"></span></p>
                   </div>
                   <div>
                         <h2>Player Data</h2>
-                        <p>Most Active Player: ##</p>
-                        <p>Word Master: ##</p>
-                        <p>Math Genius: ##</p>
-                        <p>Reset Button Camper: ##</p>
-                        <p>Least Active: ##</p>
+                        <p>Most Active Player: <span id="gameover_mostActivePlayer"></span></p>
+                        <p>Word Master: <span id="gameover_wordMaster"></span></p>
+                        <p>Math Genius: <span id="gameover_mathGenius"></span></p>
+                        <p>Reset Button Camper: <span id="gameover_playerResetCamper"></span></p>
+                        <p>Least Active: <span id="gameover_leastActive"></span></p>
                   </div>
             </div>
             <div>
@@ -76,10 +76,6 @@
       <div class="debug_div" id="debug_menu_div" style="display: none;">
             <p class="noSpace">DEBUG</p>
             <p id="debug_menu_text" class="noSpace">Hi</p>
-            <p class="noSpace"
-                  onclick="if(extraDEBUG.style.display == 'block') {extraDEBUG.style.display = 'none';} else {extraDEBUG.style.display = 'block';}">
-                  <u>Click for extraDebug</u>
-            </p>
       </div>
       <center>
             <!-- BOTTOM DIV -->
@@ -92,6 +88,8 @@
                         Logged in as: *username*</p>
                   <p class="noSpace" style="left: 0; display: none; font-size: 20px; bottom: 7px;" id="footer_roomcode">
                         Roomcode: *roomcode*</p>
+                  <p class="noSpace" style="left: 0; display: block; font-size: 20px; bottom: 7px;" id="footer_credit">
+                        Created by Erin Ballinger 2023</p>
             </div>
 
             <div id="screen_joinGame">
@@ -125,8 +123,15 @@
             <div class="writableContent horizontal" style="display: none;" id="playerlist_div">
                   <p class="" style="font-size: 40px; margin: 0 0px; padding: 0px 0px;"><u>PLAYERS</u></p><br>
                   <li class="playerlist" id="playerlist_li">
-                        <div>player example</div>
-                        <div>player example</div>
+                        <div>
+                              <p>player example</p>
+                        </div>
+                        <div>
+                              <p>player example</p>
+                        </div>
+                        <div class="trans">
+                              <p>player example</p>
+                        </div>
                   </li>
 
                   <p id="subtext2_players" class="question"
@@ -305,10 +310,8 @@
                   <hr>
                   <p style="margin-bottom:0px;padding-bottom:0px;">TODO:</p>
                   <p class="indented">
-                        AUTOMATIC MODULE SPAWNING! Have a random timer or something.<br>
-                        End game screen - Total Time and Modules!<br>
-                        Restart button / Functions on the End Game Screen!<br>
-                        Then possibly a modifier tab! Change Tick Speed, Initial Module Count ETC.
+                        Modifier tab? Change Tick Speed, Initial Module Count ETC.
+                        New module? - secret key on one person's screen, a input on a different person.
                   </p>
                   <hr>
                   <p>LOG</p>

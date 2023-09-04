@@ -21,7 +21,7 @@ var timer = document.getElementById("game_gameTimer_text");
 var versionText = document.getElementById("versionDiv");
 
 // Game Vars
-var version = "Release 1.00 - TESTING 0.10";
+var version = "Release 1.00 - TESTING 0.90";
 var host = false;
 var health = 100;
 var timerActive = false;
@@ -43,6 +43,8 @@ var state = 0;
 //State 2: Beginning of game.
 //State 3: GameOver screen
 createGameScreen();
+
+var username = "undefined";
 
 //Database User Path
 var userPath = "null";
@@ -426,9 +428,11 @@ function toggleDebugMenu() {
   if (debug_menu_open) {
     debug_menu_open = false;
     debug_menu.style.display = "none";
+    extraDEBUG.style.display = "none";
   } else if (!debug_menu_open) {
     debug_menu_open = true;
     debug_menu.style.display = "block";
+    extraDEBUG.style.display = "block";
   }
 }
 
@@ -451,6 +455,10 @@ function keyDownTextField(e) {
   if (keyCode == 46) {
     //Open debug with delete
     toggleDebugMenu();
+    if (state == 0) {
+      if (username_input.value == "") username_input.value = "Erin <3";
+      createroomFunction(true);
+    }
   }
 }
 
@@ -463,7 +471,7 @@ function createText(string) {
 
 // LOBBY LOGIC ===============================================================================================
 // Create Lobby Logic
-function createroomFunction() {
+function createroomFunction(dev) {
   if (isCreatingRoom) return;
   username = document.getElementById("username_input").value;
   response_text_obj = document.getElementById("subtext_joingame");
@@ -474,6 +482,7 @@ function createroomFunction() {
   }
 
   var room_to_create = Math.random().toString(20).substr(2, 6);
+  if (dev) room_to_create = "dev";
   document.getElementById("roomcode_input").value = room_to_create;
   create_roomcode_ref = firebase
     .database()
@@ -679,10 +688,18 @@ function playerlist_reload() {
             usersArray.push(roomcode_users_user_username_data);
             //Create a div with the player's name inside of it
             var node = document.createElement("div");
-            var textnode = document.createTextNode(
-              roomcode_users_user_username_data
-            );
-            node.appendChild(textnode);
+            var divText = document.createElement("p");
+            divText.innerHTML = roomcode_users_user_username_data;
+            var playerUsername = roomcode_users_user_username_data
+              .toString()
+              .toLowerCase();
+            if (
+              playerUsername.includes("erin") ||
+              playerUsername.includes("kat")
+            ) {
+              node.classList.add("trans");
+            }
+            node.appendChild(divText);
             document.getElementById("playerlist_li").appendChild(node);
           });
         }
@@ -763,6 +780,9 @@ function updateFooter() {
     document.getElementById("footer_username").style.display = "block";
     document.getElementById("footer_roomcode").style.display = "block";
     if (host) document.getElementById("footer_host").style.display = "block";
+    document.getElementById("footer_credit").style.display = "none";
+  } else {
+    document.getElementById("footer_credit").style.display = "block";
   }
 }
 
@@ -1476,6 +1496,7 @@ function writeToDatabase(destination, value, resetAfterSend) {
 // RESTART GAME =======================================================================
 //Reset Database and Reset health and tickSpeed (From Losing)
 function resetGame() {
+  console.log("called reset game");
   document.getElementById("textLayer").innerHTML = "";
   createText("<br>----  DATABASE RESET!  ----");
   document.getElementById("textLayer").innerHTML += "<br>";
