@@ -151,6 +151,20 @@
         </p>
         <p
           class="noSpace"
+          style="
+            left: 0;
+            display: block;
+            font-size: 20px;
+            bottom: 32px;
+            text-decoration: underline;
+          "
+          id="signIn"
+          onclick="firebase.auth().signInWithRedirect(provider);"
+        >
+          Sign in
+        </p>
+        <p
+          class="noSpace"
           style="left: 0; display: block; font-size: 20px; bottom: 7px"
           id="footer_credit"
         >
@@ -817,7 +831,7 @@
     <script>
       versionText.innerHTML = version;
       var provider = new firebase.auth.GoogleAuthProvider();
-      firebase.auth().signInWithRedirect(provider);
+      //firebase.auth().signInWithRedirect(provider);
       firebase
         .auth()
         .getRedirectResult()
