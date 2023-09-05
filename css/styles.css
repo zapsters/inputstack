@@ -191,6 +191,7 @@ body {
     #5bcefa
   );
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   width: fit-content;
   align-content: center;
@@ -303,6 +304,13 @@ body {
   background: #04aa6d;
   cursor: pointer;
 }
+.slider:disabled {
+  background: #cbcbcb;
+}
+.slider:disabled::-webkit-slider-thumb {
+  background: #035839;
+  cursor: auto;
+}
 .button {
   border: 2px solid black;
   background-color: #303030;
@@ -317,6 +325,10 @@ body {
   box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.24),
     0 17px 50px 0 rgba(0, 0, 0, 0.19);
   border: 2px solid #000;
+}
+.button:disabled {
+  background-color: #333333;
+  color: #aaaaaa;
 }
 .input {
   border: 2px solid black;
@@ -455,8 +467,6 @@ body {
   max-width: 700px;
   text-align: left;
 }
-.gameoverDiv .buttonMain {
-}
 .gameoverDiv h1 {
   font-size: 30px;
   padding: 0;
@@ -498,5 +508,5 @@ body {
   position: absolute;
   top: 45px;
   margin: 0px 20px 0px 20px;
-  background-color: white;
+  background-color: rgb(0, 0, 0);
 }

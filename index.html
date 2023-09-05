@@ -1,393 +1,850 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <title>Input Stack!</title>
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="https://zapsters.github.io/Home/images/ZapSIcon_C2.png"
+    />
+    <!-- GOOGLE'S MATERIAL ICONS SHEET https://fonts.google.com/icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+  </head>
 
-<head>
-      <link rel="stylesheet" type="text/css" href="css/style.css">
-      <title>Input Stack!</title>
-      <link rel="shortcut icon" type="image/png" href="https://zapsters.github.io/Home/images/ZapSIcon_C2.png" />
-      <!-- GOOGLE'S MATERIAL ICONS SHEET https://fonts.google.com/icons -->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-</head>
+  <body>
+    <!-- DIV POPUPS -->
+    <div
+      class="grayOutDivScreen"
+      onclick="closeDiv();"
+      id="grayOutDivScreen"
+      style="display: none"
+    >
+      <p
+        style="
+          color: white;
+          text-align: center;
+          text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);
+        "
+      >
+        Click anywhere to close...
+      </p>
+      <div
+        class="popupDiv"
+        onclick="event.stopPropagation();"
+        id="unscrambleKey"
+      >
+        <div
+          class="closeButton"
+          onclick="this.parentElement.style.display='none'; closeDiv();"
+        >
+          <p>X</p>
+        </div>
+        <p>UNSCRAMBLE KEY!</p>
+        <hr />
+        <div class="popupDivTable" id="uncrambleKey_content"></div>
+      </div>
+    </div>
 
-<body>
+    <div class="popupDiv gameoverDiv" id="gameover_div">
+      <div class="gameoverHeader">
+        <h1>Game Over!</h1>
+        <p>Score: <span id="gameover_scoreText">####</span></p>
+      </div>
+      <div class="statsScreen">
+        <div>
+          <h2>Stats</h2>
+          <p>Time Survived: <span id="gameover_timerText"></span></p>
+          <p>Module Count: <span id="gameover_moduleCount"></span></p>
+          <p>
+            Words Unscrambled: <span id="gameover_totalWordsUnscrambled"></span>
+          </p>
+          <p>
+            Math Problems Solved:
+            <span id="gameover_totalProblemsSolved"></span>
+          </p>
+          <p>
+            Reset Buttons Clicked:
+            <span id="gameover_totalResetBtnClicks"></span>
+          </p>
+        </div>
+        <div>
+          <h2>Player Data</h2>
+          <p>
+            Most Active Player: <span id="gameover_mostActivePlayer"></span>
+          </p>
+          <p>Word Master: <span id="gameover_wordMaster"></span></p>
+          <p>Math Genius: <span id="gameover_mathGenius"></span></p>
+          <p>
+            Reset Button Camper: <span id="gameover_playerResetCamper"></span>
+          </p>
+          <p>Least Active: <span id="gameover_leastActive"></span></p>
+        </div>
+      </div>
+      <div>
+        <div id="gameover_NotHost" style="display: block">
+          <h4>Waiting for the host.</h4>
+        </div>
+        <div id="gameover_hostOptions" style="display: none">
+          <h4 style="margin-bottom: 0px">Host Options:</h4>
+          <div style="padding: 0 0 0 10px">
+            <input
+              type="button"
+              class="buttonMain"
+              onclick="if(host) resetGame();"
+              value="Restart Game"
+            />
+            <input
+              type="button"
+              class="buttonMain"
+              onclick="if(host) abandonRoom();"
+              value="Quit Game"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
 
-      <!-- DIV POPUPS -->
-      <div class="grayOutDivScreen" onclick="closeDiv();" id="grayOutDivScreen" style="display: none;">
-            <p style="color:white;text-align:center;text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);">Click anywhere to
-                  close...</p>
-            <div class="popupDiv" onclick="event.stopPropagation();" id="unscrambleKey">
-                  <div class="closeButton" onclick="this.parentElement.style.display='none'; closeDiv();">
-                        <p>X</p>
-                  </div>
-                  <p>UNSCRAMBLE KEY!</p>
-                  <hr>
-                  <div class="popupDivTable" id="uncrambleKey_content"></div>
-            </div>
+    <!-- TITLE SCREEN -->
+    <div id="screen_title">
+      <!-- HEADER -->
+      <div class="header">
+        <p onclick="toggleDebugMenu()">Input Stack!</p>
+      </div>
+    </div>
+    <!-- DEBUG MENU -->
+    <div class="debug_div" id="debug_menu_div" style="display: none">
+      <p class="noSpace">DEBUG</p>
+      <p id="debug_menu_text" class="noSpace">Hi</p>
+    </div>
+    <center>
+      <!-- BOTTOM DIV -->
+      <div
+        class="bottom_div"
+        id="game_info"
+        style="margin: 0; padding: 0; display: block"
+      >
+        <p class="noSpace" id="versionDiv" style="right: 0"></p>
+        <p
+          class="noSpace"
+          style="left: 0; bottom: 57px; display: none; font-size: 20px"
+          id="footer_host"
+        >
+          <u>You are the host!</u>
+        </p>
+        <p
+          class="noSpace"
+          style="left: 0; bottom: 32px; display: none; font-size: 20px"
+          id="footer_username"
+        >
+          Logged in as: *username*
+        </p>
+        <p
+          class="noSpace"
+          style="left: 0; display: none; font-size: 20px; bottom: 7px"
+          id="footer_roomcode"
+        >
+          Roomcode: *roomcode*
+        </p>
+        <p
+          class="noSpace"
+          style="left: 0; display: block; font-size: 20px; bottom: 7px"
+          id="footer_credit"
+        >
+          Created by Erin Ballinger 2023
+        </p>
       </div>
 
-      <div class="popupDiv gameoverDiv" id="gameover_div">
-            <div class="gameoverHeader">
-                  <h1>Game Over!</h1>
-                  <p>Score: <span id="gameover_scoreText">####</span></p>
+      <div id="screen_joinGame">
+        <!-- Front Page Message -->
+        <div
+          class="centeredHoriz"
+          id="front_page_message_div"
+          style="display: block; height: 10px"
+        >
+          <p
+            class="noSpace"
+            id="front_page_mainText"
+            style="font-size: 20px; height: 20px; padding: 3px 0px"
+          >
+            In Development
+          </p>
+          <!--<p class="noSpace" id="front_page_subText" style="font-size: 20px; height: 20px; padding: 3px 0px;">Actively being updated.</p>-->
+        </div>
+
+        <!-- Front Page Join Game -->
+        <div class="centered_div" style="display: block" id="joingame_div">
+          <div class="writableContent" style="max-width: 600px">
+            <p class="noSpace" style="font-size: 40px">JOIN GAME</p>
+            <input
+              id="username_input"
+              class="messagebox"
+              maxlength="30"
+              placeholder="USERNAME"
+              style="margin: 10px 0px"
+              autocomplete="off"
+            /><br />
+            <input
+              id="roomcode_input"
+              class="messagebox"
+              maxlength="6"
+              placeholder="ROOM CODE"
+              autocomplete="off"
+            />
+            <button
+              id="joingame_btnid"
+              class="buttonMain"
+              onclick="joinroomFunction()"
+              style="cursor: pointer; float: right"
+            >
+              JOIN ROOM
+            </button>
+            <button
+              id="creategame_btnid"
+              class="buttonMain"
+              onclick="createroomFunction()"
+              style="cursor: pointer; float: left"
+            >
+              CREATE ROOM</button
+            ><br /><br /><br /><br />
+            <p
+              id="subtext_joingame"
+              class="question"
+              style="font-size: 20px"
+            ></p>
+          </div>
+        </div>
+      </div>
+    </center>
+
+    <center>
+      <!-- PLAYER SCREEN -->
+      <div
+        class="writableContent horizontal"
+        style="display: none"
+        id="playerlist_div"
+      >
+        <p class="" style="font-size: 40px; margin: 0 0px; padding: 0px 0px">
+          <u>PLAYERS</u>
+        </p>
+        <br />
+        <li class="playerlist" id="playerlist_li">
+          <div>
+            <p>player example</p>
+          </div>
+          <div>
+            <p>player example</p>
+          </div>
+          <div class="trans">
+            <p>player example</p>
+          </div>
+        </li>
+
+        <p
+          id="subtext2_players"
+          class="question"
+          style="
+            font-size: 30px;
+            padding: 0px 0px 0px 0px;
+            margin: 0px 0 -7px 0;
+          "
+        >
+          WAITING FOR HOST<br />TO START
+        </p>
+        <button
+          class="startbtn buttonMain"
+          onclick="firebase.database().ref(databasePrefix + roomcode + '/data').update({_startgame: 1});"
+          id="startbtn"
+          style="cursor: pointer; display: none"
+        >
+          START GAME
+        </button>
+      </div>
+    </center>
+
+    <!-- MAIN GAMEPLAY SCREEN ==================================== -->
+    <div
+      id="screen_main_gameplay"
+      style="
+        position: flex;
+        margin: auto;
+        text-align: center;
+        max-width: 1300px;
+        display: none;
+        position: relative;
+        top: -80px;
+      "
+    >
+      <div class="headerContainer headerSTICKY" id="header">
+        <p
+          id="game_health_text"
+          style="position: flex; margin-right: auto; top: 4px"
+        >
+          HEALTH: 100
+        </p>
+        <p
+          id="game_gameTimer_text"
+          style="position: absolute; right: 0px; padding-right: 10px; top: 4px"
+        >
+          00:00
+        </p>
+        <p
+          id="game_moduleCount_text"
+          style="position: absolute; left: 0px; padding-left: 10px; top: 4px"
+        >
+          Modules: 0
+        </p>
+      </div>
+      <br />
+      <span>
+        <p
+          id="game_timeTillNextModule_text"
+          style="display: inline; padding: 0px; margin: 0px"
+        >
+          Time till next module:
+        </p>
+        <p style="display: inline; padding: 0px 10px 0px 10px; margin: 0px">
+          |
+        </p>
+        <p style="display: inline; padding: 0px; margin: 0px">
+          Unused Text Here.
+        </p>
+      </span>
+      <div class="moduleContainer" id="moduleContainer">
+        <!-- DIV for all inputGroups -->
+      </div>
+      <br /><br />
+      <div id="extraDEBUG" style="display: none">
+        <hr />
+        <button onclick="toggleGameLoop(false);">toggleGameLoop(false)</button>
+        <button onclick="toggleGameLoop(true);">toggleGameLoop(true)</button>
+        <br />
+        <button onclick="startGame();">Start Game</button>
+        <button onclick="resetGame();">Reset Game</button>
+        <button onclick="initializeModule();">Create Module</button>
+        <button onclick="initializeGame();">initializeGame()</button>
+        <button
+          onclick="host = !host; createText(' ---- host = '+host); this.innerHTML = 'Set host = ' + !host;"
+        >
+          Set host = true
+        </button>
+        <br /><br />
+        <button onclick="takeDamage(5)">Deal 5 damage</button>
+        <button onclick="takeDamage(-5)">Heal by 5</button>
+        <button onclick="damageDisabled = false">Enable Damage</button>
+        <button onclick="damageDisabled = true">Disable Damage</button>
+        <br />
+        <button
+          onclick="var display = document.getElementById('TEMPLATEmoduleContainer').style.display; if(display == 'block'){document.getElementById('TEMPLATEmoduleContainer').style.display='none'}else{document.getElementById('TEMPLATEmoduleContainer').style.display='block'}"
+        >
+          ToggleTemplate Div</button
+        ><br />
+        <br />
+        <p style="padding: 0px; margin: 0px">MODULE LIST</p>
+        <button onclick="initializeModule('module_simple_01')">
+          Spawn Slider Div
+        </button>
+        <button onclick="initializeModule('module_reset_01')">
+          Spawn Reset Div
+        </button>
+        <button onclick="initializeModule('module_unscramble_01')">
+          Spawn Unscramble Div
+        </button>
+        <button onclick="initializeModule('module_math_01')">
+          Spawn Math Div
+        </button>
+        <button onclick="initializeModule('module_color_01')">
+          Spawn Color Match Div
+        </button>
+        <br />
+        <p onclick="resetInputFields()">
+          resetInputFields() [Click to reset the database and current fields]
+        </p>
+        <p onclick="resetGame()">GAME_RESET() [Database and local]</p>
+        <hr />
+        <!-- TEMPLATE DIV -->
+        <div
+          class="moduleContainer"
+          id="TEMPLATEmoduleContainer"
+          style="display: block"
+        >
+          <!-- TEMPLATE_module_simple_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_simple_01">
+            <p
+              class="inputmodule_DEVtitle"
+              id="TEMPLATE_module_simple_01_DEVtitle"
+            >
+              TEMPLATE_module_simple_01
+            </p>
+            <p class="inputmodule_title" data-id="title">KEEP ABOVE!</p>
+            <hr style="top: 25px" />
+            <div
+              class="RangeGroup"
+              style="width: 80%; position: absolute; top: 41px; left: 10px"
+            >
+              <p
+                style="
+                  margin-bottom: 12px;
+                  text-decoration: underline;
+                  font-weight: bold;
+                  margin-left: 3px;
+                "
+              >
+                Keep High
+              </p>
+              <input
+                type="range"
+                class="slider"
+                data-id="input_range_01"
+                value="100"
+              />
+              <input
+                type="range"
+                class="slider"
+                data-id="input_range_02"
+                value="100"
+              />
             </div>
-            <div class="statsScreen">
+          </div>
+          <!-- TEMPLATE_reset_module_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_reset_01">
+            <p
+              class="inputmodule_DEVtitle"
+              id="TEMPLATE_module_reset_01_DEVtitle"
+            >
+              TEMPLATE_module_reset_01
+            </p>
+            <p class="inputmodule_title" data-id="title">TIMER!</p>
+            <p class="inputmodule_title" style="right: 10px" data-id="timer">
+              30
+            </p>
+            <hr style="top: 25px" />
+            <button
+              data-id="input_reset_button"
+              class="button"
+              style="
+                width: 70%;
+                height: 60%;
+                margin: 0;
+                position: absolute;
+                bottom: 50%;
+                left: 50%;
+                -ms-transform: translate(-50%, 60%);
+                transform: translate(-50%, 60%);
+              "
+            >
+              RESET!!
+            </button>
+          </div>
+          <!-- TEMPLATE_module_unscramble_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_unscramble_01">
+            <p
+              class="inputmodule_DEVtitle"
+              id="TEMPLATE_module_unscramble_01_DEVtitle"
+            >
+              TEMPLATE_module_unscramble_01
+            </p>
+            <p class="inputmodule_title" data-id="title">UNSCRAMBLE!</p>
+            <p class="inputmodule_title" style="right: 10px" data-id="timer">
+              100
+            </p>
+            <p
+              class="inputmodule_clickableIcon"
+              onclick="openDiv('unscrambleKey');"
+              style="text-align: center"
+            >
+              <span class="material-icons md-18">view_list</span>
+            </p>
+            <hr style="top: 25px" />
+            <center>
+              <p
+                class="center"
+                data-id="results_text"
+                style="
+                  font-weight: bold;
+                  font-size: 23px;
+                  margin: 0;
+                  position: absolute;
+                  top: 52px;
+                  left: 50%;
+                  -ms-transform: translate(-50%, -50%);
+                  transform: translate(-50%, -50%);
+                  color: #b50000;
+                  text-decoration: underline;
+                "
+              ></p>
+              <p
+                class="center"
+                data-id="scrambled_word_text"
+                style="
+                  width: 100%;
+                  height: 40px;
+                  font-weight: bold;
+                  font-size: 20px;
+                  margin: 0;
+                  position: absolute;
+                  bottom: 45%;
+                  left: 50%;
+                  -ms-transform: translate(-50%, 0%);
+                  transform: translate(-50%, 0%);
+                "
+              >
+                WORD
+              </p>
+              <p
+                class="center"
+                data-id="UNscrambled_word_text"
+                style="
+                  display: none;
+                  font-size: 20px;
+                  margin: 0;
+                  position: absolute;
+                  bottom: 70px;
+                  left: 50%;
+                  -ms-transform: translate(-50%, -50%);
+                  transform: translate(-50%, -50%);
+                "
+              >
+                WORD
+              </p>
+              <div
+                class="RangeGroup"
+                style="
+                  margin: auto;
+                  width: 100%;
+                  display: inline;
+                  bottom: 20px;
+                  left: 0px;
+                "
+              >
+                <input
+                  type="text"
+                  style="
+                    width: 95%;
+                    text-align: center;
+                    margin-bottom: 6px;
+                    -ms-transform: translate(50%, 60%);
+                    transform: translate(-0px, 0%);
+                    font-size: 16px;
+                  "
+                  class="input"
+                  data-id="input_unscrambledWord"
+                  placeholder="Type Here..."
+                />
+                <input
+                  type="button"
+                  style="width: 95%"
+                  class="button"
+                  value="Submit"
+                  data-id="input_submit_button"
+                />
+              </div>
+            </center>
+          </div>
+          <!-- TEMPLATE_module_math_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_math_01">
+            <p
+              class="inputmodule_DEVtitle"
+              id="TEMPLATE_module_math_01_DEVtitle"
+            >
+              TEMPLATE_module_math_01
+            </p>
+            <p class="inputmodule_title" data-id="title">SIMPLE MATH!</p>
+            <p class="inputmodule_title" style="right: 10px" data-id="timer">
+              60
+            </p>
+            <hr style="top: 25px" />
+            <center>
+              <p
+                class="center"
+                data-id="results_text"
+                style="
+                  font-weight: bold;
+                  font-size: 23px;
+                  margin: 0;
+                  position: absolute;
+                  top: 22%;
+                  left: 50%;
+                  -ms-transform: translate(-50%, -50%);
+                  transform: translate(-50%, -50%);
+                  color: #b50000;
+                  text-decoration: underline;
+                "
+              ></p>
+              <p
+                class="center"
+                data-id="math_question_text"
+                style="
+                  width: 100%;
+                  height: 40px;
+                  font-weight: bold;
+                  font-size: 20px;
+                  margin: 0;
+                  position: absolute;
+                  bottom: 45%;
+                  left: 50%;
+                  -ms-transform: translate(-50%, 0%);
+                  transform: translate(-50%, 0%);
+                "
+              >
+                MATH QUESTION
+              </p>
+              <p
+                class="center"
+                data-id="math_answer_text"
+                style="
+                  display: none;
+                  font-size: 20px;
+                  margin: 0;
+                  position: absolute;
+                  bottom: 70px;
+                  left: 50%;
+                  -ms-transform: translate(-50%, -50%);
+                  transform: translate(-50%, -50%);
+                "
+              >
+                ANSWER
+              </p>
+              <div
+                class="RangeGroup"
+                style="
+                  margin: auto;
+                  width: 100%;
+                  display: inline;
+                  bottom: 20px;
+                  left: 0px;
+                "
+              >
+                <input
+                  type="text"
+                  style="
+                    width: 95%;
+                    text-align: center;
+                    margin-bottom: 6px;
+                    -ms-transform: translate(50%, 60%);
+                    transform: translate(-0px, 0%);
+                    font-size: 16px;
+                  "
+                  class="input"
+                  data-id="input_math_response"
+                  placeholder="Type Here..."
+                />
+                <input
+                  type="button"
+                  style="width: 95%"
+                  class="button"
+                  value="Submit"
+                  data-id="input_submit_button"
+                />
+              </div>
+            </center>
+          </div>
+          <!-- TEMPLATE_module_color_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_color_01">
+            <p
+              class="inputmodule_DEVtitle"
+              id="TEMPLATE_module_color_01_DEVtitle"
+            >
+              TEMPLATE_module_color_01
+            </p>
+            <p class="inputmodule_title">COLOR MATCH!</p>
+            <p class="inputmodule_title" style="right: 10px" data-id="timer">
+              60
+            </p>
+            <hr style="top: 25px" />
+            <p
+              class="center"
+              data-id="results_text"
+              style="
+                font-weight: bold;
+                font-size: 18px;
+                margin: 0;
+                position: absolute;
+                top: 22%;
+                left: 50%;
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+                color: #b50000;
+                text-decoration: underline;
+                z-index: 10;
+              "
+            ></p>
+            <div class="colorSwatch" data-id="module_colorSwatchKey"></div>
+            <div
+              class="colorSwatch"
+              data-id="module_colorSwatch_result"
+              style="right: 0px"
+            ></div>
+            <center>
+              <p
+                class="center"
+                style="
+                  width: 100%;
+                  height: 40px;
+                  font-weight: bold;
+                  font-size: 35px;
+                  margin: 0;
+                  position: absolute;
+                  top: 50px;
+                  left: 50%;
+                  -ms-transform: translate(-50%, 0%);
+                  transform: translate(-50%, 0%);
+                "
+              >
+                &rarr;
+              </p>
+              <div
+                class="RangeGroup"
+                style="
+                  height: 120px;
+                  bottom: 0;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  width: 94%;
+                  bottom: 20px;
+                "
+              >
+                <div style="display: inline-flex">
+                  <div
+                    style="
+                      line-height: 10px;
+                      margin-top: -4px;
+                      padding-top: 0px;
+                    "
+                  >
+                    <p>R:</p>
+                    <p>G:</p>
+                    <p>B:</p>
+                  </div>
                   <div>
-                        <h2>Stats</h2>
-                        <p>Time Survived: <span id="gameover_timerText"></span></p>
-                        <p>Module Count: <span id="gameover_moduleCount"></span></p>
-                        <p>Words Unscrambled: <span id="gameover_totalWordsUnscrambled"></span></p>
-                        <p>Math Problems Solved: <span id="gameover_totalProblemsSolved"></span></p>
-                        <p>Reset Buttons Clicked: <span id="gameover_totalResetBtnClicks"></span></p>
+                    <input
+                      type="range"
+                      style="margin-top: 4px"
+                      class="slider"
+                      data-onupdate="updateColorResult"
+                      data-id="input_colorval_01"
+                      value="0"
+                    />
+                    <input
+                      type="range"
+                      style="margin-top: 4px"
+                      class="slider"
+                      data-onupdate="updateColorResult"
+                      data-id="input_colorval_02"
+                      value="0"
+                    />
+                    <input
+                      type="range"
+                      style="margin-top: 4px"
+                      class="slider"
+                      data-onupdate="updateColorResult"
+                      data-id="input_colorval_03"
+                      value="0"
+                    />
                   </div>
-                  <div>
-                        <h2>Player Data</h2>
-                        <p>Most Active Player: <span id="gameover_mostActivePlayer"></span></p>
-                        <p>Word Master: <span id="gameover_wordMaster"></span></p>
-                        <p>Math Genius: <span id="gameover_mathGenius"></span></p>
-                        <p>Reset Button Camper: <span id="gameover_playerResetCamper"></span></p>
-                        <p>Least Active: <span id="gameover_leastActive"></span></p>
-                  </div>
-            </div>
-            <div>
-                  <div id="gameover_NotHost" style="display: block">
-                        <h4>Waiting for the host.</h4>
-                  </div>
-                  <div id="gameover_hostOptions" style="display: none">
-                        <h4 style="margin-bottom: 0px">Host Options:</h4>
-                        <div style="padding: 0 0 0 10px;">
-                              <input type="button" class="buttonMain" onclick="if(host) resetGame();"
-                                    value="Restart Game">
-                              <input type="button" class="buttonMain" onclick="if(host) abandonRoom();"
-                                    value="Quit Game">
-                        </div>
-                  </div>
-            </div>
+                </div>
+                <input
+                  type="button"
+                  style="width: 100%; margin-top: 4px"
+                  class="button"
+                  value="Submit"
+                  data-id="input_submit_button"
+                />
+              </div>
+            </center>
+          </div>
+        </div>
+        <hr />
+        <p>GOOGLE'S ICONS! See https://fonts.google.com/icons!</p>
+        <p>
+          <span class="material-icons md-18">face</span>
+          <span class="material-icons md-18">search</span>
+          <span class="material-icons md-18">info</span>
+          <span class="material-icons md-18">visibility</span>
+          <span class="material-icons md-18">description</span>
+          <span class="material-icons md-18">help_outline</span>
+          <span class="material-icons md-18">list</span>
+          <span class="material-icons md-18">help</span>
+          <span class="material-icons md-18">article</span>
+          <span class="material-icons md-18">question_answer</span>
+          <span class="material-icons md-18">view_list</span>
+          <span class="material-icons md-18">text_snippet</span>
+          <span class="material-icons md-18">notes</span>
+        </p>
+        <hr />
+        <input type="text" id="input_textbox_01" value="testing input" />
+        <input type="checkbox" id="input_checkbox_01" checked="true" />
+        <hr />
+        <div>
+          <p style="margin-bottom: 3px"><u>INPUT-OBJECTS</u></p>
+          <p id="INPUT_OBJECTS" class="indented">UserInputObjects =</p>
+          <p id="CURRENT_GROUPSDIV" class="indented">CurrentGroups =</p>
+        </div>
+        <hr />
+        <div>
+          <p style="margin-bottom: 3px"><u>DATABASE-STUFF</u></p>
+          <p id="DATABASE_OBJECTS" class="indented">DatabaseObjects</p>
+        </div>
+        <hr />
+        <p style="margin-bottom: 0px; padding-bottom: 0px">TODO:</p>
+        <p class="indented">
+          Modifier tab? Change Tick Speed, Initial Module Count ETC. New module?
+          - secret key on one person's screen, a input on a different person.
+        </p>
+        <hr />
+        <p>LOG</p>
+        <div id="textLayer" style="white-space: nowrap"></div>
       </div>
+    </div>
+    <!-- DATABASE SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-functions.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-database.js"></script>
 
+    <!-- SCRIPT REFERENCES -->
+    <script src="firebase.js"></script>
+    <script src="wordBank.js"></script>
+    <script src="gameScreens.js"></script>
+    <script src="gameoverScreen.js"></script>
+    <script src="userDatabaseData.js"></script>
 
-      <!-- TITLE SCREEN -->
-      <div id="screen_title">
-            <!-- HEADER -->
-            <div class="header">
-                  <p onclick="toggleDebugMenu()">Input Stack!</p>
-            </div>
-      </div>
-      <!-- DEBUG MENU -->
-      <div class="debug_div" id="debug_menu_div" style="display: none;">
-            <p class="noSpace">DEBUG</p>
-            <p id="debug_menu_text" class="noSpace">Hi</p>
-      </div>
-      <center>
-            <!-- BOTTOM DIV -->
-            <div class="bottom_div" id="game_info" style="margin: 0; padding: 0; display: block;">
-                  <p class="noSpace" id="versionDiv" style="right: 0;"></p>
-                  <p class="noSpace" style="left: 0; bottom: 57px; display: none; font-size: 20px" id="footer_host">
-                        <u>You are the host!</u>
-                  </p>
-                  <p class="noSpace" style="left: 0; bottom: 32px; display: none; font-size: 20px" id="footer_username">
-                        Logged in as: *username*</p>
-                  <p class="noSpace" style="left: 0; display: none; font-size: 20px; bottom: 7px;" id="footer_roomcode">
-                        Roomcode: *roomcode*</p>
-                  <p class="noSpace" style="left: 0; display: block; font-size: 20px; bottom: 7px;" id="footer_credit">
-                        Created by Erin Ballinger 2023</p>
-            </div>
+    <script src="gameData.js"></script>
+    <script>
+      versionText.innerHTML = version;
+      var provider = new firebase.auth.GoogleAuthProvider();
+      firebase.auth().signInWithRedirect(provider);
+      firebase
+        .auth()
+        .getRedirectResult()
+        .then((result) => {
+          if (result.credential) {
+            /** @type {firebase.auth.OAuthCredential} */
+            var credential = result.credential;
 
-            <div id="screen_joinGame">
-                  <!-- Front Page Message -->
-                  <div class="centeredHoriz" id="front_page_message_div" style="display: block; height:10px;">
-                        <p class="noSpace" id="front_page_mainText"
-                              style="font-size: 20px; height: 20px; padding: 3px 0px;">In Development</p>
-                        <!--<p class="noSpace" id="front_page_subText" style="font-size: 20px; height: 20px; padding: 3px 0px;">Actively being updated.</p>-->
-                  </div>
-
-                  <!-- Front Page Join Game -->
-                  <div class="centered_div" style="display: block;" id="joingame_div">
-                        <div class="writableContent" style="max-width: 600px;">
-                              <p class="noSpace" style="font-size: 40px;">JOIN GAME</p>
-                              <input id="username_input" class="messagebox" maxlength="30" placeholder="USERNAME"
-                                    style="margin: 10px 0px;" autocomplete="off"><br>
-                              <input id="roomcode_input" class="messagebox" maxlength="6" placeholder="ROOM CODE"
-                                    autocomplete="off">
-                              <button id="joingame_btnid" class="buttonMain" onclick="joinroomFunction()"
-                                    style="cursor: pointer; float: right">JOIN ROOM</button>
-                              <button id="creategame_btnid" class="buttonMain" onclick="createroomFunction()"
-                                    style="cursor: pointer; float: left;">CREATE ROOM</button><br><br><br><br>
-                              <p id="subtext_joingame" class="question" style="font-size: 20px;"></p>
-                        </div>
-                  </div>
-            </div>
-      </center>
-
-      <center>
-            <!-- PLAYER SCREEN -->
-            <div class="writableContent horizontal" style="display: none;" id="playerlist_div">
-                  <p class="" style="font-size: 40px; margin: 0 0px; padding: 0px 0px;"><u>PLAYERS</u></p><br>
-                  <li class="playerlist" id="playerlist_li">
-                        <div>
-                              <p>player example</p>
-                        </div>
-                        <div>
-                              <p>player example</p>
-                        </div>
-                        <div class="trans">
-                              <p>player example</p>
-                        </div>
-                  </li>
-
-                  <p id="subtext2_players" class="question"
-                        style="font-size: 30px; padding: 0px 0px 0px 0px; margin: 0px 0 -7px 0;">WAITING FOR HOST<br>TO
-                        START</p>
-                  <button class="startbtn buttonMain"
-                        onclick="firebase.database().ref(databasePrefix + roomcode + '/data').update({_startgame: 1});"
-                        id="startbtn" style="cursor: pointer; display: none;">START GAME</button>
-            </div>
-      </center>
-
-
-      <!-- MAIN GAMEPLAY SCREEN ==================================== -->
-      <div id="screen_main_gameplay"
-            style="position: flex; margin: auto; text-align: center; max-width: 1300px; display: none; position: relative; top: -80px;">
-            <div class="headerContainer headerSTICKY" id="header">
-                  <p id="game_health_text" style="position: flex; margin-right: auto; top: 4px;">HEALTH: 100</p>
-                  <p id="game_gameTimer_text" style="position: absolute; right: 0px; padding-right:10px; top: 4px;">
-                        00:00</p>
-                  <p id="game_moduleCount_text" style="position: absolute; left: 0px; padding-left:10px; top: 4px;">
-                        Modules: 0</p>
-            </div>
-            <br>
-            <span>
-                  <p id="game_timeTillNextModule_text" style="display: inline; padding: 0px; margin: 0px;">Time
-                        till
-                        next module: </p>
-                  <p style="display: inline; padding: 0px 10px 0px 10px; margin: 0px;"> | </p>
-                  <p style="display: inline; padding: 0px; margin: 0px;">Unused Text Here.</p>
-            </span>
-            <div class="moduleContainer" id="moduleContainer">
-                  <!-- DIV for all inputGroups -->
-            </div>
-            <br><br>
-            <div id="extraDEBUG" style="display: none">
-                  <hr>
-                  <button onclick="toggleGameLoop(false);">toggleGameLoop(false)</button>
-                  <button onclick="toggleGameLoop(true);">toggleGameLoop(true)</button>
-                  <br>
-                  <button onclick="startGame();">Start Game</button>
-                  <button onclick="resetGame();">Reset Game</button>
-                  <button onclick="initializeModule();">Create Module</button>
-                  <button onclick="initializeGame();">initializeGame()</button>
-                  <button
-                        onclick="host = !host; createText(' ---- host = '+host); this.innerHTML = 'Set host = ' + !host;">Set
-                        host = true</button>
-                  <br><br>
-                  <button onclick="takeDamage(5)">Deal 5 damage</button>
-                  <button onclick="takeDamage(-5)">Heal by 5</button>
-                  <button onclick="damageDisabled = false">Enable Damage</button>
-                  <button onclick="damageDisabled = true">Disable Damage</button>
-                  <br>
-                  <button
-                        onclick="var display = document.getElementById('TEMPLATEmoduleContainer').style.display; if(display == 'block'){document.getElementById('TEMPLATEmoduleContainer').style.display='none'}else{document.getElementById('TEMPLATEmoduleContainer').style.display='block'}">ToggleTemplate
-                        Div</button><br>
-                  <br>
-                  <p style="padding:0px; margin: 0px;">MODULE LIST</p>
-                  <button onclick="initializeModule('module_simple_01')">Spawn Slider Div</button>
-                  <button onclick="initializeModule('module_reset_module_01')">Spawn Reset Div</button>
-                  <button onclick="initializeModule('module_unscramble_01')">Spawn Unscramble Div</button>
-                  <button onclick="initializeModule('module_math_01')">Spawn Math Div</button>
-                  <button onclick="initializeModule('module_color_01')">Spawn Color Match Div</button>
-                  <br>
-                  <p onclick="resetInputFields()">resetInputFields() [Click to reset the database and current
-                        fields]
-                  </p>
-                  <p onclick="resetGame()">GAME_RESET() [Database and local]</p>
-                  <hr>
-                  <!-- TEMPLATE DIV -->
-                  <div class="moduleContainer" id="TEMPLATEmoduleContainer" style="display: block">
-                        <!-- TEMPLATE_module_simple_01 -->
-                        <div class="inputGroup" id="TEMPLATE_module_simple_01">
-                              <p class="inputmodule_DEVtitle" id="TEMPLATE_module_simple_01_DEVtitle">
-                                    TEMPLATE_module_simple_01</p>
-                              <p class="inputmodule_title" data-id="title">KEEP ABOVE!</p>
-                              <hr style="top:25px">
-                              <div class="RangeGroup" style="width: 80%; position: absolute; top: 41px; left: 10px;">
-                                    <p
-                                          style="margin-bottom:12px; text-decoration: underline; font-weight: bold; margin-left: 3px">
-                                          Keep High</p>
-                                    <input type="range" class="slider" data-id="input_range_01" value="100">
-                                    <input type="range" class="slider" data-id="input_range_02" value="100">
-                              </div>
-                        </div>
-                        <!-- TEMPLATE_reset_module_01 -->
-                        <div class="inputGroup" id="TEMPLATE_module_reset_module_01">
-                              <p class="inputmodule_DEVtitle" id="TEMPLATE_module_reset_module_01_DEVtitle">
-                                    TEMPLATE_module_reset_module_01</p>
-                              <p class="inputmodule_title" data-id="title">TIMER!</p>
-                              <p class="inputmodule_title" style="right:10px" data-id="timer">30</p>
-                              <hr style="top:25px">
-                              <button data-id="input_reset_button" class="button"
-                                    style="width:70%; height: 60%; margin: 0; position: absolute; bottom: 50%; left: 50%; -ms-transform: translate(-50%, 60%); transform: translate(-50%, 60%);">RESET!!</button>
-                        </div>
-                        <!-- TEMPLATE_module_unscramble_01 -->
-                        <div class="inputGroup" id="TEMPLATE_module_unscramble_01">
-                              <p class="inputmodule_DEVtitle" id="TEMPLATE_module_unscramble_01_DEVtitle">
-                                    TEMPLATE_module_unscramble_01</p>
-                              <p class="inputmodule_title" data-id="title">UNSCRAMBLE!</p>
-                              <p class="inputmodule_title" style="right:10px" data-id="timer">100</p>
-                              <p class="inputmodule_clickableIcon" onclick="openDiv('unscrambleKey');"
-                                    style="text-align:center;"><span class="material-icons md-18">view_list</span></p>
-                              <hr style="top:25px">
-                              <center>
-                                    <p class="center" data-id="results_text"
-                                          style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 52px; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;">
-                                    </p>
-                                    <p class="center" data-id="scrambled_word_text"
-                                          style="width: 100%; height: 40px; font-weight: bold; font-size: 20px; margin: 0; position: absolute; bottom: 45%; left: 50%; -ms-transform: translate(-50%, 0%); transform: translate(-50%, 0%);">
-                                          WORD</p>
-                                    <p class="center" data-id="UNscrambled_word_text"
-                                          style="display: none; font-size: 20px; margin: 0; position: absolute; bottom: 70px; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);">
-                                          WORD</p>
-                                    <div class="RangeGroup"
-                                          style="margin: auto; width: 100%; display: inline; bottom: 20px; left: 0px;">
-                                          <input type="text"
-                                                style="width:95%; text-align: center; margin-bottom: 6px; -ms-transform: translate(50%, 60%); transform: translate(-0px, 0%); font-size:16px;"
-                                                class="input" data-id="input_unscrambledWord"
-                                                placeholder="Type Here...">
-                                          <input type="button" style="width: 95%;" class="button" value="Submit"
-                                                data-id="input_submit_button">
-                                    </div>
-                              </center>
-                        </div>
-                        <!-- TEMPLATE_module_math_01 -->
-                        <div class="inputGroup" id="TEMPLATE_module_math_01">
-                              <p class="inputmodule_DEVtitle" id="TEMPLATE_module_math_01_DEVtitle">
-                                    TEMPLATE_module_math_01</p>
-                              <p class="inputmodule_title" data-id="title">SIMPLE MATH!</p>
-                              <p class="inputmodule_title" style="right:10px" data-id="timer">60</p>
-                              <hr style="top:25px">
-                              <center>
-                                    <p class="center" data-id="results_text"
-                                          style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 22%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;">
-                                    </p>
-                                    <p class="center" data-id="math_question_text"
-                                          style="width: 100%; height: 40px; font-weight: bold; font-size: 20px; margin: 0; position: absolute; bottom: 45%; left: 50%; -ms-transform: translate(-50%, 0%); transform: translate(-50%, 0%);">
-                                          MATH QUESTION</p>
-                                    <p class="center" data-id="math_answer_text"
-                                          style="display: none; font-size: 20px; margin: 0; position: absolute; bottom: 70px; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);">
-                                          ANSWER</p>
-                                    <div class="RangeGroup"
-                                          style="margin: auto; width: 100%; display: inline; bottom: 20px; left: 0px;">
-                                          <input type="text"
-                                                style="width:95%; text-align: center; margin-bottom: 6px; -ms-transform: translate(50%, 60%); transform: translate(-0px, 0%); font-size:16px;"
-                                                class="input" data-id="input_math_response" placeholder="Type Here...">
-                                          <input type="button" style="width: 95%;" class="button" value="Submit"
-                                                data-id="input_submit_button">
-                                    </div>
-                              </center>
-                        </div>
-                        <!-- TEMPLATE_module_color_01 -->
-                        <div class="inputGroup" id="TEMPLATE_module_color_01">
-                              <p class="inputmodule_DEVtitle" id="TEMPLATE_module_color_01_DEVtitle">
-                                    TEMPLATE_module_color_01</p>
-                              <p class="inputmodule_title">COLOR MATCH!</p>
-                              <p class="inputmodule_title" style="right:10px" data-id="timer">60</p>
-                              <hr style="top:25px">
-                              <p class="center" data-id="results_text"
-                                    style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 22%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;">
-                              </p>
-                              <div class="colorSwatch" data-id="module_colorSwatchKey">
-                              </div>
-                              <div class="colorSwatch" data-id="module_colorSwatch_result" style="right: 0px;">
-                              </div>
-                              <center>
-
-                                    <p class="center"
-                                          style="width: 100%; height: 40px; font-weight: bold; font-size: 35px; margin: 0; position: absolute; top: 50px; left: 50%; -ms-transform: translate(-50%, 0%); transform: translate(-50%, 0%);">
-                                          &rarr;</p>
-                                    <div class="RangeGroup"
-                                          style="height: 120px; bottom: 0; left:50%; transform: translateX(-50%); width: 94%; bottom: 20px;">
-                                          <div style="display: inline-flex">
-                                                <div style="line-height: 10px; margin-top: -4px; padding-top: 0px;">
-                                                      <p>R: </p>
-                                                      <p>G: </p>
-                                                      <p>B: </p>
-                                                </div>
-                                                <div>
-                                                      <input type="range" style="margin-top:4px" class="slider"
-                                                            data-onupdate="updateColorResult"
-                                                            data-id="input_colorval_01" value="0">
-                                                      <input type="range" style="margin-top:4px" class="slider"
-                                                            data-onupdate="updateColorResult"
-                                                            data-id="input_colorval_02" value="0">
-                                                      <input type="range" style="margin-top:4px" class="slider"
-                                                            data-onupdate="updateColorResult"
-                                                            data-id="input_colorval_03" value="0">
-                                                </div>
-                                          </div>
-                                          <input type="button" style="width: 100%; margin-top:4px;" class="button"
-                                                value="Submit" data-id="input_submit_button">
-                                    </div>
-                              </center>
-                        </div>
-                  </div>
-                  <hr>
-                  <p>GOOGLE'S ICONS! See https://fonts.google.com/icons!</p>
-                  <p>
-                        <span class="material-icons md-18">face</span>
-                        <span class="material-icons md-18">search</span>
-                        <span class="material-icons md-18">info</span>
-                        <span class="material-icons md-18">visibility</span>
-                        <span class="material-icons md-18">description</span>
-                        <span class="material-icons md-18">help_outline</span>
-                        <span class="material-icons md-18">list</span>
-                        <span class="material-icons md-18">help</span>
-                        <span class="material-icons md-18">article</span>
-                        <span class="material-icons md-18">question_answer</span>
-                        <span class="material-icons md-18">view_list</span>
-                        <span class="material-icons md-18">text_snippet</span>
-                        <span class="material-icons md-18">notes</span>
-                  </p>
-                  <hr>
-                  <input type="text" id="input_textbox_01" value="testing input">
-                  <input type="checkbox" id="input_checkbox_01" checked="true">
-                  <hr>
-                  <div>
-                        <p style="margin-bottom:3px;"><u>INPUT-OBJECTS</u></p>
-                        <p id="INPUT_OBJECTS" class="indented">UserInputObjects = </p>
-                        <p id="CURRENT_GROUPSDIV" class="indented">CurrentGroups = </p>
-                  </div>
-                  <hr>
-                  <div>
-                        <p style="margin-bottom:3px;"><u>DATABASE-STUFF</u></p>
-                        <p id="DATABASE_OBJECTS" class="indented">DatabaseObjects</p>
-                  </div>
-                  <hr>
-                  <p style="margin-bottom:0px;padding-bottom:0px;">TODO:</p>
-                  <p class="indented">
-                        Modifier tab? Change Tick Speed, Initial Module Count ETC.
-                        New module? - secret key on one person's screen, a input on a different person.
-                  </p>
-                  <hr>
-                  <p>LOG</p>
-                  <div id="textLayer" style="white-space: nowrap"></div>
-            </div>
-      </div>
-      <!-- DATABASE SCRIPTS -->
-      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-auth.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-functions.js"></script>
-      <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-database.js"></script>
-
-      <!-- SCRIPT REFERENCES -->
-      <script src="firebase.js"></script>
-      <script src="wordBank.js"></script>
-      <script src="gameScreens.js"></script>
-      <script src="gameoverScreen.js"></script>
-      <script src="userDatabaseData.js"></script>
-
-      <script src="gameData.js"></script>
-      <script>
-            versionText.innerHTML = version;
-      </script>
-</body>
-
+            // This gives you a Google Access Token. You can use it to access the Google API.
+            var token = credential.accessToken;
+            // ...
+          }
+          // The signed-in user info.
+          var user = result.user;
+          // IdP data available in result.additionalUserInfo.profile.
+          // ...
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+          // ...
+        });
+    </script>
+  </body>
 </html>

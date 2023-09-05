@@ -7,9 +7,10 @@ var inputObjects = [];
 //List of all InputGroups that can be created.
 var groupTypeList = [
   "module_simple_01",
-  "module_reset_module_01",
+  "module_reset_01",
   "module_unscramble_01",
   "module_math_01",
+  "module_color_01",
 ];
 
 //Debug Variables
@@ -21,7 +22,7 @@ var timer = document.getElementById("game_gameTimer_text");
 var versionText = document.getElementById("versionDiv");
 
 // Game Vars
-var version = "Release 1.00 - TESTING 0.92";
+var version = "Release 1.00 - TESTING 0.92 Google Sign-in Test";
 var host = false;
 var health = 100;
 var timerActive = false;
@@ -60,9 +61,9 @@ var game_timeTillNextModule = game_timeTillNextModule_default;
 //module_simple_01
 var_simple01_healthPenalty = 1;
 
-//module_reset_module_01
+//module_reset_01
 var reset_timer_graceTime = 3; //When to start flashing red.
-var_reset_module_01_healthPenalty = 10;
+var_reset_01_healthPenalty = 10;
 var_reset_timerLength = 25;
 
 //module_unscramble_01
@@ -74,11 +75,6 @@ var_unscramble_timerLength = 100;
 var_math_01_timerLength = 60;
 var_math_01_healthPenalty = 10;
 math_01_timer_graceTime = 3;
-
-//module_color_01
-var_color_01_timerLength = 60;
-var_color_01_healthPenalty = 10;
-color_01_timer_graceTime = 3;
 
 math_problem_list = [
   ["8 * 3", "24"],
@@ -94,6 +90,11 @@ math_problem_list = [
   ["5^2", "25"],
   ["12 x 12", "144"],
 ];
+
+//module_color_01
+var_color_01_timerLength = 60;
+var_color_01_healthPenalty = 10;
+color_01_timer_graceTime = 3;
 
 // GAME INTERVALS ====================================================
 var game_loop_interval = null; //Responsible for calling onTick() and gameplay_loop() every TickSpeed / Second.
@@ -160,9 +161,9 @@ function onTick() {
             takeDamage(var_simple01_healthPenalty * 2);
           }
 
-          slider01.value -= 5;
+          slider01.value -= 2;
           userUpdateField(module_id + "_input_range_01");
-          slider02.value -= 5;
+          slider02.value -= 2;
           userUpdateField(module_id + "_input_range_02");
         }
 
@@ -174,8 +175,7 @@ function onTick() {
             groupReferences[i].classList.remove("flashing");
         }
         break;
-      //
-      case "module_reset_module_01":
+      case "module_reset_01":
         module_timer_current = parseInt(
           groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML
         );
@@ -189,7 +189,7 @@ function onTick() {
             databaseTextObjects(module_id + "_timer", module_timer_current);
           } else {
             //console.log("TAKING DAMAGE!");
-            takeDamage(var_reset_module_01_healthPenalty);
+            takeDamage(var_reset_01_healthPenalty);
           }
         }
         //The module will flash red is low on time.
@@ -212,7 +212,6 @@ function onTick() {
         if (host)
           databaseTextObjects(module_id + "_timer", module_timer_current);
         break;
-
       case "module_unscramble_01":
         resultsText = groupReferences[i].querySelector(
           "#" + module_id + "_results_text"
@@ -286,7 +285,6 @@ function onTick() {
         }
 
         break;
-
       case "module_math_01":
         resultsText = groupReferences[i].querySelector(
           "#" + module_id + "_results_text"
@@ -364,10 +362,10 @@ function onTick() {
         module_timer_current = parseInt(
           groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML
         );
-        if (host) {
-          if (module_timer_current > 0) {
-            module_timer_current--;
-          } else {
+        if (module_timer_current > 0) {
+          if (host) module_timer_current--;
+        } else {
+          if (host) {
             module_timer_current = var_color_01_timerLength;
             var keyDiv = groupReferences[i].querySelector(
               "#" + module_id + "_module_colorSwatchKey"
@@ -381,6 +379,28 @@ function onTick() {
                 keyColor: newColor,
               });
           }
+
+          //Unlock stuff when the module restarts
+          var color01 = groupReferences[i].querySelector(
+            "#" + module_id + "_input_colorval_01"
+          );
+          color02 = groupReferences[i].querySelector(
+            "#" + module_id + "_input_colorval_02"
+          );
+          color03 = groupReferences[i].querySelector(
+            "#" + module_id + "_input_colorval_03"
+          );
+          groupReferences[i].querySelector(
+            "#" + module_id + "_input_submit_button"
+          ).disabled = false;
+          color01.disabled = false;
+          color02.disabled = false;
+          color03.disabled = false;
+          color01.value = 0;
+          color02.value = 0;
+          color03.value = 0;
+        }
+        if (host) {
           groupReferences[i].querySelector(
             "#" + module_id + "_timer"
           ).innerHTML = module_timer_current;
@@ -988,6 +1008,8 @@ function initializeGame() {
 
           //CREATING A NEW DIV FROM TEMPLATE
           var templateGroup = document.getElementById("TEMPLATE_" + groupType);
+          console.log("check this " + templateGroup);
+          console.log("check this also " + groupType);
           var createdGroup = templateGroup.cloneNode(true);
           createdGroup.id = "MODULE_ENTRY_" + groupInDatabase;
           console.log("#" + templateGroup.id + "DEVtitle");
@@ -1217,7 +1239,7 @@ function initializeModule(groupType) {
     createText("<b>YOU ARE NOT THE HOST... WHY INITIZALIZEINPUTGROUP()???</b>");
   }
   if (groupType == undefined) {
-    //var groupTypeList = ["module_simple_01", "module_reset_module_01"];
+    //var groupTypeList = ["module_simple_01", "module_reset_01"];
     var groupType =
       groupTypeList[Math.floor(Math.random() * groupTypeList.length)];
   }
@@ -1277,7 +1299,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         updateUserStats();
       });
       break;
-    case "module_reset_module_01":
+    case "module_reset__01":
       ResetButton = createdGroupRef.querySelector(
         "#" + module_id + "_input_reset_button"
       );
@@ -1553,6 +1575,10 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         }
       });
 
+      submitButton = createdGroupRef.querySelector(
+        "#" + module_id + "_input_submit_button"
+      );
+
       userColorDiv = createdGroupRef.querySelector(
         "#" + module_id + "_module_colorSwatch_result"
       );
@@ -1568,6 +1594,52 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       var keyDiv = createdGroupRef.querySelector(
         "#" + module_id + "_module_colorSwatchKey"
       );
+
+      //Submit button code.
+      submitButton.addEventListener("click", function () {
+        resultsText = createdGroupRef.querySelector(
+          "#" + module_id + "_results_text"
+        );
+
+        var keyColorCode = keyDiv.style.backgroundColor
+          .substring(
+            keyDiv.style.backgroundColor.indexOf("(") + 1,
+            keyDiv.style.backgroundColor.lastIndexOf(")")
+          )
+          .split(", ")
+          .map(Number);
+        console.log(keyColorCode);
+
+        var colorInputValues = [
+          colorVal1.value * 2.5,
+          colorVal2.value * 2.5,
+          colorVal3.value * 2.5,
+        ];
+
+        var colorDifference = [
+          keyColorCode[0] - colorInputValues[0],
+          keyColorCode[1] - colorInputValues[1],
+          keyColorCode[2] - colorInputValues[2],
+        ];
+
+        var valid = colorDifference.every((el) => el < 20 && el > -20);
+        console.log("Win: " + valid);
+        console.log("colorScore: " + colorDifference);
+
+        if (valid) {
+          writeToDatabase("modules/" + module_id + "/isCorrect", true, false);
+          colorVal1.disabled = true;
+          colorVal2.disabled = true;
+          colorVal3.disabled = true;
+          submitButton.disabled = true;
+        } else {
+          writeToDatabase("modules/" + module_id + "/isCorrect", false, true);
+          colorVal1.disabled = false;
+          colorVal2.disabled = false;
+          colorVal3.disabled = false;
+          submitButton.disabled = false;
+        }
+      });
 
       //Check for when a field is updated! ==============================================================================================
       module_database_ref = firebase
