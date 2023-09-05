@@ -21,7 +21,7 @@ var timer = document.getElementById("game_gameTimer_text");
 var versionText = document.getElementById("versionDiv");
 
 // Game Vars
-var version = "Release 1.00 - TESTING 0.91";
+var version = "Release 1.00 - TESTING 0.92";
 var host = false;
 var health = 100;
 var timerActive = false;
