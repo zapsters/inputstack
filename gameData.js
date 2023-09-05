@@ -990,15 +990,20 @@ function initializeGame() {
           var templateGroup = document.getElementById("TEMPLATE_" + groupType);
           var createdGroup = templateGroup.cloneNode(true);
           createdGroup.id = "MODULE_ENTRY_" + groupInDatabase;
-          createdGroup.querySelector("#DEVtitle").innerHTML = createdGroup.id;
+          console.log("#" + templateGroup.id + "DEVtitle");
+          createdGroup.querySelector(
+            "#" + templateGroup.id + "_DEVtitle"
+          ).innerHTML = createdGroup.id;
           if (!DEV_showGroupTitles) {
-            createdGroup.querySelector("#DEVtitle").style.display = "none";
+            createdGroup.querySelector(
+              "#" + templateGroup.id + "_DEVtitle"
+            ).style.display = "none";
           }
           document.getElementById("moduleContainer").appendChild(createdGroup);
           var children = createdGroup.getElementsByTagName("*");
           //Give new id to children
           for (let i = 0; i < children.length; i++) {
-            children[i].id = groupInDatabase + "_" + children[i].id;
+            children[i].id = groupInDatabase + "_" + children[i].dataset.id;
           }
 
           //Init input children and set moduleObject data onto input children.

@@ -2,7 +2,7 @@
 <html>
 
 <head>
-      <link rel="stylesheet" type="text/css" href="style.css">
+      <link rel="stylesheet" type="text/css" href="css/style.css">
       <title>Input Stack!</title>
       <link rel="shortcut icon" type="image/png" href="https://zapsters.github.io/Home/images/ZapSIcon_C2.png" />
       <!-- GOOGLE'S MATERIAL ICONS SHEET https://fonts.google.com/icons -->
@@ -204,94 +204,99 @@
                   <div class="moduleContainer" id="TEMPLATEmoduleContainer" style="display: block">
                         <!-- TEMPLATE_module_simple_01 -->
                         <div class="inputGroup" id="TEMPLATE_module_simple_01">
-                              <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_simple_01</p>
-                              <p class="inputmodule_title" id="title">KEEP ABOVE!</p>
+                              <p class="inputmodule_DEVtitle" id="TEMPLATE_module_simple_01_DEVtitle">
+                                    TEMPLATE_module_simple_01</p>
+                              <p class="inputmodule_title" data-id="title">KEEP ABOVE!</p>
                               <hr style="top:25px">
                               <div class="RangeGroup" style="width: 80%; position: absolute; top: 41px; left: 10px;">
                                     <p
                                           style="margin-bottom:12px; text-decoration: underline; font-weight: bold; margin-left: 3px">
                                           Keep High</p>
-                                    <input type="range" class="slider" id="input_range_01" value="100">
-                                    <input type="range" class="slider" id="input_range_02" value="100">
+                                    <input type="range" class="slider" data-id="input_range_01" value="100">
+                                    <input type="range" class="slider" data-id="input_range_02" value="100">
                               </div>
                         </div>
                         <!-- TEMPLATE_reset_module_01 -->
                         <div class="inputGroup" id="TEMPLATE_module_reset_module_01">
-                              <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_reset_module_01</p>
-                              <p class="inputmodule_title" id="title">TIMER!</p>
-                              <p class="inputmodule_title" style="right:10px" id="timer">30</p>
+                              <p class="inputmodule_DEVtitle" id="TEMPLATE_module_reset_module_01_DEVtitle">
+                                    TEMPLATE_module_reset_module_01</p>
+                              <p class="inputmodule_title" data-id="title">TIMER!</p>
+                              <p class="inputmodule_title" style="right:10px" data-id="timer">30</p>
                               <hr style="top:25px">
-                              <button id="input_reset_button" class="button"
+                              <button data-id="input_reset_button" class="button"
                                     style="width:70%; height: 60%; margin: 0; position: absolute; bottom: 50%; left: 50%; -ms-transform: translate(-50%, 60%); transform: translate(-50%, 60%);">RESET!!</button>
                         </div>
                         <!-- TEMPLATE_module_unscramble_01 -->
                         <div class="inputGroup" id="TEMPLATE_module_unscramble_01">
-                              <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_unscramble_01</p>
-                              <p class="inputmodule_title" id="title">UNSCRAMBLE!</p>
+                              <p class="inputmodule_DEVtitle" id="TEMPLATE_module_unscramble_01_DEVtitle">
+                                    TEMPLATE_module_unscramble_01</p>
+                              <p class="inputmodule_title" data-id="title">UNSCRAMBLE!</p>
                               <p class="inputmodule_title" style="right:10px" id="timer">100</p>
                               <p class="inputmodule_clickableIcon" onclick="openDiv('unscrambleKey');"
-                                    style="text-align:center;" id="timer"><span
+                                    style="text-align:center;" data-id="timer"><span
                                           class="material-icons md-18">view_list</span></p>
                               <hr style="top:25px">
                               <center>
-                                    <p class="center" id="results_text"
+                                    <p class="center" data-id="results_text"
                                           style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 52px; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;">
                                     </p>
-                                    <p class="center" id="scrambled_word_text"
+                                    <p class="center" data-id="scrambled_word_text"
                                           style="width: 100%; height: 40px; font-weight: bold; font-size: 20px; margin: 0; position: absolute; bottom: 45%; left: 50%; -ms-transform: translate(-50%, 0%); transform: translate(-50%, 0%);">
                                           WORD</p>
-                                    <p class="center" id="UNscrambled_word_text"
+                                    <p class="center" data-id="UNscrambled_word_text"
                                           style="display: none; font-size: 20px; margin: 0; position: absolute; bottom: 70px; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);">
                                           WORD</p>
                                     <div class="RangeGroup"
                                           style="margin: auto; width: 100%; display: inline; bottom: 20px; left: 0px;">
                                           <input type="text"
                                                 style="width:95%; text-align: center; margin-bottom: 6px; -ms-transform: translate(50%, 60%); transform: translate(-0px, 0%); font-size:16px;"
-                                                class="input" id="input_unscrambledWord"
-                                                placeholder="Type Here..."></input>
+                                                class="input" data-id="input_unscrambledWord"
+                                                placeholder="Type Here...">
                                           <input type="button" style="width: 95%;" class="button" value="Submit"
-                                                id="input_submit_button"></input>
+                                                data-id="input_submit_button">
                                     </div>
                               </center>
                         </div>
                         <!-- TEMPLATE_module_math_01 -->
                         <div class="inputGroup" id="TEMPLATE_module_math_01">
-                              <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_math_01</p>
-                              <p class="inputmodule_title" id="title">SIMPLE MATH!</p>
-                              <p class="inputmodule_title" style="right:10px" id="timer">60</p>
+                              <p class="inputmodule_DEVtitle" id="TEMPLATE_module_math_01_DEVtitle">
+                                    TEMPLATE_module_math_01</p>
+                              <p class="inputmodule_title" data-id="title">SIMPLE MATH!</p>
+                              <p class="inputmodule_title" style="right:10px" data-id="timer">60</p>
                               <hr style="top:25px">
                               <center>
-                                    <p class="center" id="results_text"
+                                    <p class="center" data-id="results_text"
                                           style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 22%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;">
                                     </p>
-                                    <p class="center" id="math_question_text"
+                                    <p class="center" data-id="math_question_text"
                                           style="width: 100%; height: 40px; font-weight: bold; font-size: 20px; margin: 0; position: absolute; bottom: 45%; left: 50%; -ms-transform: translate(-50%, 0%); transform: translate(-50%, 0%);">
                                           MATH QUESTION</p>
-                                    <p class="center" id="math_answer_text"
+                                    <p class="center" data-id="math_answer_text"
                                           style="display: none; font-size: 20px; margin: 0; position: absolute; bottom: 70px; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%);">
                                           ANSWER</p>
                                     <div class="RangeGroup"
                                           style="margin: auto; width: 100%; display: inline; bottom: 20px; left: 0px;">
                                           <input type="text"
                                                 style="width:95%; text-align: center; margin-bottom: 6px; -ms-transform: translate(50%, 60%); transform: translate(-0px, 0%); font-size:16px;"
-                                                class="input" id="input_math_response" placeholder="Type Here...">
+                                                class="input" data-id="input_math_response" placeholder="Type Here...">
                                           <input type="button" style="width: 95%;" class="button" value="Submit"
-                                                id="input_submit_button">
+                                                data-id="input_submit_button">
                                     </div>
                               </center>
                         </div>
                         <!-- TEMPLATE_module_color_01 -->
                         <div class="inputGroup" id="TEMPLATE_module_color_01">
-                              <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_color_01</p>
-                              <p class="inputmodule_title" id="title">COLOR MATCH!</p>
-                              <p class="inputmodule_title" style="right:10px" id="timer">60</p>
+                              <p class="inputmodule_DEVtitle" id="TEMPLATE_module_color_01_DEVtitle">
+                                    TEMPLATE_module_color_01</p>
+                              <p class="inputmodule_title">COLOR MATCH!</p>
+                              <p class="inputmodule_title" style="right:10px" data-id="timer">60</p>
                               <hr style="top:25px">
-                              <p class="center" id="results_text"
+                              <p class="center" data-id="results_text"
                                     style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 22%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;">
                               </p>
-                              <div class="colorSwatch" id="module_colorSwatchKey">
+                              <div class="colorSwatch" data-id="module_colorSwatchKey">
                               </div>
-                              <div class="colorSwatch" id="module_colorSwatch_result" style="right: 0px;">
+                              <div class="colorSwatch" data-id="module_colorSwatch_result" style="right: 0px;">
                               </div>
                               <center>
 
@@ -306,20 +311,20 @@
                                                       <p>G: </p>
                                                       <p>B: </p>
                                                 </div>
-                                                <div style="">
+                                                <div>
                                                       <input type="range" style="margin-top:4px" class="slider"
-                                                            data-onupdate="updateColorResult" id="input_colorval_01"
-                                                            value="0">
+                                                            data-onupdate="updateColorResult"
+                                                            data-id="input_colorval_01" value="0">
                                                       <input type="range" style="margin-top:4px" class="slider"
-                                                            data-onupdate="updateColorResult" id="input_colorval_02"
-                                                            value="0">
+                                                            data-onupdate="updateColorResult"
+                                                            data-id="input_colorval_02" value="0">
                                                       <input type="range" style="margin-top:4px" class="slider"
-                                                            data-onupdate="updateColorResult" id="input_colorval_03"
-                                                            value="0">
+                                                            data-onupdate="updateColorResult"
+                                                            data-id="input_colorval_03" value="0">
                                                 </div>
                                           </div>
                                           <input type="button" style="width: 100%; margin-top:4px;" class="button"
-                                                value="Submit" id="input_submit_button">
+                                                value="Submit" data-id="input_submit_button">
                                     </div>
                               </center>
                         </div>
@@ -341,9 +346,9 @@
                         <span class="material-icons md-18">text_snippet</span>
                         <span class="material-icons md-18">notes</span>
                   </p>
-                  </hr>
-                  <input type="text" id="input_textbox_01" value="testing input"></input>
-                  <input type="checkbox" id="input_checkbox_01" checked="true"></input>
+                  <hr>
+                  <input type="text" id="input_textbox_01" value="testing input">
+                  <input type="checkbox" id="input_checkbox_01" checked="true">
                   <hr>
                   <div>
                         <p style="margin-bottom:3px;"><u>INPUT-OBJECTS</u></p>
