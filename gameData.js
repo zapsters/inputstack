@@ -28,6 +28,8 @@ var timerActive = false;
 var totalSeconds = 0; //Used for in game realtime timer
 var defaultTickSpeed = 1000;
 var tickSpeed = defaultTickSpeed;
+var username = "undefined";
+var damageDisabled = false;
 
 var groupReferences = []; //References to each group container.
 var currentGroups = [];
@@ -37,14 +39,12 @@ var currentModuleNUM = 0;
 var isCreatingRoom = false;
 var isJoining = false;
 var starting = false;
-var state = 0;
+var state = 0; //State Value
 //State 0: Not in a room
 //State 1: In room, wait screen
 //State 2: Beginning of game.
 //State 3: GameOver screen
 createGameScreen();
-
-var username = "undefined";
 
 //Database User Path
 var userPath = "null";
@@ -53,7 +53,7 @@ var userPath = "null";
 var moduleStartCount = 4;
 var modules_per_spawnCycle = 2; // # of modules that spawn when the game_timeTillNextModule reaches 0
 var game_timeTillNextModule_default = 40; //Seconds between each module spawn
-var game_timeTillNextModule;
+var game_timeTillNextModule = game_timeTillNextModule_default;
 
 //MODULE VARIABLES ===========================================================
 //module_simple_01
@@ -74,17 +74,24 @@ var_math_01_timerLength = 60;
 var_math_01_healthPenalty = 10;
 math_01_timer_graceTime = 3;
 
+//module_color_01
+var_color_01_timerLength = 60;
+var_color_01_healthPenalty = 10;
+color_01_timer_graceTime = 3;
+
 math_problem_list = [
-  ["2 + 2", "4"],
-  ["1 + 2", "3"],
   ["8 * 3", "24"],
-  ["200 - 48", "152"],
-  ["184 - 73", "111"],
-  ["12 x 3", "36"],
+  ["260 - 48", "212"],
+  ["184 + 73", "257"],
   ["93 - 21", "72"],
   ["92 + 3", "95"],
-  ["200 / 4", "50"],
+  ["250 * 4", "100"],
   ["100 * 9", "900"],
+  ["125 * 4", "500"],
+  ["954 - 309", "645"],
+  ["733 - 125", "608"],
+  ["5^2", "25"],
+  ["12 x 12", "144"],
 ];
 
 // GAME INTERVALS ====================================================
@@ -105,24 +112,12 @@ function toggleGameLoop(flag) {
     game_onTick_interval = window.setInterval(function () {
       onTick();
     }, tickSpeed);
-
-    //Start Timer!
-    timerActive = true;
-    clearInterval(game_timer_interval);
-    game_timer_interval = window.setInterval(function () {
-      timerToggle();
-    }, 1000);
   } else {
     timerActive = false;
     clearInterval(game_loop_interval);
     clearInterval(game_onTick_interval);
     clearInterval(game_timer_interval);
   }
-}
-
-function timerToggle() {
-  if (!host) return;
-  if (timerActive) ++totalSeconds;
 }
 
 //Sets the speed of the game and it's timers.
@@ -138,6 +133,7 @@ function setTickSpeed(tickSpeed) {
 //Runs every tick ============================
 function onTick() {
   //HOST MANAGES THE GAME, REST IS FORMATTING.
+  if (timerActive) ++totalSeconds;
   groupTypes.forEach(function (value, i) {
     var module_id = "module_" + i;
     var module_type = value;
@@ -228,17 +224,8 @@ function onTick() {
         if (host) {
           if (module_timer_current > 0) {
             module_timer_current--;
-
-            groupReferences[i].querySelector(
-              "#" + module_id + "_timer"
-            ).innerHTML = module_timer_current;
-            databaseTextObjects(module_id + "_timer", module_timer_current);
           } else {
             module_timer_current = var_unscramble_timerLength;
-            groupReferences[i].querySelector(
-              "#" + module_id + "_timer"
-            ).innerHTML = var_unscramble_timerLength;
-            databaseTextObjects(module_id + "_timer", module_timer_current);
 
             if (resultsText.innerHTML != "CORRECT!") {
               //console.log("DEALING DAMAGE!");
@@ -267,6 +254,10 @@ function onTick() {
             databaseTextObjects(ScrambledtextOBJ.id, randomWORD.shuffle());
             databaseTextObjects(UNScrambledtextOBJ.id, randomWORD);
           }
+          groupReferences[i].querySelector(
+            "#" + module_id + "_timer"
+          ).innerHTML = var_unscramble_timerLength;
+          databaseTextObjects(module_id + "_timer", module_timer_current);
         }
 
         //The module will flash red is low on time.
@@ -307,16 +298,8 @@ function onTick() {
         if (host) {
           if (module_timer_current > 0) {
             module_timer_current--;
-            groupReferences[i].querySelector(
-              "#" + module_id + "_timer"
-            ).innerHTML = module_timer_current;
-            databaseTextObjects(module_id + "_timer", module_timer_current);
           } else {
             module_timer_current = var_math_01_timerLength;
-            groupReferences[i].querySelector(
-              "#" + module_id + "_timer"
-            ).innerHTML = var_unscramble_timerLength;
-            databaseTextObjects(module_id + "_timer", module_timer_current);
 
             if (resultsText.innerHTML != "CORRECT!") {
               //console.log("DEALING DAMAGE!");
@@ -345,6 +328,10 @@ function onTick() {
             //SET THE ANSWER TEXT
             databaseTextObjects(math_answer_text.id, randomPROBLEM[1]);
           }
+          groupReferences[i].querySelector(
+            "#" + module_id + "_timer"
+          ).innerHTML = module_timer_current;
+          databaseTextObjects(module_id + "_timer", module_timer_current);
         }
         //The module will flash red is low on time.
         if (module_timer_current > 0) {
@@ -372,6 +359,26 @@ function onTick() {
         }
 
         break;
+      case "module_color_01":
+        module_timer_current = parseInt(
+          groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML
+        );
+        if (host) {
+          if (module_timer_current > 0) {
+            module_timer_current--;
+          } else {
+            module_timer_current = var_color_01_timerLength;
+            var keyDiv = groupReferences[i].querySelector(
+              "#" + module_id + "_module_colorSwatchKey"
+            );
+            keyDiv.style.backgroundColor = randomColor();
+          }
+          groupReferences[i].querySelector(
+            "#" + module_id + "_timer"
+          ).innerHTML = module_timer_current;
+          databaseTextObjects(module_id + "_timer", module_timer_current);
+        }
+        break;
       default:
         console.log(value + " failed in the ONTICK function.");
         break;
@@ -383,6 +390,7 @@ function onTick() {
         .ref(databasePrefix + roomcode + "/data")
         .update({
           _timerCurrent: totalSeconds,
+          _moduleTimer: game_timeTillNextModule,
         });
     }
     //console.log(module_id + " is type " + value);
@@ -429,10 +437,12 @@ function toggleDebugMenu() {
     debug_menu_open = false;
     debug_menu.style.display = "none";
     extraDEBUG.style.display = "none";
+    //DEV_showGroupTitles = false;
   } else if (!debug_menu_open) {
     debug_menu_open = true;
     debug_menu.style.display = "block";
     extraDEBUG.style.display = "block";
+    //DEV_showGroupTitles = true;
   }
 }
 
@@ -710,6 +720,7 @@ function playerlist_reload() {
 
 // START GAME LOGIC ====================================================================================
 function startGame() {
+  game_timeTillNextModule = game_timeTillNextModule_default;
   //Begin the game with default # of modules. (4?)
   setTimeout(function () {
     initializeModuleMultiple(moduleStartCount);
@@ -719,7 +730,7 @@ function startGame() {
       .update({
         _state: state,
       });
-  }, 50);
+  }, 100);
 
   //Begin gameplay functions
   toggleGameLoop(true);
@@ -801,35 +812,33 @@ function gameplay_loop() {
   if (game_timeTillNextModule == 0) {
     initializeModuleMultiple(modules_per_spawnCycle);
     game_timeTillNextModule = game_timeTillNextModule_default;
-    game_timeTillNextModule_text.innerHTML =
-      "Time till next module: " + game_timeTillNextModule;
   } else {
     if (game_timeTillNextModule == null) {
       game_timeTillNextModule = game_timeTillNextModule_default;
     } else {
       game_timeTillNextModule--;
     }
-    game_timeTillNextModule_text.innerHTML =
-      "Time till next module: " + game_timeTillNextModule;
   }
 }
 
 //Update Header and Timer Text
 function updateHeader() {
   game_moduleCount_text.innerHTML = "Modules: " + currentModuleNUM;
+  game_gameTimer_text.innerHTML = timerText;
+  game_timeTillNextModule_text.innerHTML =
+    "Time till next module: " + game_timeTillNextModule;
 }
 
 function gameOver() {
   toggleGameLoop(false);
   timerActive = false;
-  timerToggle();
   initializeGameOverScreen();
 }
 
 //Health logic
 //HOST - takeDamageFunction Can take negative damage to heal.
 function takeDamage(amount) {
-  if (host) {
+  if (host && !damageDisabled) {
     if (health - amount <= 0) {
       newHealth = 0;
     } else {
@@ -904,7 +913,8 @@ function recieveStateUpdate(value) {
   }
 }
 
-//Used At the start of gameplay to start checking for database updates.
+// Used At the start of gameplay to start checking for database updates.
+// Includes recieving field updates, then setting the new value on screen.
 function initializeGame() {
   initInput("input_textbox_01");
   initInput("input_checkbox_01");
@@ -969,19 +979,23 @@ function initializeGame() {
           var templateGroup = document.getElementById("TEMPLATE_" + groupType);
           var createdGroup = templateGroup.cloneNode(true);
           createdGroup.id = "MODULE_ENTRY_" + groupInDatabase;
-          createdGroup.querySelector("#DEVtitle").innerHTML = groupType;
+          createdGroup.querySelector("#DEVtitle").innerHTML = createdGroup.id;
           if (!DEV_showGroupTitles) {
             createdGroup.querySelector("#DEVtitle").style.display = "none";
           }
           document.getElementById("moduleContainer").appendChild(createdGroup);
           var children = createdGroup.getElementsByTagName("*");
+          //Give new id to children
           for (let i = 0; i < children.length; i++) {
             children[i].id = groupInDatabase + "_" + children[i].id;
           }
 
+          //Init input children and set moduleObject data onto input children.
           var inputChildren = createdGroup.getElementsByTagName("input");
           for (let i = 0; i < inputChildren.length; i++) {
             initInput(inputChildren[i].id);
+            inputChildren[i].dataset.moduleId = createdGroup.id;
+            inputChildren[i].dataset.groupInDatabase = groupInDatabase;
           }
 
           fullyInitGroup(createdGroup, groupInDatabase, groupType);
@@ -1039,8 +1053,23 @@ function initializeGame() {
               inputObject.value = databaseInputValue;
               break;
           }
-          //Add object to array, then update list
 
+          //Used to run code if a field gets updated.
+          if (inputObject.dataset.onupdate != undefined) {
+            var onRunData = inputObject.dataset.onupdate;
+            var groupInDatabase = inputObject.dataset.groupInDatabase;
+            var moduleId = inputObject.dataset.moduleId;
+            switch (onRunData) {
+              case "updateColorResult":
+                updateColorResult(moduleId, groupInDatabase);
+                break;
+
+              default:
+                break;
+            }
+          }
+
+          //Add object to array, then update list
           DEVobjectList = document.getElementById("DATABASE_OBJECTS");
           DEVobjectList.innerHTML +=
             objectID + " = " + databaseInputValue + "<br>";
@@ -1058,6 +1087,7 @@ function initializeGame() {
     .ref(databasePrefix + roomcode + "/MainVars/");
   database_important_vars_ref.on("value", function (doc) {
     inputData = doc.val();
+    if (inputData == null) return;
     varList = Object.keys(doc.val());
     varList.forEach((variable, i) => {
       switch (variable) {
@@ -1084,6 +1114,7 @@ function initializeGame() {
     .ref(databasePrefix + roomcode + "/textObjects/");
   database_gamevar_instances_ref.on("value", function (doc) {
     inputData = doc.val();
+    if (inputData == null) return;
     groupList = Object.keys(doc.val()); //WILL THROW ERROR IF NO DATA IN DATABASE.
     groupList.forEach((textObjectInDatabase) => {
       textObjectData = doc.child(textObjectInDatabase).child("data").val();
@@ -1091,7 +1122,8 @@ function initializeGame() {
     });
   });
 
-  //Check for data updates.
+  // Check for data updates.
+  // Update timer text
   database_data_instances_ref = firebase
     .database()
     .ref(databasePrefix + roomcode + "/data/");
@@ -1102,7 +1134,10 @@ function initializeGame() {
     secondsText = pad(totalSeconds % 60);
     minutesText = pad(parseInt(totalSeconds / 60));
     timerText = minutesText + ":" + secondsText;
-    game_gameTimer_text.innerHTML = timerText;
+
+    //Module timer
+    game_timeTillNextModule = gameData._moduleTimer;
+    updateHeader();
   });
 }
 //END OF INITGAME=====
@@ -1454,6 +1489,61 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       });
 
       break;
+    case "module_color_01":
+      //Add event listener for the "isCorrect" var in the database
+      colorIsCorrectEvent = firebase
+        .database()
+        .ref(
+          databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect"
+        );
+      colorIsCorrectEvent.on("value", function (doc) {
+        resultsText = createdGroupRef.querySelector(
+          "#" + module_id + "_results_text"
+        );
+
+        inputData = doc.val();
+        isCorrect = doc.child("data").val();
+        //console.log(module_id + " trigged isCorrect event, isCorrect is = " + doc.child("data").val());
+        if (isCorrect == true) {
+          resultsText.innerHTML = "CORRECT!";
+          resultsText.style.color = "green";
+        } else if (isCorrect == false) {
+          resultsText.innerHTML = "WRONG!";
+          setTimeout(function () {
+            if (resultsText.innerHTML == "CORRECT!") return;
+            resultsText = createdGroupRef.querySelector(
+              "#" + module_id + "_results_text"
+            );
+            resultsText.innerHTML = "";
+            inputfield.disabled = false;
+          }, 1000);
+          resultsText.style.color = "#b50000";
+          inputfield.disabled = false;
+        } else if (isCorrect == undefined) {
+          inputfield.disabled = false;
+        }
+      });
+
+      userColorDiv = createdGroupRef.querySelector(
+        "#" + module_id + "_module_colorSwatch_result"
+      );
+      colorVal1 = createdGroupRef.querySelector(
+        "#" + module_id + "_input_colorval_01"
+      );
+      colorVal2 = createdGroupRef.querySelector(
+        "#" + module_id + "_input_colorval_02"
+      );
+      colorVal3 = createdGroupRef.querySelector(
+        "#" + module_id + "_input_colorval_03"
+      );
+      var keyDiv = createdGroupRef.querySelector(
+        "#" + module_id + "_module_colorSwatchKey"
+      );
+      if (host) {
+        /* TODO SYNC THIS TO DATABASE */
+        keyDiv.style.backgroundColor = randomColor();
+      }
+      break;
   }
 }
 
@@ -1529,7 +1619,6 @@ function resetGame() {
   //Reset Timer
   totalSeconds = 0;
   timerActive = false;
-  timerToggle();
 
   //Reset module spawn timers
   game_timeTillNextModule = game_timeTillNextModule_default;
@@ -1600,6 +1689,17 @@ function randomIntFromInterval(min, max) {
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+function randomColor() {
+  return (
+    "rgb(" +
+    randomIntFromInterval(0, 255) +
+    ", " +
+    randomIntFromInterval(0, 255) +
+    ", " +
+    randomIntFromInterval(0, 255) +
+    ")"
+  );
+}
 function pad(val) {
   var valString = val + "";
   if (valString.length < 2) {
@@ -1652,4 +1752,27 @@ function showTextForTime(textObject, text, time) {
     if (lastShowTextForTimeRan != n) return;
     textObject.style.visibility = "hidden";
   }, time);
+}
+function updateColorResult(module_id, groupInDatabase) {
+  var moduleReference = document.getElementById(module_id);
+  resultsText = moduleReference.querySelector(
+    "#" + groupInDatabase + "_results_text"
+  );
+  userColorDiv = moduleReference.querySelector(
+    "#" + groupInDatabase + "_module_colorSwatch_result"
+  );
+  colorVal1 = moduleReference.querySelector(
+    "#" + groupInDatabase + "_input_colorval_01"
+  );
+  colorVal2 = moduleReference.querySelector(
+    "#" + groupInDatabase + "_input_colorval_02"
+  );
+  colorVal3 = moduleReference.querySelector(
+    "#" + groupInDatabase + "_input_colorval_03"
+  );
+  redVal = (parseInt(colorVal1.value) / 100) * 255;
+  greenVal = (parseInt(colorVal2.value) / 100) * 255;
+  blueVal = (parseInt(colorVal3.value) / 100) * 255;
+  userColorDiv.style.backgroundColor =
+    "rgb(" + redVal + "," + greenVal + "," + blueVal + ")";
 }

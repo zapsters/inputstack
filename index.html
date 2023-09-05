@@ -178,8 +178,12 @@
                   <button
                         onclick="host = !host; createText(' ---- host = '+host); this.innerHTML = 'Set host = ' + !host;">Set
                         host = true</button>
+                  <br><br>
                   <button onclick="takeDamage(5)">Deal 5 damage</button>
                   <button onclick="takeDamage(-5)">Heal by 5</button>
+                  <button onclick="damageDisabled = false">Enable Damage</button>
+                  <button onclick="damageDisabled = true">Disable Damage</button>
+                  <br>
                   <button
                         onclick="var display = document.getElementById('TEMPLATEmoduleContainer').style.display; if(display == 'block'){document.getElementById('TEMPLATEmoduleContainer').style.display='none'}else{document.getElementById('TEMPLATEmoduleContainer').style.display='block'}">ToggleTemplate
                         Div</button><br>
@@ -189,6 +193,7 @@
                   <button onclick="initializeModule('module_reset_module_01')">Spawn Reset Div</button>
                   <button onclick="initializeModule('module_unscramble_01')">Spawn Unscramble Div</button>
                   <button onclick="initializeModule('module_math_01')">Spawn Math Div</button>
+                  <button onclick="initializeModule('module_color_01')">Spawn Color Match Div</button>
                   <br>
                   <p onclick="resetInputFields()">resetInputFields() [Click to reset the database and current
                         fields]
@@ -275,6 +280,49 @@
                                     </div>
                               </center>
                         </div>
+                        <!-- TEMPLATE_module_color_01 -->
+                        <div class="inputGroup" id="TEMPLATE_module_color_01">
+                              <p class="inputmodule_DEVtitle" id="DEVtitle">TEMPLATE_module_color_01</p>
+                              <p class="inputmodule_title" id="title">COLOR MATCH!</p>
+                              <p class="inputmodule_title" style="right:10px" id="timer">60</p>
+                              <hr style="top:25px">
+                              <p class="center" id="results_text"
+                                    style="font-weight: bold; font-size: 23px; margin: 0; position: absolute; top: 22%; left: 50%; -ms-transform: translate(-50%, -50%); transform: translate(-50%, -50%); color: #b50000; text-decoration: underline;">
+                              </p>
+                              <div class="colorSwatch" id="module_colorSwatchKey">
+                              </div>
+                              <div class="colorSwatch" id="module_colorSwatch_result" style="right: 0px;">
+                              </div>
+                              <center>
+
+                                    <p class="center"
+                                          style="width: 100%; height: 40px; font-weight: bold; font-size: 35px; margin: 0; position: absolute; top: 50px; left: 50%; -ms-transform: translate(-50%, 0%); transform: translate(-50%, 0%);">
+                                          &rarr;</p>
+                                    <div class="RangeGroup"
+                                          style="height: 120px; bottom: 0; left:50%; transform: translateX(-50%); width: 94%; bottom: 20px;">
+                                          <div style="display: inline-flex">
+                                                <div style="line-height: 10px; margin-top: -4px; padding-top: 0px;">
+                                                      <p>R: </p>
+                                                      <p>G: </p>
+                                                      <p>B: </p>
+                                                </div>
+                                                <div style="">
+                                                      <input type="range" style="margin-top:4px" class="slider"
+                                                            data-onupdate="updateColorResult" id="input_colorval_01"
+                                                            value="100">
+                                                      <input type="range" style="margin-top:4px" class="slider"
+                                                            data-onupdate="updateColorResult" id="input_colorval_02"
+                                                            value="100">
+                                                      <input type="range" style="margin-top:4px" class="slider"
+                                                            data-onupdate="updateColorResult" id="input_colorval_03"
+                                                            value="100">
+                                                </div>
+                                          </div>
+                                          <input type="button" style="width: 100%; margin-top:4px;" class="button"
+                                                value="Submit" id="input_submit_button">
+                                    </div>
+                              </center>
+                        </div>
                   </div>
                   <hr>
                   <p>GOOGLE'S ICONS! See https://fonts.google.com/icons!</p>
@@ -310,6 +358,7 @@
                   <hr>
                   <p style="margin-bottom:0px;padding-bottom:0px;">TODO:</p>
                   <p class="indented">
+                        ** Host updates & players recieve color module key rgb values. **
                         Modifier tab? Change Tick Speed, Initial Module Count ETC.
                         New module? - secret key on one person's screen, a input on a different person.
                   </p>
