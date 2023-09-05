@@ -21,7 +21,7 @@ var timer = document.getElementById("game_gameTimer_text");
 var versionText = document.getElementById("versionDiv");
 
 // Game Vars
-var version = "Release 1.00 - TESTING 0.90";
+var version = "Release 1.00 - TESTING 0.91";
 var host = false;
 var health = 100;
 var timerActive = false;
@@ -30,6 +30,7 @@ var defaultTickSpeed = 1000;
 var tickSpeed = defaultTickSpeed;
 var username = "undefined";
 var damageDisabled = false;
+var roomcodeReload = false;
 
 var groupReferences = []; //References to each group container.
 var currentGroups = [];
@@ -371,7 +372,14 @@ function onTick() {
             var keyDiv = groupReferences[i].querySelector(
               "#" + module_id + "_module_colorSwatchKey"
             );
-            keyDiv.style.backgroundColor = randomColor();
+            newColor = randomColor().toString();
+            keyDiv.style.backgroundColor = newColor;
+            firebase
+              .database()
+              .ref(databasePrefix + roomcode + "/modules/" + module_id)
+              .update({
+                keyColor: newColor,
+              });
           }
           groupReferences[i].querySelector(
             "#" + module_id + "_timer"
@@ -634,6 +642,8 @@ function joinroomFunction() {
 
 //Called by all players when _roomcode_reload == 1. Reloads page when the host leaves.
 function roomcodeReload() {
+  if (roomcodeReload) return;
+  roomcodeReload = true;
   if (host) {
     deleteRoom(roomcode);
   } else {
@@ -966,6 +976,7 @@ function initializeGame() {
       //For every module_## in the database...
       groupList.forEach((groupInDatabase) => {
         if (!currentGroups.includes(groupInDatabase)) {
+          currentGroups.push(groupInDatabase);
           //Check if the group already exists, if not...
           groupType = doc.child(groupInDatabase).child("groupType").val();
           createText(
@@ -1001,7 +1012,6 @@ function initializeGame() {
           fullyInitGroup(createdGroup, groupInDatabase, groupType);
 
           groupReferences.push(createdGroup);
-          currentGroups.push(groupInDatabase);
           groupTypes.push(groupType);
         }
       });
@@ -1215,12 +1225,26 @@ function initializeModule(groupType) {
       groupID +
       " | "
   );
-  firebase
-    .database()
-    .ref(databasePrefix + roomcode + "/modules/" + "module_" + groupID)
-    .update({
-      groupType: groupType,
-    });
+  switch (groupType) {
+    case "module_color_01":
+      firebase
+        .database()
+        .ref(databasePrefix + roomcode + "/modules/" + "module_" + groupID)
+        .update({
+          groupType: groupType,
+          keyColor: "rgb(255,255,255)",
+        });
+      break;
+
+    default:
+      firebase
+        .database()
+        .ref(databasePrefix + roomcode + "/modules/" + "module_" + groupID)
+        .update({
+          groupType: groupType,
+        });
+      break;
+  }
 }
 
 function initializeModuleMultiple(count) {
@@ -1539,9 +1563,24 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       var keyDiv = createdGroupRef.querySelector(
         "#" + module_id + "_module_colorSwatchKey"
       );
+
+      //Check for when a field is updated! ==============================================================================================
+      module_database_ref = firebase
+        .database()
+        .ref(databasePrefix + roomcode + "/modules/" + module_id);
+      module_database_ref.on("value", function (doc) {
+        var moduleData = doc.val();
+        keyDiv.style.backgroundColor = moduleData.keyColor;
+      });
+
       if (host) {
-        /* TODO SYNC THIS TO DATABASE */
-        keyDiv.style.backgroundColor = randomColor();
+        newColor = randomColor().toString();
+        firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/modules/" + module_id)
+          .update({
+            keyColor: newColor,
+          });
       }
       break;
   }
