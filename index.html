@@ -157,11 +157,18 @@
                 text-decoration: underline;
                 cursor: pointer;
               "
-              id="signIn"
+              id="auth_signIn"
               onclick="signInButton();"
             >
               Sign in with Google
             </a>
+            <p
+              class="noSpace"
+              style="font-size: 20px; display: none"
+              id="auth_signedInAs"
+            >
+              Signed in as <span id="auth_signedInAs_displayName">???</span>
+            </p>
           </div>
           <!--<p class="noSpace" id="front_page_subText" style="font-size: 20px; height: 20px; padding: 3px 0px;">Actively being updated.</p>-->
         </div>
@@ -807,34 +814,6 @@
     <script src="gameData.js"></script>
     <script>
       versionText.innerHTML = version;
-
-      //Get user data on the redirect.
-      firebase
-        .auth()
-        .getRedirectResult()
-        .then((result) => {
-          if (result.credential) {
-            /** @type {firebase.auth.OAuthCredential} */
-            var credential = result.credential;
-
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            token = credential.accessToken;
-          }
-          // The signed-in user info.
-          user = result.user;
-          // IdP data available in result.additionalUserInfo.profile.
-          console.log("Logged in as " + user);
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-          // ...
-        });
     </script>
   </body>
 </html>
