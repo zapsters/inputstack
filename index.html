@@ -27,7 +27,7 @@
         style="
           color: white;
           text-align: center;
-          text-shadow: 2px 2px 2px rgba(0, 0, 0, 1);
+          text-shadow: 2px 2px 2px rgb(0, 0, 0);
         "
       >
         Click anywhere to close...
@@ -122,70 +122,47 @@
     </div>
     <center>
       <!-- BOTTOM DIV -->
-      <div
-        class="bottom_div"
-        id="game_info"
-        style="margin: 0; padding: 0; display: block"
-      >
-        <p class="noSpace" id="versionDiv" style="right: 0"></p>
-        <p
-          class="noSpace"
-          style="left: 0; bottom: 57px; display: none; font-size: 20px"
-          id="footer_host"
-        >
-          <u>You are the host!</u>
-        </p>
-        <p
-          class="noSpace"
-          style="left: 0; bottom: 32px; display: none; font-size: 20px"
-          id="footer_username"
-        >
-          Logged in as: *username*
-        </p>
-        <p
-          class="noSpace"
-          style="left: 0; display: none; font-size: 20px; bottom: 7px"
-          id="footer_roomcode"
-        >
-          Roomcode: *roomcode*
-        </p>
-        <p
-          class="noSpace"
-          style="
-            left: 0;
-            display: block;
-            font-size: 20px;
-            bottom: 32px;
-            text-decoration: underline;
-          "
-          id="signIn"
-          onclick="firebase.auth().signInWithRedirect(provider);"
-        >
-          Sign in
-        </p>
-        <p
-          class="noSpace"
-          style="left: 0; display: block; font-size: 20px; bottom: 7px"
-          id="footer_credit"
-        >
-          Created by Erin Ballinger 2023
-        </p>
+      <div class="bottom_div flex-container" id="game_info">
+        <div>
+          <p class="noSpace" style="display: none" id="footer_host">
+            <u>You are the host!</u>
+          </p>
+          <p class="noSpace" style="display: none" id="footer_username">
+            Logged in as: *username*
+          </p>
+          <p class="noSpace" style="display: none" id="footer_roomcode">
+            Roomcode: *roomcode*
+          </p>
+          <p class="noSpace" style="display: block" id="footer_credit">
+            Created by Erin Ballinger 2023
+          </p>
+        </div>
+        <div>
+          <p class="noSpace" id="front_page_mainText">In Development</p>
+          <p class="noSpace" id="versionDiv"></p>
+        </div>
       </div>
 
       <div id="screen_joinGame">
         <!-- Front Page Message -->
         <div
-          class="centeredHoriz"
-          id="front_page_message_div"
-          style="display: block; height: 10px"
+          class="centeredHoriz flex-container"
+          style="margin: 0px 0px 0px 0px"
         >
-          <p
-            class="noSpace"
-            id="front_page_mainText"
-            style="font-size: 20px; height: 20px; padding: 3px 0px"
-          >
-            In Development
-          </p>
+          <div style="text-align: right">
+            <a
+              class="noSpace"
+              style="
+                font-size: 20px;
+                text-decoration: underline;
+                cursor: pointer;
+              "
+              id="signIn"
+              onclick="signInButton();"
+            >
+              Sign in with Google
+            </a>
+          </div>
           <!--<p class="noSpace" id="front_page_subText" style="font-size: 20px; height: 20px; padding: 3px 0px;">Actively being updated.</p>-->
         </div>
 
@@ -830,35 +807,6 @@
     <script src="gameData.js"></script>
     <script>
       versionText.innerHTML = version;
-      var provider = new firebase.auth.GoogleAuthProvider();
-      //firebase.auth().signInWithRedirect(provider);
-      firebase
-        .auth()
-        .getRedirectResult()
-        .then((result) => {
-          if (result.credential) {
-            /** @type {firebase.auth.OAuthCredential} */
-            var credential = result.credential;
-
-            // This gives you a Google Access Token. You can use it to access the Google API.
-            var token = credential.accessToken;
-            // ...
-          }
-          // The signed-in user info.
-          var user = result.user;
-          // IdP data available in result.additionalUserInfo.profile.
-          // ...
-        })
-        .catch((error) => {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-          // ...
-        });
     </script>
   </body>
 </html>
