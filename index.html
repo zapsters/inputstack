@@ -190,6 +190,7 @@
               placeholder="USERNAME"
               style="margin: 10px 0px"
               autocomplete="off"
+              onkeydown="if(event.key === 'Enter') {roomcode_input.focus()}"
             /><br />
             <input
               id="roomcode_input"
@@ -197,6 +198,7 @@
               maxlength="6"
               placeholder="ROOM CODE"
               autocomplete="off"
+              onkeydown="if(event.key === 'Enter') {joingame_btnid.click()}"
             />
             <button
               id="joingame_btnid"

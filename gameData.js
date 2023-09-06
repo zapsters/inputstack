@@ -24,7 +24,8 @@ var versionText = document.getElementById("versionDiv");
 // Game Vars
 var version = "Release 1.00 - TESTING 1.00 [AUTH]";
 var host = false;
-var health = 100;
+var defaultHealth = 100;
+var health = defaultHealth;
 var timerActive = false;
 var totalSeconds = 0; //Used for in game realtime timer
 var defaultTickSpeed = 1000;
@@ -95,6 +96,7 @@ math_problem_list = [
 var_color_01_timerLength = 120;
 var_color_01_healthPenalty = 10;
 color_01_timer_graceTime = 3;
+module_color_01_leniency = 30; //The leniency for a correct score. Each RGB channel must be this much close to the right answer (+ or -) for a correct.
 
 // GAME INTERVALS ====================================================
 var game_loop_interval = null; //Responsible for calling onTick() and gameplay_loop() every TickSpeed / Second.
@@ -138,7 +140,6 @@ function onTick() {
   if (timerActive) ++totalSeconds;
   groupTypes.forEach(function (value, i) {
     var module_id = "module_" + i;
-    var module_type = value;
     switch (value) {
       case "module_simple_01":
         var slider01 = groupReferences[i].querySelector(
@@ -370,6 +371,10 @@ function onTick() {
             var keyDiv = groupReferences[i].querySelector(
               "#" + module_id + "_module_colorSwatchKey"
             );
+            var resultsText = createdGroupRef.querySelector(
+              "#" + module_id + "_results_text"
+            );
+            resultsText.innerHTML = "";
             newColor = randomColor().toString();
             keyDiv.style.backgroundColor = newColor;
             firebase
@@ -581,7 +586,7 @@ function createRoom(roomcode) {
 function joinroomFunction() {
   if (isJoining) return;
   username = document.getElementById("username_input").value;
-  roomcode = document.getElementById("roomcode_input").value;
+  roomcode = document.getElementById("roomcode_input").value.toLowerCase();
   response_text_obj = document.getElementById("subtext_joingame");
   //Check if username and roomcode are filled out
   if (username == "") {
@@ -1305,10 +1310,10 @@ function initializeModuleMultiple(count) {
 function fullyInitGroup(createdGroupRef, module_id, groupType) {
   switch (groupType) {
     case "module_simple_01":
-      range1 = createdGroupRef.querySelector(
+      var range1 = createdGroupRef.querySelector(
         "#" + module_id + "_input_range_01"
       );
-      range2 = createdGroupRef.querySelector(
+      var range2 = createdGroupRef.querySelector(
         "#" + module_id + "_input_range_02"
       );
       range1.addEventListener("click", function () {
@@ -1321,11 +1326,10 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       });
       break;
     case "module_reset_01":
-      ResetButton = createdGroupRef.querySelector(
+      var ResetButton = createdGroupRef.querySelector(
         "#" + module_id + "_input_reset_button"
       );
       ResetButton.addEventListener("click", function () {
-        console.log("HI i clicked");
         createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
           var_reset_timerLength;
         databaseTextObjects(module_id + "_timer", var_reset_timerLength);
@@ -1335,48 +1339,49 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         interactions += 1;
         updateUserStats();
       });
-      module_timer_current = var_reset_timerLength;
+      var module_timer_current = var_reset_timerLength;
       createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
         var_reset_timerLength;
       break;
     case "module_unscramble_01":
-      //TEXT OBJECT CODE
-      ScrambledtextOBJ = createdGroupRef.querySelector(
+      var ScrambledtextOBJ = createdGroupRef.querySelector(
         "#" + module_id + "_scrambled_word_text"
       );
-      UNScrambledtextOBJ = createdGroupRef.querySelector(
+      var UNScrambledtextOBJ = createdGroupRef.querySelector(
         "#" + module_id + "_UNscrambled_word_text"
       );
-      resultsText = createdGroupRef.querySelector(
+      var resultsText = createdGroupRef.querySelector(
         "#" + module_id + "_results_text"
       );
-      inputfield = createdGroupRef.querySelector(
+      var inputfield = createdGroupRef.querySelector(
         "#" + module_id + "_input_unscrambledWord"
       );
+      var submitButton = createdGroupRef.querySelector(
+        "#" + module_id + "_input_submit_button"
+      );
 
-      module_timer_current = var_unscramble_timerLength;
+      var module_timer_current = var_unscramble_timerLength;
       createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
         var_unscramble_timerLength;
 
       //Add event listener for the "isCorrect" var in the database
-      unscrambleIsCorrectEvent = firebase
+      var unscrambleIsCorrectEvent = firebase
         .database()
         .ref(
           databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect"
         );
       unscrambleIsCorrectEvent.on("value", function (doc) {
-        resultsText = createdGroupRef.querySelector(
+        var resultsText = createdGroupRef.querySelector(
           "#" + module_id + "_results_text"
         );
-        inputfield = createdGroupRef.querySelector(
+        var inputfield = createdGroupRef.querySelector(
           "#" + module_id + "_input_unscrambledWord"
         );
 
-        inputData = doc.val();
-        isCorrect = doc.child("data").val();
-        //console.log(module_id + " trigged isCorrect event, isCorrect is = " + doc.child("data").val());
+        var isCorrect = doc.child("data").val();
         if (isCorrect == true) {
           inputfield.disabled = true;
+          submitButton.disabled = true;
           resultsText.innerHTML = "CORRECT!";
           resultsText.style.color = "green";
         } else if (isCorrect == false) {
@@ -1391,14 +1396,16 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
           }, 1000);
           resultsText.style.color = "#b50000";
           inputfield.disabled = false;
+          submitButton.disabled = false;
         } else if (isCorrect == undefined) {
           inputfield.disabled = false;
+          submitButton.disabled = false;
         }
       });
 
       if (host) {
         //GET A NEW TEXT
-        randomWORD =
+        var randomWORD =
           scrambled_words_list[
             Math.floor(Math.random() * scrambled_words_list.length)
           ];
@@ -1408,18 +1415,12 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       }
 
       //BUTTON
-      submitButton = createdGroupRef.querySelector(
-        "#" + module_id + "_input_submit_button"
-      );
       submitButton.addEventListener("click", function () {
-        resultsText = createdGroupRef.querySelector(
-          "#" + module_id + "_results_text"
-        );
-        inputfield = createdGroupRef.querySelector(
+        var inputfield = createdGroupRef.querySelector(
           "#" + module_id + "_input_unscrambledWord"
         );
         if (inputfield.value == "") return;
-        UNScrambledtextOBJ = createdGroupRef.querySelector(
+        var UNScrambledtextOBJ = createdGroupRef.querySelector(
           "#" + module_id + "_UNscrambled_word_text"
         );
         if (
@@ -1442,7 +1443,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       //WHEN PRESSING ENTER IN INPUT FIELD
       inputfield.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
-          submitButton = createdGroupRef.querySelector(
+          var submitButton = createdGroupRef.querySelector(
             "#" + module_id + "_input_submit_button"
           );
           submitButton.click();
@@ -1451,64 +1452,66 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       break;
     case "module_math_01":
       //TEXT OBJECT CODE
-      math_question_text = createdGroupRef.querySelector(
+      var math_question_text = createdGroupRef.querySelector(
         "#" + module_id + "_math_question_text"
       );
-      math_answer_text = createdGroupRef.querySelector(
+      var math_answer_text = createdGroupRef.querySelector(
         "#" + module_id + "_math_answer_text"
       );
-      resultsText = createdGroupRef.querySelector(
+      var resultsText = createdGroupRef.querySelector(
         "#" + module_id + "_results_text"
       );
-      inputfield = createdGroupRef.querySelector(
+      var inputfield = createdGroupRef.querySelector(
         "#" + module_id + "_input_math_response"
       );
+      var submitButton = createdGroupRef.querySelector(
+        "#" + module_id + "_input_submit_button"
+      );
 
-      module_timer_current = var_math_01_timerLength;
+      var module_timer_current = var_math_01_timerLength;
       createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
         module_timer_current;
 
       //Add event listener for the "isCorrect" var in the database
-      mathIsCorrectEvent = firebase
+      var mathIsCorrectEvent = firebase
         .database()
         .ref(
           databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect"
         );
       mathIsCorrectEvent.on("value", function (doc) {
-        resultsText = createdGroupRef.querySelector(
+        var resultsText = createdGroupRef.querySelector(
           "#" + module_id + "_results_text"
         );
-        inputfield = createdGroupRef.querySelector(
+        var inputfield = createdGroupRef.querySelector(
           "#" + module_id + "_input_math_response"
         );
 
-        inputData = doc.val();
-        isCorrect = doc.child("data").val();
-        //console.log(module_id + " trigged isCorrect event, isCorrect is = " + doc.child("data").val());
+        var isCorrect = doc.child("data").val();
         if (isCorrect == true) {
           inputfield.disabled = true;
+          submitButton.disabled = true;
           resultsText.innerHTML = "CORRECT!";
           resultsText.style.color = "green";
         } else if (isCorrect == false) {
           resultsText.innerHTML = "WRONG!";
+          inputfield.disabled = false;
+          submitButton.diabled = false;
           setTimeout(function () {
             if (resultsText.innerHTML == "CORRECT!") return;
-            resultsText = createdGroupRef.querySelector(
-              "#" + module_id + "_results_text"
-            );
+            resultsText.style.color = "#b50000";
             resultsText.innerHTML = "";
-            inputfield.disabled = false;
           }, 1000);
-          resultsText.style.color = "#b50000";
           inputfield.disabled = false;
+          submitButton.disabled = false;
         } else if (isCorrect == undefined) {
+          submitButton.disabled = false;
           inputfield.disabled = false;
         }
       });
 
       if (host) {
         //GET A NEW PROBLEM
-        randomPROBLEM =
+        var randomPROBLEM =
           math_problem_list[
             Math.floor(Math.random() * math_problem_list.length)
           ];
@@ -1520,18 +1523,12 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       }
 
       //BUTTON
-      submitButton = createdGroupRef.querySelector(
-        "#" + module_id + "_input_submit_button"
-      );
       submitButton.addEventListener("click", function () {
-        resultsText = createdGroupRef.querySelector(
-          "#" + module_id + "_results_text"
-        );
-        inputfield = createdGroupRef.querySelector(
+        var inputfield = createdGroupRef.querySelector(
           "#" + module_id + "_input_math_response"
         );
         if (inputfield.value == "") return;
-        math_answer_text = createdGroupRef.querySelector(
+        var math_answer_text = createdGroupRef.querySelector(
           "#" + module_id + "_math_answer_text"
         );
         if (
@@ -1554,7 +1551,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       //WHEN PRESSING ENTER IN INPUT FIELD
       inputfield.addEventListener("keypress", function (e) {
         if (e.key === "Enter") {
-          submitButton = createdGroupRef.querySelector(
+          var submitButton = createdGroupRef.querySelector(
             "#" + module_id + "_input_submit_button"
           );
           submitButton.click();
@@ -1564,63 +1561,73 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       break;
     case "module_color_01":
       //Timer
-      module_timer_current = var_color_01_timerLength;
+      var module_timer_current = var_color_01_timerLength;
       createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
         module_timer_current;
 
-      //Add event listener for the "isCorrect" var in the database
-      colorIsCorrectEvent = firebase
-        .database()
-        .ref(
-          databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect"
-        );
-      colorIsCorrectEvent.on("value", function (doc) {
-        resultsText = createdGroupRef.querySelector(
-          "#" + module_id + "_results_text"
-        );
-
-        inputData = doc.val();
-        isCorrect = doc.child("data").val();
-        //console.log(module_id + " trigged isCorrect event, isCorrect is = " + doc.child("data").val());
-        if (isCorrect == true) {
-          resultsText.innerHTML = "CORRECT!";
-          resultsText.style.color = "green";
-        } else if (isCorrect == false) {
-          resultsText.innerHTML = "WRONG!";
-          setTimeout(function () {
-            if (resultsText.innerHTML == "CORRECT!") return;
-            resultsText = createdGroupRef.querySelector(
-              "#" + module_id + "_results_text"
-            );
-            resultsText.innerHTML = "";
-            inputfield.disabled = false;
-          }, 1000);
-          resultsText.style.color = "#b50000";
-          inputfield.disabled = false;
-        } else if (isCorrect == undefined) {
-          inputfield.disabled = false;
-        }
-      });
-
-      submitButton = createdGroupRef.querySelector(
+      var submitButton = createdGroupRef.querySelector(
         "#" + module_id + "_input_submit_button"
       );
-
-      userColorDiv = createdGroupRef.querySelector(
+      var userColorDiv = createdGroupRef.querySelector(
         "#" + module_id + "_module_colorSwatch_result"
       );
-      colorVal1 = createdGroupRef.querySelector(
+      var colorVal1 = createdGroupRef.querySelector(
         "#" + module_id + "_input_colorval_01"
       );
-      colorVal2 = createdGroupRef.querySelector(
+      var colorVal2 = createdGroupRef.querySelector(
         "#" + module_id + "_input_colorval_02"
       );
-      colorVal3 = createdGroupRef.querySelector(
+      var colorVal3 = createdGroupRef.querySelector(
         "#" + module_id + "_input_colorval_03"
       );
       var keyDiv = createdGroupRef.querySelector(
         "#" + module_id + "_module_colorSwatchKey"
       );
+
+      //Add event listener for the "isCorrect" var in the database
+      var colorIsCorrectEvent = firebase
+        .database()
+        .ref(
+          databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect"
+        );
+      colorIsCorrectEvent.on("value", function (doc) {
+        var resultsText = createdGroupRef.querySelector(
+          "#" + module_id + "_results_text"
+        );
+
+        var isCorrect = doc.child("data").val();
+        if (isCorrect == true) {
+          resultsText.innerHTML = "CORRECT!";
+          resultsText.style.color = "green";
+          colorVal1.disabled = true;
+          colorVal2.disabled = true;
+          colorVal3.disabled = true;
+          submitButton.disabled = true;
+        } else if (isCorrect == false) {
+          resultsText.innerHTML = "WRONG!";
+          colorVal1.disabled = false;
+          colorVal2.disabled = false;
+          colorVal3.disabled = false;
+          submitButton.disabled = false;
+          setTimeout(function () {
+            if (
+              createdGroupRef.querySelector("#" + module_id + "_results_text")
+                .innerHTML == "CORRECT!"
+            )
+              return;
+            var resultsText = createdGroupRef.querySelector(
+              "#" + module_id + "_results_text"
+            );
+            resultsText.innerHTML = "";
+          }, 1000);
+          resultsText.style.color = "#b50000";
+        } else {
+          colorVal1.disabled = false;
+          colorVal2.disabled = false;
+          colorVal3.disabled = false;
+          submitButton.disabled = false;
+        }
+      });
 
       //Submit button code.
       submitButton.addEventListener("click", function () {
@@ -1635,7 +1642,6 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
           )
           .split(", ")
           .map(Number);
-        console.log(keyColorCode);
 
         var colorInputValues = [
           colorVal1.value * 2.5,
@@ -1649,22 +1655,16 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
           keyColorCode[2] - colorInputValues[2],
         ];
 
-        var valid = colorDifference.every((el) => el < 20 && el > -20);
-        console.log("Win: " + valid);
+        var valid = colorDifference.every(
+          (el) =>
+            el < module_color_01_leniency && el > -module_color_01_leniency
+        );
         console.log("colorScore: " + colorDifference);
 
         if (valid) {
           writeToDatabase("modules/" + module_id + "/isCorrect", true, false);
-          colorVal1.disabled = true;
-          colorVal2.disabled = true;
-          colorVal3.disabled = true;
-          submitButton.disabled = true;
         } else {
           writeToDatabase("modules/" + module_id + "/isCorrect", false, true);
-          colorVal1.disabled = false;
-          colorVal2.disabled = false;
-          colorVal3.disabled = false;
-          submitButton.disabled = false;
         }
       });
 
@@ -1674,6 +1674,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         .ref(databasePrefix + roomcode + "/modules/" + module_id);
       module_database_ref.on("value", function (doc) {
         var moduleData = doc.val();
+        if (moduleData == null || moduleData == undefined) return; // This would throw an error and break everything.
         keyDiv.style.backgroundColor = moduleData.keyColor;
       });
 
@@ -1764,19 +1765,28 @@ function resetGame() {
   currentModuleNUM = 0;
   updateHeader();
 
-  //Reset Timer
-  totalSeconds = 0;
-  timerActive = false;
-
   //Reset module spawn timers
   game_timeTillNextModule = game_timeTillNextModule_default;
+
+  //Reset Timer
+  totalSeconds = 0;
+  timerActive = true;
+  if (host) {
+    firebase
+      .database()
+      .ref(databasePrefix + roomcode + "/data")
+      .update({
+        _timerCurrent: totalSeconds,
+        _moduleTimer: game_timeTillNextModule,
+      });
+  }
 
   //RESET HEALTH VARIABLE
   firebase
     .database()
     .ref(databasePrefix + roomcode + "/MainVars/health")
     .update({
-      value: 100,
+      value: defaultHealth,
     });
 
   //RESET TICKSPEED
