@@ -53,6 +53,7 @@ body {
   bottom: 0;
   width: 100%;
   position: fixed;
+  z-index: 20;
 }
 
 .bottom_div p {

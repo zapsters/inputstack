@@ -82,7 +82,7 @@ math_problem_list = [
   ["184 + 73", "257"],
   ["93 - 21", "72"],
   ["92 + 3", "95"],
-  ["250 * 4", "100"],
+  ["250 * 4", "1000"],
   ["100 * 9", "900"],
   ["125 * 4", "500"],
   ["954 - 309", "645"],
@@ -1032,11 +1032,8 @@ function initializeGame() {
 
           //CREATING A NEW DIV FROM TEMPLATE
           var templateGroup = document.getElementById("TEMPLATE_" + groupType);
-          console.log("check this " + templateGroup);
-          console.log("check this also " + groupType);
           var createdGroup = templateGroup.cloneNode(true);
           createdGroup.id = "MODULE_ENTRY_" + groupInDatabase;
-          console.log("#" + templateGroup.id + "DEVtitle");
           createdGroup.querySelector(
             "#" + templateGroup.id + "_DEVtitle"
           ).innerHTML = createdGroup.id;
@@ -1323,11 +1320,12 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         updateUserStats();
       });
       break;
-    case "module_reset__01":
+    case "module_reset_01":
       ResetButton = createdGroupRef.querySelector(
         "#" + module_id + "_input_reset_button"
       );
       ResetButton.addEventListener("click", function () {
+        console.log("HI i clicked");
         createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
           var_reset_timerLength;
         databaseTextObjects(module_id + "_timer", var_reset_timerLength);
@@ -1688,6 +1686,11 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
             keyColor: newColor,
           });
       }
+      break;
+    default:
+      console.error(
+        "Unkown group in fullyInitGroup(). groupType: " + groupType
+      );
       break;
   }
 }
