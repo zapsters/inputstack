@@ -1,5 +1,5 @@
 // Database & Input Object VARIABLES =========================================
-var databasePrefix = "InputGame/";
+var databasePrefix = "inputStack/";
 var roomcode = "DEV";
 var databaseObjects = [];
 var inputObjects = [];
@@ -22,7 +22,7 @@ var timer = document.getElementById("game_gameTimer_text");
 var versionText = document.getElementById("versionDiv");
 
 // Game Vars
-var version = "Release 1.00 - TESTING 0.92";
+var version = "Release 1.00 - TESTING 1.00 [AUTH]";
 var host = false;
 var health = 100;
 var timerActive = false;
@@ -92,7 +92,7 @@ math_problem_list = [
 ];
 
 //module_color_01
-var_color_01_timerLength = 60;
+var_color_01_timerLength = 120;
 var_color_01_healthPenalty = 10;
 color_01_timer_graceTime = 3;
 
@@ -396,9 +396,6 @@ function onTick() {
           color01.disabled = false;
           color02.disabled = false;
           color03.disabled = false;
-          color01.value = 0;
-          color02.value = 0;
-          color03.value = 0;
         }
         if (host) {
           groupReferences[i].querySelector(
@@ -521,29 +518,43 @@ function createroomFunction(dev) {
 
   var room_to_create = Math.random().toString(20).substr(2, 6);
   if (dev) room_to_create = "dev";
-  document.getElementById("roomcode_input").value = room_to_create;
   create_roomcode_ref = firebase
     .database()
     .ref(databasePrefix + room_to_create + "/users");
-  create_roomcode_ref.once("value", function (doc) {
-    create_roomcode_data = doc.val();
-    if (create_roomcode_data == null) {
-      isCreatingRoom = true;
-      roomcode = create_roomcode_data;
-      showTextForTime(
-        response_text_obj,
-        "Creating room '" + room_to_create + "'",
-        1200
-      );
-      setTimeout(() => {
-        document.getElementById("joingame_btnid").click();
-      }, 1000);
-      createRoom(room_to_create);
-    } else {
-      showTextForTime(response_text_obj, "That Room Already Exists", 5000);
-      return;
+  create_roomcode_ref.once(
+    "value",
+    function (doc) {
+      create_roomcode_data = doc.val();
+      // Success...
+      document.getElementById("roomcode_input").value = room_to_create;
+      if (create_roomcode_data == null) {
+        isCreatingRoom = true;
+        roomcode = create_roomcode_data;
+        showTextForTime(
+          response_text_obj,
+          "Creating room '" + room_to_create + "'",
+          1200
+        );
+        setTimeout(() => {
+          document.getElementById("joingame_btnid").click();
+        }, 1000);
+        createRoom(room_to_create);
+      } else {
+        showTextForTime(response_text_obj, "That Room Already Exists", 5000);
+        return;
+      }
+    },
+    (error) => {
+      if (error) {
+        console.log(error);
+        showTextForTime(
+          response_text_obj,
+          error.toString().split(" ")[1],
+          2000
+        );
+      }
     }
-  });
+  );
 }
 
 //Create room data in the database.
@@ -584,80 +595,93 @@ function joinroomFunction() {
 
   //Get Room Data!
   room_data_ref = firebase.database().ref(databasePrefix + roomcode + "/data");
-  room_data_ref.once("value", function (doc) {
-    room_data = doc.val();
-    roomcode_data_data = doc.val();
-    if (room_data != null) {
-      isJoining = true;
-      showTextForTime(response_text_obj, "Joining Room!", 1200);
-      userscount_read = roomcode_data_data._usercount;
-      newusercount = userscount_read + 1;
-      usernum = newusercount;
-      userPath = "user" + usernum;
-      //Writes user info as roomcode/users/user[usernum]
-      firebase
-        .database()
-        .ref(databasePrefix + roomcode + "/users/user" + usernum)
-        .set({
-          username: username,
-          interactions: 0,
-          wordsUnscrambled: 0,
-          resetButtonClicks: 0,
-          problemsSolved: 0,
+  room_data_ref.once(
+    "value",
+    function (doc) {
+      room_data = doc.val();
+      roomcode_data_data = doc.val();
+      if (room_data != null) {
+        isJoining = true;
+        showTextForTime(response_text_obj, "Joining Room!", 1200);
+        userscount_read = roomcode_data_data._usercount;
+        newusercount = userscount_read + 1;
+        usernum = newusercount;
+        userPath = "user" + usernum;
+        //Writes user info as roomcode/users/user[usernum]
+        firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/users/user" + usernum)
+          .set({
+            username: username,
+            interactions: 0,
+            wordsUnscrambled: 0,
+            resetButtonClicks: 0,
+            problemsSolved: 0,
+          });
+        //Adds one to the usercount
+        firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/data/")
+          .update({
+            _usercount: newusercount,
+          });
+        state = 1;
+        createGameScreen();
+
+        //Start the check to check if _startgame is updated!
+        roomcode_data_startgame_ref = firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/data/_startgame");
+        roomcode_data_startgame_ref.on("value", function (snapshot) {
+          if (state == 1) {
+            startGameFunction();
+          }
         });
-      //Adds one to the usercount
-      firebase
-        .database()
-        .ref(databasePrefix + roomcode + "/data/")
-        .update({
-          _usercount: newusercount,
+
+        //Start the check to check if _state is updated!
+        roomcode_data_startgame_ref = firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/data/_state");
+        roomcode_data_startgame_ref.on("value", function (snapshot) {
+          recieveStateUpdate(snapshot.val());
         });
-      state = 1;
-      createGameScreen();
 
-      //Start the check to check if _startgame is updated!
-      roomcode_data_startgame_ref = firebase
-        .database()
-        .ref(databasePrefix + roomcode + "/data/_startgame");
-      roomcode_data_startgame_ref.on("value", function (snapshot) {
-        if (state == 1) {
-          startGameFunction();
-        }
-      });
+        //Start the check for _roomcode_reload = 1. If it is, quit the game
+        roomcode_data_reload_ref = firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/data/_roomcode_reload");
+        roomcode_data_reload_ref.on("value", function (doc) {
+          roomcodeReloadval = doc.val();
+          if (roomcodeReloadval == "1" || roomcodeReloadval == 1) {
+            roomcodeReload();
+          }
+        });
 
-      //Start the check to check if _state is updated!
-      roomcode_data_startgame_ref = firebase
-        .database()
-        .ref(databasePrefix + roomcode + "/data/_state");
-      roomcode_data_startgame_ref.on("value", function (snapshot) {
-        recieveStateUpdate(snapshot.val());
-      });
-
-      //Start the check for _roomcode_reload = 1. If it is, quit the game
-      roomcode_data_reload_ref = firebase
-        .database()
-        .ref(databasePrefix + roomcode + "/data/_roomcode_reload");
-      roomcode_data_reload_ref.on("value", function (doc) {
-        roomcodeReloadval = doc.val();
-        if (roomcodeReloadval == "1" || roomcodeReloadval == 1) {
-          roomcodeReload();
-        }
-      });
-
-      //Start to check if Roomcode/users/_usercount is updated. If updated, call the playerlist_reload() function
-      roomcode_users_usercount_ref = firebase
-        .database()
-        .ref(databasePrefix + roomcode + "/data/_usercount");
-      roomcode_users_usercount_ref.on("value", function (snapshot) {
-        if (state == 1) {
-          playerlist_reload();
-        }
-      });
-    } else {
-      showTextForTime(response_text_obj, "Room does not exist", 1200);
-      return;
+        //Start to check if Roomcode/users/_usercount is updated. If updated, call the playerlist_reload() function
+        roomcode_users_usercount_ref = firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/data/_usercount");
+        roomcode_users_usercount_ref.on("value", function (snapshot) {
+          if (state == 1) {
+            playerlist_reload();
+          }
+        });
+      } else {
+        showTextForTime(response_text_obj, "Room does not exist", 1200);
+        return;
+      }
+    },
+    (error) => {
+      if (error) {
+        console.log(error);
+        showTextForTime(
+          response_text_obj,
+          error.toString().split(" ")[1],
+          2000
+        );
+      }
     }
-  });
+  );
 }
 
 //Called by all players when _roomcode_reload == 1. Reloads page when the host leaves.
@@ -1541,6 +1565,11 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
 
       break;
     case "module_color_01":
+      //Timer
+      module_timer_current = var_color_01_timerLength;
+      createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
+        module_timer_current;
+
       //Add event listener for the "isCorrect" var in the database
       colorIsCorrectEvent = firebase
         .database()

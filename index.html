@@ -150,24 +150,30 @@
           style="margin: 0px 0px 0px 0px"
         >
           <div style="text-align: right">
-            <a
-              class="noSpace"
-              style="
-                font-size: 20px;
-                text-decoration: underline;
-                cursor: pointer;
-              "
-              id="auth_signIn"
-              onclick="signInButton();"
-            >
-              Sign in with Google
-            </a>
+            <p class="noSpace">
+              <a
+                class="noSpace"
+                style="
+                  font-size: 20px;
+                  text-decoration: underline;
+                  cursor: pointer;
+                "
+                id="auth_signIn"
+                onclick="signInButton();"
+              >
+                Sign in with Google
+              </a>
+            </p>
             <p
               class="noSpace"
               style="font-size: 20px; display: none"
               id="auth_signedInAs"
             >
               Signed in as <span id="auth_signedInAs_displayName">???</span>
+            </p>
+            <p style="max-width: 280px; float: right">
+              Note: Google accounts are used purely for authentication, no data
+              is stored or used beyond access to the database.
             </p>
           </div>
           <!--<p class="noSpace" id="front_page_subText" style="font-size: 20px; height: 20px; padding: 3px 0px;">Actively being updated.</p>-->
