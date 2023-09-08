@@ -10,7 +10,7 @@ body {
 @font-face {
   /* MAIN FONT */
   font-family: supria_sans;
-  src: url("https://zapsters.github.io/Home/fonts/SupriaSans-Bold.woff")
+  src: url("https://zapsters.github.io/home/fonts/SupriaSans-Bold.woff")
     format("woff");
   font-weight: normal;
   font-style: normal;

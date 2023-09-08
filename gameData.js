@@ -12,6 +12,7 @@ var groupTypeList = [
   "module_math_01",
   "module_color_01",
 ];
+groupTypeList = ["module_color_01"];
 
 //Debug Variables
 var DEV_showGroupTitles = false;
@@ -360,7 +361,7 @@ function onTick() {
 
         break;
       case "module_color_01":
-        module_timer_current = parseInt(
+        var module_timer_current = parseInt(
           groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML
         );
         if (module_timer_current > 0) {
@@ -375,7 +376,7 @@ function onTick() {
               "#" + module_id + "_results_text"
             );
             resultsText.innerHTML = "";
-            newColor = randomColor().toString();
+            var newColor = randomColor().toString();
             keyDiv.style.backgroundColor = newColor;
             firebase
               .database()
@@ -1680,6 +1681,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
 
       if (host) {
         newColor = randomColor().toString();
+        newColor = "rgb(0,0,0)";
         firebase
           .database()
           .ref(databasePrefix + roomcode + "/modules/" + module_id)
@@ -1934,3 +1936,4 @@ function updateColorResult(module_id, groupInDatabase) {
   userColorDiv.style.backgroundColor =
     "rgb(" + redVal + "," + greenVal + "," + blueVal + ")";
 }
+function cardswipeSpeedCalc() {}

@@ -6,7 +6,7 @@
     <link
       rel="shortcut icon"
       type="image/png"
-      href="https://zapsters.github.io/Home/images/ZapSIcon_C2.png"
+      href="https://zapsters.github.io/home/images/ZapSIcon_C2.png"
     />
     <!-- GOOGLE'S MATERIAL ICONS SHEET https://fonts.google.com/icons -->
     <link
@@ -759,6 +759,63 @@
                   value="Submit"
                   data-id="input_submit_button"
                 />
+              </div>
+            </center>
+          </div>
+          <!-- TEMPLATE_module_cardswipe_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_cardswipe_01">
+            <p
+              class="inputmodule_DEVtitle"
+              id="TEMPLATE_module_color_01_DEVtitle"
+            >
+              TEMPLATE_module_cardswipe_01
+            </p>
+            <p class="inputmodule_title">CARD SWIPE!</p>
+            <p class="inputmodule_title" style="right: 10px" data-id="timer">
+              60
+            </p>
+            <hr style="top: 25px" />
+            <p
+              class="center"
+              data-id="results_text"
+              style="
+                font-weight: bold;
+                font-size: 18px;
+                margin: 0;
+                position: absolute;
+                top: 22%;
+                left: 50%;
+                -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+                color: #b50000;
+                text-decoration: underline;
+                z-index: 10;
+              "
+            >
+              WRONG!
+            </p>
+            <center>
+              <div
+                class="RangeGroup"
+                style="
+                  height: 120px;
+                  bottom: 0;
+                  left: 50%;
+                  transform: translateX(-50%);
+                  width: 94%;
+                  bottom: 20px;
+                "
+              >
+                <div>
+                  <input
+                    type="range"
+                    style="margin-top: 4px"
+                    class="slider"
+                    data-onupdate="cardswipeSpeedCalc"
+                    data-id="input_colorval_01"
+                    value="0"
+                  />
+                </div>
               </div>
             </center>
           </div>
