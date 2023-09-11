@@ -12,7 +12,6 @@ var groupTypeList = [
   "module_math_01",
   "module_color_01",
 ];
-groupTypeList = ["module_color_01"];
 
 //Debug Variables
 var DEV_showGroupTitles = false;
@@ -372,9 +371,12 @@ function onTick() {
             var keyDiv = groupReferences[i].querySelector(
               "#" + module_id + "_module_colorSwatchKey"
             );
-            var resultsText = createdGroupRef.querySelector(
+            var resultsText = groupReferences[i].querySelector(
               "#" + module_id + "_results_text"
             );
+            if (resultsText.innerHTML != "CORRECT!") {
+              takeDamage(var_color_01_healthPenalty);
+            }
             resultsText.innerHTML = "";
             var newColor = randomColor().toString();
             keyDiv.style.backgroundColor = newColor;
@@ -659,7 +661,7 @@ function joinroomFunction() {
         roomcode_data_reload_ref.on("value", function (doc) {
           roomcodeReloadval = doc.val();
           if (roomcodeReloadval == "1" || roomcodeReloadval == 1) {
-            roomcodeReload();
+            onRoomcodeReload();
           }
         });
 
@@ -691,7 +693,7 @@ function joinroomFunction() {
 }
 
 //Called by all players when _roomcode_reload == 1. Reloads page when the host leaves.
-function roomcodeReload() {
+function onRoomcodeReload() {
   if (roomcodeReload) return;
   roomcodeReload = true;
   if (host) {
@@ -1681,7 +1683,6 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
 
       if (host) {
         newColor = randomColor().toString();
-        newColor = "rgb(0,0,0)";
         firebase
           .database()
           .ref(databasePrefix + roomcode + "/modules/" + module_id)
