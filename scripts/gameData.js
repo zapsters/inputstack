@@ -989,95 +989,7 @@ function initializeGame() {
     onTick();
   }, tickSpeed);
 
-  //CHECKS AND CREATES ANY MODULES IN THE GROUPS FOLDER!!! ===================================
-  //Check for when the group folder is updated in the database. ==================
-  database_groups_instances_ref = firebase
-    .database()
-    .ref(databasePrefix + roomcode + "/modules/");
-  database_groups_instances_ref.on("value", function (doc) {
-    inputData = doc.val();
-
-    //Get each group folder in the database's /modules/
-    try {
-      groupList = Object.keys(doc.val());
-    } catch (err) {
-      //WILL THROW ERROR IF NO DATA IN DATABASE.
-      groupList = undefined;
-    }
-    if (groupList === undefined) {
-      //If no data in the groups folder, delete all current group.
-      createText("# NO GROUP DATA! Deleting all groups.");
-      groupList = [];
-      currentGroups = [];
-      groupTypes = [];
-      currentModuleNUM = 0;
-      //Update current groups DIV.
-      CURRENT_GROUPSDIV = document.getElementById("CURRENT_GROUPSDIV");
-      CURRENT_GROUPSDIV.innerHTML =
-        "CurrentGroups = " + currentGroups.join(" | ");
-      groupReferences.forEach((groupReference) => {
-        groupReference.remove();
-      });
-      removeDeletedInputFields();
-      groupReferences = [];
-    } else {
-      //Update the currentModuleNUM
-      currentModuleNUM = groupList.length;
-      updateHeader();
-
-      //For every module_## in the database...
-      groupList.forEach((groupInDatabase) => {
-        if (!currentGroups.includes(groupInDatabase)) {
-          currentGroups.push(groupInDatabase);
-          //Check if the group already exists, if not...
-          groupType = doc.child(groupInDatabase).child("groupType").val();
-          createText(
-            "# CREATE THE GROUP! TYPE of '<i>" +
-              groupType +
-              "</i>' as " +
-              groupInDatabase
-          );
-
-          //CREATING A NEW DIV FROM TEMPLATE
-          var templateGroup = document.getElementById("TEMPLATE_" + groupType);
-          var createdGroup = templateGroup.cloneNode(true);
-          createdGroup.id = "MODULE_ENTRY_" + groupInDatabase;
-          createdGroup.querySelector(
-            "#" + templateGroup.id + "_DEVtitle"
-          ).innerHTML = createdGroup.id;
-          if (!DEV_showGroupTitles) {
-            createdGroup.querySelector(
-              "#" + templateGroup.id + "_DEVtitle"
-            ).style.display = "none";
-          }
-          document.getElementById("moduleContainer").appendChild(createdGroup);
-          var children = createdGroup.getElementsByTagName("*");
-          //Give new id to children
-          for (let i = 0; i < children.length; i++) {
-            children[i].id = groupInDatabase + "_" + children[i].dataset.id;
-          }
-
-          //Init input children and set moduleObject data onto input children.
-          var inputChildren = createdGroup.getElementsByTagName("input");
-          for (let i = 0; i < inputChildren.length; i++) {
-            initInput(inputChildren[i].id);
-            inputChildren[i].dataset.moduleId = createdGroup.id;
-            inputChildren[i].dataset.groupInDatabase = groupInDatabase;
-          }
-
-          fullyInitGroup(createdGroup, groupInDatabase, groupType);
-
-          groupReferences.push(createdGroup);
-          groupTypes.push(groupType);
-        }
-      });
-    }
-
-    //Update current groups DIV.
-    CURRENT_GROUPSDIV = document.getElementById("CURRENT_GROUPSDIV");
-    CURRENT_GROUPSDIV.innerHTML =
-      "CurrentGroups = " + currentGroups.join(" | ");
-  });
+  databaseModuleChecking();
 
   //Check for when a field is updated! ==============================================================================================
   database_objects_instances_ref = firebase
@@ -1129,7 +1041,9 @@ function initializeGame() {
               case "updateColorResult":
                 updateColorResult(moduleId, groupInDatabase);
                 break;
-
+              case "cardswipeSpeedCalc":
+                cardswipeSpeedCalc(moduleId, groupInDatabase);
+                break;
               default:
                 break;
             }
@@ -1259,6 +1173,98 @@ function initInput(fieldID) {
   } else {
     alert("Problem initInput for " + fieldID + " (Doesn't Exist?)");
   }
+}
+
+function databaseModuleChecking() {
+  //CHECKS AND CREATES ANY MODULES IN THE GROUPS FOLDER!!! ===================================
+  //Check for when the group folder is updated in the database. ==================
+  database_groups_instances_ref = firebase
+    .database()
+    .ref(databasePrefix + roomcode + "/modules/");
+  database_groups_instances_ref.on("value", function (doc) {
+    inputData = doc.val();
+
+    //Get each group folder in the database's /modules/
+    try {
+      groupList = Object.keys(doc.val());
+    } catch (err) {
+      //WILL THROW ERROR IF NO DATA IN DATABASE.
+      groupList = undefined;
+    }
+    if (groupList === undefined) {
+      //If no data in the groups folder, delete all current group.
+      createText("# NO GROUP DATA! Deleting all groups.");
+      groupList = [];
+      currentGroups = [];
+      groupTypes = [];
+      currentModuleNUM = 0;
+      //Update current groups DIV.
+      CURRENT_GROUPSDIV = document.getElementById("CURRENT_GROUPSDIV");
+      CURRENT_GROUPSDIV.innerHTML =
+        "CurrentGroups = " + currentGroups.join(" | ");
+      groupReferences.forEach((groupReference) => {
+        groupReference.remove();
+      });
+      removeDeletedInputFields();
+      groupReferences = [];
+    } else {
+      //Update the currentModuleNUM
+      currentModuleNUM = groupList.length;
+      updateHeader();
+
+      //For every module_## in the database...
+      groupList.forEach((groupInDatabase) => {
+        if (!currentGroups.includes(groupInDatabase)) {
+          currentGroups.push(groupInDatabase);
+          //Check if the group already exists, if not...
+          groupType = doc.child(groupInDatabase).child("groupType").val();
+          createText(
+            "# CREATE THE GROUP! TYPE of '<i>" +
+              groupType +
+              "</i>' as " +
+              groupInDatabase
+          );
+
+          //CREATING A NEW DIV FROM TEMPLATE
+          var templateGroup = document.getElementById("TEMPLATE_" + groupType);
+          var createdGroup = templateGroup.cloneNode(true);
+          createdGroup.id = "MODULE_ENTRY_" + groupInDatabase;
+          createdGroup.querySelector(
+            "#" + templateGroup.id + "_DEVtitle"
+          ).innerHTML = createdGroup.id;
+          if (!DEV_showGroupTitles) {
+            createdGroup.querySelector(
+              "#" + templateGroup.id + "_DEVtitle"
+            ).style.display = "none";
+          }
+          document.getElementById("moduleContainer").appendChild(createdGroup);
+          var children = createdGroup.getElementsByTagName("*");
+          //Give new id to children
+          for (let i = 0; i < children.length; i++) {
+            children[i].id = groupInDatabase + "_" + children[i].dataset.id;
+          }
+
+          //Init input children and set moduleObject data onto input children.
+          var inputChildren = createdGroup.getElementsByTagName("input");
+          for (let i = 0; i < inputChildren.length; i++) {
+            initInput(inputChildren[i].id);
+            inputChildren[i].dataset.moduleId = createdGroup.id;
+            inputChildren[i].dataset.groupInDatabase = groupInDatabase;
+          }
+
+          fullyInitGroup(createdGroup, groupInDatabase, groupType);
+
+          groupReferences.push(createdGroup);
+          groupTypes.push(groupType);
+        }
+      });
+    }
+
+    //Update current groups DIV.
+    CURRENT_GROUPSDIV = document.getElementById("CURRENT_GROUPSDIV");
+    CURRENT_GROUPSDIV.innerHTML =
+      "CurrentGroups = " + currentGroups.join(" | ");
+  });
 }
 
 //Inputs come in groups. This will spawn a group of inputs.
@@ -1937,4 +1943,14 @@ function updateColorResult(module_id, groupInDatabase) {
   userColorDiv.style.backgroundColor =
     "rgb(" + redVal + "," + greenVal + "," + blueVal + ")";
 }
-function cardswipeSpeedCalc() {}
+function cardswipeSpeedCalc(module_id, groupInDatabase) {
+  var moduleReference = document.getElementById(module_id);
+  resultsText = moduleReference.querySelector(
+    "#" + groupInDatabase + "_input_colorval_01"
+  );
+  console.log(resultsText.value);
+}
+function cardswipeSpeedCalcEnd(cardswipeSlider) {
+  cardswipeSlider.value = 0;
+  userUpdateField(cardswipeSlider.id);
+}

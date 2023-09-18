@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <link rel="stylesheet" type="text/css" href="css/styles.css" />
     <title>Input Stack!</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
     <link
       rel="shortcut icon"
       type="image/png"
@@ -364,6 +364,9 @@
         </button>
         <button onclick="initializeModule('module_color_01')">
           Spawn Color Match Div
+        </button>
+        <button onclick="initializeModule('module_cardswipe_01')">
+          Spawn CardSwipe
         </button>
         <br />
         <p onclick="resetInputFields()">
@@ -810,10 +813,11 @@
                   <input
                     type="range"
                     style="margin-top: 4px"
-                    class="slider"
+                    class="slider cardSwipe"
                     data-onupdate="cardswipeSpeedCalc"
                     data-id="input_colorval_01"
                     value="0"
+                    onmouseup="cardswipeSpeedCalcEnd(this)"
                   />
                 </div>
               </div>
@@ -870,13 +874,13 @@
     <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-database.js"></script>
 
     <!-- SCRIPT REFERENCES -->
-    <script src="firebase.js"></script>
-    <script src="wordBank.js"></script>
-    <script src="gameScreens.js"></script>
-    <script src="gameoverScreen.js"></script>
-    <script src="userDatabaseData.js"></script>
+    <script src="scripts/firebase.js"></script>
+    <script src="scripts/wordBank.js"></script>
+    <script src="scripts/gameScreens.js"></script>
+    <script src="scripts/gameoverScreen.js"></script>
+    <script src="scripts/userDatabaseData.js"></script>
 
-    <script src="gameData.js"></script>
+    <script src="scripts/gameData.js"></script>
     <script>
       versionText.innerHTML = version;
     </script>

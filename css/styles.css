@@ -321,6 +321,12 @@ body {
   background: #035839;
   cursor: auto;
 }
+.cardSwipe {
+  pointer-events: none;
+}
+.cardSwipe::-webkit-slider-thumb {
+  pointer-events: all;
+}
 .button {
   border: 2px solid black;
   background-color: #303030;
