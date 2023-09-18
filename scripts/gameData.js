@@ -412,6 +412,59 @@ function onTick() {
           databaseTextObjects(module_id + "_timer", module_timer_current);
         }
         break;
+      case "module_cardswipe_01":
+        var module_timer_current = parseInt(
+          groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML
+        );
+        if (module_timer_current > 0) {
+          if (host) module_timer_current--;
+        } else {
+          if (host) {
+            module_timer_current = var_color_01_timerLength;
+            var keyDiv = groupReferences[i].querySelector(
+              "#" + module_id + "_module_colorSwatchKey"
+            );
+            var resultsText = groupReferences[i].querySelector(
+              "#" + module_id + "_results_text"
+            );
+            if (resultsText.innerHTML != "CORRECT!") {
+              takeDamage(var_color_01_healthPenalty);
+            }
+            resultsText.innerHTML = "";
+            var newColor = randomColor().toString();
+            keyDiv.style.backgroundColor = newColor;
+            firebase
+              .database()
+              .ref(databasePrefix + roomcode + "/modules/" + module_id)
+              .update({
+                keyColor: newColor,
+              });
+          }
+
+          //Unlock stuff when the module restarts
+          var color01 = groupReferences[i].querySelector(
+            "#" + module_id + "_input_colorval_01"
+          );
+          color02 = groupReferences[i].querySelector(
+            "#" + module_id + "_input_colorval_02"
+          );
+          color03 = groupReferences[i].querySelector(
+            "#" + module_id + "_input_colorval_03"
+          );
+          groupReferences[i].querySelector(
+            "#" + module_id + "_input_submit_button"
+          ).disabled = false;
+          color01.disabled = false;
+          color02.disabled = false;
+          color03.disabled = false;
+        }
+        if (host) {
+          groupReferences[i].querySelector(
+            "#" + module_id + "_timer"
+          ).innerHTML = module_timer_current;
+          databaseTextObjects(module_id + "_timer", module_timer_current);
+        }
+        break;
       default:
         console.log(value + " failed in the ONTICK function.");
         break;
@@ -792,7 +845,7 @@ function startGame() {
       .update({
         _state: state,
       });
-  }, 100);
+  }, 150);
 
   //Begin gameplay functions
   toggleGameLoop(true);
@@ -975,6 +1028,9 @@ function recieveStateUpdate(value) {
   }
 }
 
+var oldSnapshot = {};
+var newSnapshot = {};
+var changedObjects = {};
 // Used At the start of gameplay to start checking for database updates.
 // Includes recieving field updates, then setting the new value on screen.
 function initializeGame() {
@@ -992,12 +1048,12 @@ function initializeGame() {
   databaseModuleChecking();
 
   //Check for when a field is updated! ==============================================================================================
+  //Update 1.00: Now we check oldSnapshot vs newSnapshot, and only run code for the objects that have a new value.
   database_objects_instances_ref = firebase
     .database()
     .ref(databasePrefix + roomcode + "/objects/");
   database_objects_instances_ref.on("value", function (doc) {
     inputData = doc.val();
-
     //Get each input field in the database folder
     try {
       inputObjectList = Object.keys(doc.val());
@@ -1011,12 +1067,23 @@ function initializeGame() {
       DEVobjectList = document.getElementById("DATABASE_OBJECTS");
       DEVobjectList.innerHTML = "Updated: " + dateTime(1) + "<br>";
     } else {
+      //This prevents it breaking when starting a new game.
+      //Or else it would break the newSnapshot/oldSnapshot logic.
+      if (doc.val() == null) {
+        return;
+      }
+      newSnapshot = doc.val();
+      changedObjects = JSONdiff(oldSnapshot, newSnapshot);
+      oldSnapshot = doc.val();
+      changedInputObjectList = Object.keys(changedObjects);
+      //console.log(changedObjects);
+
       //Print the object list to the DEV div.
       DEVobjectList = document.getElementById("DATABASE_OBJECTS");
       DEVobjectList.innerHTML = "Updated: " + dateTime(1) + "<br>";
 
       //Get the element for each entry in the 'objects/' folder.
-      inputObjectList.forEach((objectID) => {
+      changedInputObjectList.forEach((objectID) => {
         if (!databaseObjects.includes(objectID)) databaseObjects.push(objectID);
         if (document.getElementById(objectID)) {
           inputObject = document.getElementById(objectID); //Get the coresponding input field.
@@ -1697,6 +1764,8 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
           });
       }
       break;
+    case "module_cardswipe_01":
+      break;
     default:
       console.error(
         "Unkown group in fullyInitGroup(). groupType: " + groupType
@@ -1705,7 +1774,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
   }
 }
 
-//UpdateGameVars, used for timers and other NON-INPORTANT variables to be synced
+//UpdateGameVars, used for module timers.
 function databaseTextObjects(name, value) {
   firebase
     .database()
@@ -1943,14 +2012,59 @@ function updateColorResult(module_id, groupInDatabase) {
   userColorDiv.style.backgroundColor =
     "rgb(" + redVal + "," + greenVal + "," + blueVal + ")";
 }
+
+var cardSwipeBeginTime = null;
 function cardswipeSpeedCalc(module_id, groupInDatabase) {
   var moduleReference = document.getElementById(module_id);
-  resultsText = moduleReference.querySelector(
-    "#" + groupInDatabase + "_input_colorval_01"
+  cardSwipeSlider = moduleReference.querySelector(
+    "#" + groupInDatabase + "_input_cardSwipe_01"
   );
-  console.log(resultsText.value);
+  if (cardSwipeSlider.value == 0) return;
+  if (cardSwipeBeginTime == null) {
+    cardSwipeBeginTime = Date.now();
+  }
 }
 function cardswipeSpeedCalcEnd(cardswipeSlider) {
+  var cardSwipeRelease = Date.now();
+  var cardSwipeTime = parseInt(cardSwipeRelease) - parseInt(cardSwipeBeginTime);
+  cardSwipeBeginTime = null;
+  cardSwipeRelease = null;
+  console.log("Card Swipe Difference: " + cardSwipeTime);
   cardswipeSlider.value = 0;
   userUpdateField(cardswipeSlider.id);
+}
+
+//Gets the difference between two JSON objects.
+//Returns the difference, uses OBJ2's value.
+//Thanks https://stackoverflow.com/questions/8431651/getting-a-diff-of-two-json-objects
+function JSONdiff(obj1, obj2) {
+  const result = {};
+  if (Object.is(obj1, obj2)) {
+    return undefined;
+  }
+  if (!obj2 || typeof obj2 !== "object") {
+    return obj2;
+  }
+  Object.keys(obj1 || {})
+    .concat(Object.keys(obj2 || {}))
+    .forEach((key) => {
+      if (obj2[key] !== obj1[key] && !Object.is(obj1[key], obj2[key])) {
+        result[key] = obj2[key];
+      }
+      if (typeof obj2[key] === "object" && typeof obj1[key] === "object") {
+        const value = JSONdiff(obj1[key], obj2[key]);
+        if (value !== undefined && value != null && value != {}) {
+          result[key] = value;
+        }
+      }
+      if (!result[key] || typeof result[key] !== "object") {
+        // Don't touch it.
+      } else {
+        // The property is an object
+        if (Object.keys(result[key]).length === 0) {
+          delete result[key]; // The object had no properties, so delete that property
+        }
+      }
+    });
+  return result;
 }
