@@ -6,13 +6,11 @@
     <link
       rel="shortcut icon"
       type="image/png"
-      href="https://zapsters.github.io/home/images/ZapSIcon_C2.png"
-    />
+      href="https://zapsters.github.io/home/images/ZapSIcon_C2.png" />
     <!-- GOOGLE'S MATERIAL ICONS SHEET https://fonts.google.com/icons -->
     <link
       href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
   </head>
 
   <body>
@@ -21,26 +19,22 @@
       class="grayOutDivScreen"
       onclick="closeDiv();"
       id="grayOutDivScreen"
-      style="display: none"
-    >
+      style="display: none">
       <p
         style="
           color: white;
           text-align: center;
           text-shadow: 2px 2px 2px rgb(0, 0, 0);
-        "
-      >
+        ">
         Click anywhere to close...
       </p>
       <div
         class="popupDiv"
         onclick="event.stopPropagation();"
-        id="unscrambleKey"
-      >
+        id="unscrambleKey">
         <div
           class="closeButton"
-          onclick="this.parentElement.style.display='none'; closeDiv();"
-        >
+          onclick="this.parentElement.style.display='none'; closeDiv();">
           <p>X</p>
         </div>
         <p>UNSCRAMBLE KEY!</p>
@@ -95,14 +89,12 @@
               type="button"
               class="buttonMain"
               onclick="if(host) resetGame();"
-              value="Restart Game"
-            />
+              value="Restart Game" />
             <input
               type="button"
               class="buttonMain"
               onclick="if(host) abandonRoom();"
-              value="Quit Game"
-            />
+              value="Quit Game" />
           </div>
         </div>
       </div>
@@ -112,7 +104,7 @@
     <div id="screen_title">
       <!-- HEADER -->
       <div class="header">
-        <p onclick="toggleDebugMenu()">Input Stack!</p>
+        <!-- <p onclick="toggleDebugMenu()">Input Stack!</p> -->
       </div>
     </div>
     <!-- DEBUG MENU -->
@@ -147,8 +139,7 @@
         <!-- Front Page Message -->
         <div
           class="centeredHoriz flex-container"
-          style="margin: 0px 0px 0px 0px"
-        >
+          style="margin: 0px 0px 0px 0px">
           <div style="text-align: right">
             <p class="noSpace">
               <a
@@ -159,16 +150,14 @@
                   cursor: pointer;
                 "
                 id="auth_signIn"
-                onclick="signInButton();"
-              >
+                onclick="signInButton();">
                 Sign in with Google
               </a>
             </p>
             <p
               class="noSpace"
               style="font-size: 20px; display: none"
-              id="auth_signedInAs"
-            >
+              id="auth_signedInAs">
               Signed in as <span id="auth_signedInAs_displayName">???</span>
             </p>
             <p style="max-width: 280px; float: right">
@@ -190,37 +179,32 @@
               placeholder="USERNAME"
               style="margin: 10px 0px"
               autocomplete="off"
-              onkeydown="if(event.key === 'Enter') {roomcode_input.focus()}"
-            /><br />
+              onkeydown="if(event.key === 'Enter') {roomcode_input.focus()}" /><br />
             <input
               id="roomcode_input"
               class="messagebox"
               maxlength="6"
               placeholder="ROOM CODE"
               autocomplete="off"
-              onkeydown="if(event.key === 'Enter') {joingame_btnid.click()}"
-            />
+              onkeydown="if(event.key === 'Enter') {joingame_btnid.click()}" />
             <button
               id="joingame_btnid"
               class="buttonMain"
               onclick="joinroomFunction()"
-              style="cursor: pointer; float: right"
-            >
+              style="cursor: pointer; float: right">
               JOIN ROOM
             </button>
             <button
               id="creategame_btnid"
               class="buttonMain"
               onclick="createroomFunction()"
-              style="cursor: pointer; float: left"
-            >
+              style="cursor: pointer; float: left">
               CREATE ROOM</button
             ><br /><br /><br /><br />
             <p
               id="subtext_joingame"
               class="question"
-              style="font-size: 20px"
-            ></p>
+              style="font-size: 20px"></p>
           </div>
         </div>
       </div>
@@ -231,8 +215,7 @@
       <div
         class="writableContent horizontal"
         style="display: none"
-        id="playerlist_div"
-      >
+        id="playerlist_div">
         <p class="" style="font-size: 40px; margin: 0 0px; padding: 0px 0px">
           <u>PLAYERS</u>
         </p>
@@ -256,16 +239,14 @@
             font-size: 30px;
             padding: 0px 0px 0px 0px;
             margin: 0px 0 -7px 0;
-          "
-        >
+          ">
           WAITING FOR HOST<br />TO START
         </p>
         <button
           class="startbtn buttonMain"
           onclick="firebase.database().ref(databasePrefix + roomcode + '/data').update({_startgame: 1});"
           id="startbtn"
-          style="cursor: pointer; display: none"
-        >
+          style="cursor: pointer; display: none">
           START GAME
         </button>
       </div>
@@ -282,25 +263,21 @@
         display: none;
         position: relative;
         top: -80px;
-      "
-    >
+      ">
       <div class="headerContainer headerSTICKY" id="header">
         <p
           id="game_health_text"
-          style="position: flex; margin-right: auto; top: 4px"
-        >
+          style="position: flex; margin-right: auto; top: 4px">
           HEALTH: 100
         </p>
         <p
           id="game_gameTimer_text"
-          style="position: absolute; right: 0px; padding-right: 10px; top: 4px"
-        >
+          style="position: absolute; right: 0px; padding-right: 10px; top: 4px">
           00:00
         </p>
         <p
           id="game_moduleCount_text"
-          style="position: absolute; left: 0px; padding-left: 10px; top: 4px"
-        >
+          style="position: absolute; left: 0px; padding-left: 10px; top: 4px">
           Modules: 0
         </p>
       </div>
@@ -308,8 +285,7 @@
       <span>
         <p
           id="game_timeTillNextModule_text"
-          style="display: inline; padding: 0px; margin: 0px"
-        >
+          style="display: inline; padding: 0px; margin: 0px">
           Time till next module:
         </p>
         <p style="display: inline; padding: 0px 10px 0px 10px; margin: 0px">
@@ -333,8 +309,7 @@
         <button onclick="initializeModule();">Create Module</button>
         <button onclick="initializeGame();">initializeGame()</button>
         <button
-          onclick="host = !host; createText(' ---- host = '+host); this.innerHTML = 'Set host = ' + !host;"
-        >
+          onclick="host = !host; createText(' ---- host = '+host); this.innerHTML = 'Set host = ' + !host;">
           Set host = true
         </button>
         <br /><br />
@@ -344,8 +319,7 @@
         <button onclick="damageDisabled = true">Disable Damage</button>
         <br />
         <button
-          onclick="var display = document.getElementById('TEMPLATEmoduleContainer').style.display; if(display == 'block'){document.getElementById('TEMPLATEmoduleContainer').style.display='none'}else{document.getElementById('TEMPLATEmoduleContainer').style.display='block'}"
-        >
+          onclick="var display = document.getElementById('TEMPLATEmoduleContainer').style.display; if(display == 'block'){document.getElementById('TEMPLATEmoduleContainer').style.display='none'}else{document.getElementById('TEMPLATEmoduleContainer').style.display='block'}">
           ToggleTemplate Div</button
         ><br />
         <br />
@@ -378,52 +352,45 @@
         <div
           class="moduleContainer"
           id="TEMPLATEmoduleContainer"
-          style="display: block"
-        >
+          style="display: block">
           <!-- TEMPLATE_module_simple_01 -->
           <div class="inputGroup" id="TEMPLATE_module_simple_01">
             <p
               class="inputmodule_DEVtitle"
-              id="TEMPLATE_module_simple_01_DEVtitle"
-            >
+              id="TEMPLATE_module_simple_01_DEVtitle">
               TEMPLATE_module_simple_01
             </p>
             <p class="inputmodule_title" data-id="title">KEEP ABOVE!</p>
             <hr style="top: 25px" />
             <div
               class="RangeGroup"
-              style="width: 80%; position: absolute; top: 41px; left: 10px"
-            >
+              style="width: 80%; position: absolute; top: 41px; left: 10px">
               <p
                 style="
                   margin-bottom: 12px;
                   text-decoration: underline;
                   font-weight: bold;
                   margin-left: 3px;
-                "
-              >
+                ">
                 Keep High
               </p>
               <input
                 type="range"
                 class="slider"
                 data-id="input_range_01"
-                value="100"
-              />
+                value="100" />
               <input
                 type="range"
                 class="slider"
                 data-id="input_range_02"
-                value="100"
-              />
+                value="100" />
             </div>
           </div>
           <!-- TEMPLATE_reset_module_01 -->
           <div class="inputGroup" id="TEMPLATE_module_reset_01">
             <p
               class="inputmodule_DEVtitle"
-              id="TEMPLATE_module_reset_01_DEVtitle"
-            >
+              id="TEMPLATE_module_reset_01_DEVtitle">
               TEMPLATE_module_reset_01
             </p>
             <p class="inputmodule_title" data-id="title">TIMER!</p>
@@ -443,8 +410,7 @@
                 left: 50%;
                 -ms-transform: translate(-50%, 60%);
                 transform: translate(-50%, 60%);
-              "
-            >
+              ">
               RESET!!
             </button>
           </div>
@@ -452,8 +418,7 @@
           <div class="inputGroup" id="TEMPLATE_module_unscramble_01">
             <p
               class="inputmodule_DEVtitle"
-              id="TEMPLATE_module_unscramble_01_DEVtitle"
-            >
+              id="TEMPLATE_module_unscramble_01_DEVtitle">
               TEMPLATE_module_unscramble_01
             </p>
             <p class="inputmodule_title" data-id="title">UNSCRAMBLE!</p>
@@ -463,8 +428,7 @@
             <p
               class="inputmodule_clickableIcon"
               onclick="openDiv('unscrambleKey');"
-              style="text-align: center"
-            >
+              style="text-align: center">
               <span class="material-icons md-18">view_list</span>
             </p>
             <hr style="top: 25px" />
@@ -483,8 +447,7 @@
                   transform: translate(-50%, -50%);
                   color: #b50000;
                   text-decoration: underline;
-                "
-              ></p>
+                "></p>
               <p
                 class="center"
                 data-id="scrambled_word_text"
@@ -499,8 +462,7 @@
                   left: 50%;
                   -ms-transform: translate(-50%, 0%);
                   transform: translate(-50%, 0%);
-                "
-              >
+                ">
                 WORD
               </p>
               <p
@@ -515,8 +477,7 @@
                   left: 50%;
                   -ms-transform: translate(-50%, -50%);
                   transform: translate(-50%, -50%);
-                "
-              >
+                ">
                 WORD
               </p>
               <div
@@ -527,8 +488,7 @@
                   display: inline;
                   bottom: 20px;
                   left: 0px;
-                "
-              >
+                ">
                 <input
                   type="text"
                   style="
@@ -541,15 +501,13 @@
                   "
                   class="input"
                   data-id="input_unscrambledWord"
-                  placeholder="Type Here..."
-                />
+                  placeholder="Type Here..." />
                 <input
                   type="button"
                   style="width: 95%"
                   class="button"
                   value="Submit"
-                  data-id="input_submit_button"
-                />
+                  data-id="input_submit_button" />
               </div>
             </center>
           </div>
@@ -557,8 +515,7 @@
           <div class="inputGroup" id="TEMPLATE_module_math_01">
             <p
               class="inputmodule_DEVtitle"
-              id="TEMPLATE_module_math_01_DEVtitle"
-            >
+              id="TEMPLATE_module_math_01_DEVtitle">
               TEMPLATE_module_math_01
             </p>
             <p class="inputmodule_title" data-id="title">SIMPLE MATH!</p>
@@ -581,8 +538,7 @@
                   transform: translate(-50%, -50%);
                   color: #b50000;
                   text-decoration: underline;
-                "
-              ></p>
+                "></p>
               <p
                 class="center"
                 data-id="math_question_text"
@@ -597,8 +553,7 @@
                   left: 50%;
                   -ms-transform: translate(-50%, 0%);
                   transform: translate(-50%, 0%);
-                "
-              >
+                ">
                 MATH QUESTION
               </p>
               <p
@@ -613,8 +568,7 @@
                   left: 50%;
                   -ms-transform: translate(-50%, -50%);
                   transform: translate(-50%, -50%);
-                "
-              >
+                ">
                 ANSWER
               </p>
               <div
@@ -625,8 +579,7 @@
                   display: inline;
                   bottom: 20px;
                   left: 0px;
-                "
-              >
+                ">
                 <input
                   type="text"
                   style="
@@ -639,15 +592,13 @@
                   "
                   class="input"
                   data-id="input_math_response"
-                  placeholder="Type Here..."
-                />
+                  placeholder="Type Here..." />
                 <input
                   type="button"
                   style="width: 95%"
                   class="button"
                   value="Submit"
-                  data-id="input_submit_button"
-                />
+                  data-id="input_submit_button" />
               </div>
             </center>
           </div>
@@ -655,8 +606,7 @@
           <div class="inputGroup" id="TEMPLATE_module_color_01">
             <p
               class="inputmodule_DEVtitle"
-              id="TEMPLATE_module_color_01_DEVtitle"
-            >
+              id="TEMPLATE_module_color_01_DEVtitle">
               TEMPLATE_module_color_01
             </p>
             <p class="inputmodule_title">COLOR MATCH!</p>
@@ -679,14 +629,12 @@
                 color: #b50000;
                 text-decoration: underline;
                 z-index: 10;
-              "
-            ></p>
+              "></p>
             <div class="colorSwatch" data-id="module_colorSwatchKey"></div>
             <div
               class="colorSwatch"
               data-id="module_colorSwatch_result"
-              style="right: 0px"
-            ></div>
+              style="right: 0px"></div>
             <center>
               <p
                 class="center"
@@ -701,8 +649,7 @@
                   left: 50%;
                   -ms-transform: translate(-50%, 0%);
                   transform: translate(-50%, 0%);
-                "
-              >
+                ">
                 &rarr;
               </p>
               <div
@@ -714,16 +661,14 @@
                   transform: translateX(-50%);
                   width: 94%;
                   bottom: 20px;
-                "
-              >
+                ">
                 <div style="display: inline-flex">
                   <div
                     style="
                       line-height: 10px;
                       margin-top: -4px;
                       padding-top: 0px;
-                    "
-                  >
+                    ">
                     <p>R:</p>
                     <p>G:</p>
                     <p>B:</p>
@@ -735,24 +680,21 @@
                       class="slider"
                       data-onupdate="updateColorResult"
                       data-id="input_colorval_01"
-                      value="0"
-                    />
+                      value="0" />
                     <input
                       type="range"
                       style="margin-top: 4px"
                       class="slider"
                       data-onupdate="updateColorResult"
                       data-id="input_colorval_02"
-                      value="0"
-                    />
+                      value="0" />
                     <input
                       type="range"
                       style="margin-top: 4px"
                       class="slider"
                       data-onupdate="updateColorResult"
                       data-id="input_colorval_03"
-                      value="0"
-                    />
+                      value="0" />
                   </div>
                 </div>
                 <input
@@ -760,8 +702,7 @@
                   style="width: 100%; margin-top: 4px"
                   class="button"
                   value="Submit"
-                  data-id="input_submit_button"
-                />
+                  data-id="input_submit_button" />
               </div>
             </center>
           </div>
@@ -769,8 +710,7 @@
           <div class="inputGroup" id="TEMPLATE_module_cardswipe_01">
             <p
               class="inputmodule_DEVtitle"
-              id="TEMPLATE_module_cardswipe_01_DEVtitle"
-            >
+              id="TEMPLATE_module_cardswipe_01_DEVtitle">
               TEMPLATE_module_cardswipe_01
             </p>
             <p class="inputmodule_title">CARD SWIPE!</p>
@@ -793,8 +733,7 @@
                 color: #b50000;
                 text-decoration: underline;
                 z-index: 10;
-              "
-            >
+              ">
               WRONG!
             </p>
             <center>
@@ -807,8 +746,7 @@
                   transform: translateX(-50%);
                   width: 94%;
                   bottom: 20px;
-                "
-              >
+                ">
                 <div>
                   <input
                     type="range"
@@ -817,8 +755,7 @@
                     data-onupdate="cardswipeSpeedCalc"
                     data-id="input_cardSwipe_01"
                     value="0"
-                    onmouseup="cardswipeSpeedCalcEnd(this)"
-                  />
+                    onmouseup="cardswipeSpeedCalcEnd(this)" />
                 </div>
               </div>
             </center>

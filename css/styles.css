@@ -24,6 +24,12 @@ body {
   text-align: center;
   padding: 20px 0;
   border-bottom: 2px solid black;
+  height: 78px;
+
+  background-image: url(../images/InputStackLogo.png);
+  background-size: 220px;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .header p {
