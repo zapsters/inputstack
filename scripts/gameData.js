@@ -96,7 +96,7 @@ math_problem_list = [
 var_color_01_timerLength = 120;
 var_color_01_healthPenalty = 10;
 color_01_timer_graceTime = 3;
-module_color_01_leniency = 30; //The leniency for a correct score. Each RGB channel must be this much close to the right answer (+ or -) for a correct.
+module_color_01_leniency = 50; //The leniency for a correct score. Each RGB channel must be this much close to the right answer (+ or -) for a correct.
 
 // GAME INTERVALS ====================================================
 var game_loop_interval = null; //Responsible for calling onTick() and gameplay_loop() every TickSpeed / Second.
