@@ -1049,6 +1049,10 @@ function initializeGame() {
 
   //Check for when a field is updated! ==============================================================================================
   //Update 1.00: Now we check oldSnapshot vs newSnapshot, and only run code for the objects that have a new value.
+  /* The above code is listening for changes in a Firebase database reference. When a change occurs, it
+  retrieves the updated data and updates the corresponding input fields in the HTML document. It
+  also performs additional actions based on the `dataset.onupdate` value of each input field.
+  Finally, it prints the updated object list to a specific div in the HTML document. */
   database_objects_instances_ref = firebase
     .database()
     .ref(databasePrefix + roomcode + "/objects/");
@@ -1129,6 +1133,9 @@ function initializeGame() {
   });
 
   //Check for when the MainVars folder is updated in the database. ==================
+  /* The above code is listening for changes in the "MainVars" section of a Firebase database. When a
+  change occurs, it retrieves the updated values and performs different actions based on the
+  variable name. */
   database_important_vars_ref = firebase
     .database()
     .ref(databasePrefix + roomcode + "/MainVars/");
@@ -1907,6 +1914,10 @@ function resetInputFields() {
   removeDeletedInputFields();
 }
 
+/**
+ * The function removes deleted input fields from the inputObjects array and updates the
+ * InputObjectsList element with the updated array.
+ */
 function removeDeletedInputFields() {
   inputObjects.forEach((objectID) => {
     if (!document.getElementById(objectID)) {
@@ -2024,6 +2035,13 @@ function cardswipeSpeedCalc(module_id, groupInDatabase) {
     cardSwipeBeginTime = Date.now();
   }
 }
+
+/**
+ * The function calculates the time difference between the beginning and end of a card swipe and logs
+ * it to the console.
+ * @param cardswipeSlider - The cardswipeSlider parameter is a reference to a slider element in the
+ * HTML document.
+ */
 function cardswipeSpeedCalcEnd(cardswipeSlider) {
   var cardSwipeRelease = Date.now();
   var cardSwipeTime = parseInt(cardSwipeRelease) - parseInt(cardSwipeBeginTime);
