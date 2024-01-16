@@ -24,10 +24,10 @@ body {
   text-align: center;
   padding: 20px 0;
   border-bottom: 2px solid black;
-  height: 78px;
+  height: 60px;
 
   background-image: url(../images/InputStackLogo.png);
-  background-size: 220px;
+  background-size: 210px;
   background-position: center;
   background-repeat: no-repeat;
 }
@@ -87,8 +87,7 @@ body {
   left: 50%;
   width: 100%;
   height: 100px;
-  margin-top: -10%;
-  margin-left: -50%;
+  transform: translate(-50%, -50%);
   text-align: center;
 }
 
@@ -103,6 +102,10 @@ body {
   margin: auto;
   width: 90%;
   padding: 0px;
+}
+
+#playerlist_div {
+  margin-top: 15px;
 }
 
 @media (max-width: 700px) {
@@ -226,7 +229,7 @@ body {
   margin-top: 0;
 }
 .moduleContainer {
-  border: 1px solid black;
+  border: 2px solid black;
   padding: 4px 0px 4px 0px;
   margin: auto;
   text-align: center;
