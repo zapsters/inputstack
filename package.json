@@ -1,0 +1,19 @@
+{
+  "name": "inputstack",
+  "version": "1.0.0",
+  "description": "Coming out of Project0! An input game. Singleplayer or multiplayer.",
+  "main": "index.js",
+  "scripts": {
+    "serve": "live-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zapsters/inputstack.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zapsters/inputstack/issues"
+  },
+  "homepage": "https://github.com/zapsters/inputstack#readme"
+}
