@@ -1247,7 +1247,7 @@ function scramble_word_list_filter(count) {
 
 //This will grab the scrambled_words_list variable and add it to the wordbank div.
 function createWordbankDiv() {
-  ul = document.createElement("ul");
+  var ul = document.createElement("ul");
 
   document.getElementById("uncrambleKey_content").appendChild(ul);
   document.getElementById("uncrambleKey_content").style.display = "block";

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="theme-light">
   <head>
     <title>Input Stack!</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
@@ -24,7 +24,7 @@
       </div>
     </div>
 
-    <div class="popupDiv gameoverDiv" id="gameover_div">
+    <div class="popupDiv gameoverDiv" style="display: none" id="gameover_div">
       <div class="gameoverHeader">
         <h1>Game Over!</h1>
         <p>Score: <span id="gameover_scoreText">####</span></p>
@@ -75,13 +75,15 @@
       </div>
     </div>
 
-    <!-- TITLE SCREEN -->
-    <div id="screen_title">
+    <nav id="screen_title">
       <!-- HEADER -->
       <div class="header">
         <!-- <p onclick="toggleDebugMenu()">Input Stack!</p> -->
       </div>
-    </div>
+    </nav>
+
+    <div id="app"></div>
+
     <!-- DEBUG MENU -->
     <div class="debug_div" id="debug_menu_div" style="display: none">
       <p class="noSpace">DEBUG</p>
@@ -96,75 +98,6 @@
           </p>
           <p class="noSpace" style="display: none" id="footer_username">Logged in as: *username*</p>
           <p class="noSpace" style="display: none" id="footer_roomcode">Roomcode: *roomcode*</p>
-          <p class="noSpace" style="display: block" id="footer_credit">
-            Created by Erin Ballinger 2023
-          </p>
-        </div>
-        <div>
-          <p class="noSpace" id="front_page_mainText">In Development</p>
-          <p class="noSpace" id="versionDiv"></p>
-        </div>
-      </div>
-
-      <div id="screen_joinGame">
-        <!-- Front Page Message -->
-        <div class="centeredHoriz flex-container" style="margin: 0px 0px 0px 0px">
-          <div style="text-align: right; display: none">
-            <p class="noSpace">
-              <a
-                class="noSpace"
-                style="font-size: 20px; text-decoration: underline; cursor: pointer"
-                id="auth_signIn"
-                onclick="signInButton();">
-                Sign in with Google
-              </a>
-            </p>
-            <p class="noSpace" style="font-size: 20px; display: none" id="auth_signedInAs">
-              Signed in as <span id="auth_signedInAs_displayName">???</span>
-            </p>
-            <p style="max-width: 280px; float: right">
-              Note: Google accounts are used purely for authentication and no sensitive info is
-              passed to this site.
-            </p>
-          </div>
-          <!--<p class="noSpace" id="front_page_subText" style="font-size: 20px; height: 20px; padding: 3px 0px;">Actively being updated.</p>-->
-        </div>
-
-        <!-- Front Page Join Game -->
-        <div class="centered_div" style="display: block" id="joingame_div">
-          <div class="writableContent" style="max-width: 600px">
-            <p class="noSpace" style="font-size: 40px">JOIN GAME</p>
-            <input
-              id="username_input"
-              class="messagebox"
-              maxlength="30"
-              placeholder="USERNAME"
-              style="margin: 10px 0px"
-              autocomplete="off"
-              onkeydown="if(event.key === 'Enter') {roomcode_input.focus()}" /><br />
-            <input
-              id="roomcode_input"
-              class="messagebox"
-              maxlength="6"
-              placeholder="ROOM CODE"
-              autocomplete="off"
-              onkeydown="if(event.key === 'Enter') {joingame_btnid.click()}" />
-            <button
-              id="joingame_btnid"
-              class="buttonMain"
-              onclick="joinroomFunction()"
-              style="cursor: pointer; float: right">
-              JOIN ROOM
-            </button>
-            <button
-              id="creategame_btnid"
-              class="buttonMain"
-              onclick="createroomFunction()"
-              style="cursor: pointer; float: left">
-              CREATE ROOM</button
-            ><br /><br /><br /><br />
-            <p id="subtext_joingame" class="question" style="font-size: 20px"></p>
-          </div>
         </div>
       </div>
     </center>
@@ -692,15 +625,6 @@
     <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-database.js"></script>
 
     <!-- SCRIPT REFERENCES -->
-    <script src="scripts/firebase.js"></script>
-    <script src="scripts/wordBank.js"></script>
-    <script src="scripts/gameScreens.js"></script>
-    <script src="scripts/gameoverScreen.js"></script>
-    <script src="scripts/userDatabaseData.js"></script>
-
-    <script src="scripts/gameData.js"></script>
-    <script>
-      versionText.innerHTML = version;
-    </script>
+    <script type="module" src="app/app.js"></script>
   </body>
 </html>

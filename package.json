@@ -1,10 +1,12 @@
 {
   "name": "inputstack",
   "version": "1.1.0",
-  "description": "Coming out of Project0! An input game. Singleplayer or multiplayer.",
+  "description": "A frantic, real-time multiplayer game where players must work together to manage an ever-growing stack of tasks.",
   "main": "index.js",
   "scripts": {
-    "serve": "live-server"
+    "serve": "live-server dist",
+    "sass": "sass src/sass/styles.scss dist/css/styles.css -w",
+    "build": "webpack"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,13 @@
   "bugs": {
     "url": "https://github.com/zapsters/inputstack/issues"
   },
-  "homepage": "https://github.com/zapsters/inputstack#readme"
+  "homepage": "https://github.com/zapsters/inputstack#readme",
+  "devDependencies": {
+    "sass": "^1.85.0",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "jquery": "^3.7.1"
+  }
 }

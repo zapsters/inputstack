@@ -1,0 +1,16 @@
+= TODO =
+
+⚿ Game logic optimization
+☐ Migrating to SASS
+☐ Migration to new firebase system
+  ☐ Connect to emulators
+  ☐ Database optimization
+⛋ Separate #join and #create Pages
+  ☐ Allows for game customization later on
+  ☐ Easier user interface since the intended action is clear instead of Create vs Join on the same page.
+
+☐ Uncomplete
+☒ In Progress
+☑ Finished
+⛋ Low Priority
+⚿ Important
