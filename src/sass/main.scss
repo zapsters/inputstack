@@ -1,0 +1,351 @@
+@use "variables.scss" as *;
+@use "themes.scss" as *;
+
+.screen_main_gameplay {
+  @include themify($themes) {
+    width: 90%;
+    margin: 0 auto;
+    /* screen_main_gameplay STYLE SHEET =============================*/
+    header.main {
+      background-color: themed("cardHeaderBackground");
+      border: 2px solid themed("border");
+      z-index: 100;
+      font-weight: bold;
+      margin: 14px auto;
+      margin-top: 90px;
+      padding-top: 4px;
+      text-align: center;
+      transition: background-color 100ms linear;
+      max-width: 1150px;
+      padding: 15px 5px;
+
+      display: flex;
+      align-items: stretch;
+      justify-content: space-evenly;
+    }
+    .headerSTICKY {
+      position: sticky;
+      top: 5px;
+    }
+    #TEMPLATEmoduleContainer {
+      padding: 50px 10px;
+      gap: 10px;
+      row-gap: 30px;
+    }
+    .moduleContainer {
+      border: 2px solid themed("border");
+      padding: 4px 2px;
+      margin: auto;
+      text-align: center;
+      font-size: 0px;
+      max-width: 1100px;
+      flex-wrap: wrap;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      .inputGroup {
+        text-align: center;
+        width: 240px;
+        height: 240px;
+        border: 3px solid black;
+        background-color: themed("cardBackground");
+        padding: 0;
+        margin: 0;
+        display: inline-block;
+        font-size: 16px; /* For some god damn reason, this fixes the space issues of JAVASCRIPT created divs and hardcoded divs... */
+        vertical-align: top;
+        position: relative;
+
+        display: flex;
+        align-items: stretch;
+        justify-content: space-evenly;
+        flex-direction: column;
+        .inputmodule_DEVtitle {
+          position: absolute;
+          top: 0;
+          transform: translateY(calc(-100% - 4px));
+          background-color: themed("cardHeaderBackground");
+          left: 0;
+        }
+        header {
+          text-align: left;
+          font-weight: 700;
+          padding: 6px;
+          background-color: themed("cardHeaderBackground");
+          border-bottom: 3px solid black;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          p {
+            margin: 0;
+          }
+        }
+        .content {
+          flex: 1;
+          padding: 5px;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+          flex-direction: column;
+          position: relative;
+          color: themed("text");
+          .inputmodule_clickableIcon {
+            position: absolute;
+            right: 6px;
+            bottom: 60px;
+            cursor: pointer;
+            color: #434343;
+            text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+          }
+          .inputmodule_clickableIcon:hover {
+            color: #838383;
+          }
+        }
+
+        .colorSwatchContainer {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 90%;
+          margin: 0 auto;
+          flex: 1;
+          .colorSwatch {
+            border: 2px black solid;
+            width: 45px;
+            height: 45px;
+            background-color: rgb(0, 0, 0);
+          }
+        }
+        table {
+          width: 100%;
+          tbody,
+          tr {
+            width: 100% !important;
+          }
+          td,
+          * {
+            vertical-align: text-top !important;
+          }
+        }
+        .slider {
+          padding: 0;
+          border: 2px solid black;
+          height: 21px;
+          background: #d3d3d3;
+          outline: none;
+          opacity: 0.7;
+          -webkit-transition: 0.2s;
+          appearance: none;
+          transition: opacity 0.2s;
+          overflow: hidden;
+          margin: 0;
+          margin-bottom: 5px;
+        }
+        .slider:hover {
+          opacity: 1;
+        }
+        .slider::-webkit-slider-thumb {
+          -webkit-appearance: none;
+          appearance: none;
+          width: 18px;
+          height: 18px;
+          background: #04aa6d;
+          cursor: pointer;
+        }
+        .slider:disabled {
+          background: #cbcbcb;
+        }
+        .slider:disabled::-webkit-slider-thumb {
+          background: #035839;
+          cursor: auto;
+        }
+        .cardSwipe {
+          pointer-events: none;
+        }
+        .cardSwipe::-webkit-slider-thumb {
+          pointer-events: all;
+        }
+        button {
+          background-color: themed("buttonBackground");
+          color: themed("background");
+          border-color: themed("background");
+          padding: 6px 30px;
+          &:hover,
+          &:focus {
+            background-color: themed("accent") !important;
+          }
+          &:active {
+            border-color: themed("accent");
+          }
+        }
+        button:disabled {
+          background-color: #333333;
+          color: #aaaaaa;
+        }
+        .input {
+          font-size: 15px;
+        }
+        .input:disabled {
+          opacity: 0.5;
+        }
+      }
+
+      .grayOutDivScreen {
+        overflow: hidden;
+        background-color: rgba(0, 0, 0, 0.5);
+        height: 100%;
+        width: 100%;
+        display: none;
+
+        padding: 0px;
+        margin: 0px;
+        top: 0px;
+        position: fixed;
+        z-index: 300;
+        transition: background-color 3000ms ease-out;
+
+        pointer-events: all;
+        cursor: context-menu;
+      }
+
+      .grayOutDivScreen div {
+        z-index: 500;
+        pointer-events: all;
+      }
+
+      .popupDiv {
+        cursor: auto;
+        z-index: 500;
+
+        padding: 0px 0px;
+        position: fixed;
+        top: 55%;
+        left: 50%;
+        width: 90%;
+        min-width: 400px;
+        max-width: 1200px;
+        max-height: 700px;
+        margin: auto;
+        text-align: center;
+        border: solid 2px;
+        overflow-y: scroll;
+        background-color: #ebddca;
+        -ms-transform: translate(-50%, 60%);
+        transform: translate(-50%, -50%);
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+        overflow: scroll;
+
+        display: none;
+      }
+
+      .popupDiv::-webkit-scrollbar {
+        display: none;
+      }
+
+      .popupDivTable {
+        border: solid 2px;
+        margin: 20px 5px 5px 5px;
+        min-height: 40px;
+      }
+
+      .popupDiv .closeButton {
+        position: absolute;
+        right: 0;
+        margin-right: 10px;
+        font-size: 20px;
+        top: 9px;
+        border: #d62b2b solid 2px;
+        background-color: white;
+        cursor: pointer;
+        height: 30px;
+        width: 30px;
+        overflow: none;
+      }
+
+      .popupDiv .closeButton:hover {
+        background-color: #d62b2b;
+        border: #d62b2b solid 2px;
+      }
+
+      .popupDiv .closeButton p {
+        margin: auto;
+        padding-top: 4px;
+      }
+
+      .popupDivTable li {
+        text-align: left;
+      }
+
+      .popupDivTable ul {
+        text-align: left;
+        -moz-column-count: 6;
+        -moz-column-gap: 20px;
+        -webkit-column-count: 6;
+        -webkit-column-gap: 20px;
+        column-count: 6;
+        column-gap: 20px;
+      }
+
+      .popupDiv hr {
+        border: 1px solid black;
+        position: absolute;
+        width: 100%;
+        top: 40px;
+      }
+
+      .gameoverDiv {
+        background-color: rgb(255, 255, 255);
+        max-width: 700px;
+        text-align: left;
+      }
+      .gameoverDiv h1 {
+        font-size: 30px;
+        padding: 0;
+        margin: 0;
+      }
+      .gameoverDiv .gameoverHeader {
+        padding-top: 5px;
+        background-color: #fe9eb4;
+        text-align: center;
+        border-bottom: black 2px solid;
+      }
+      .gameoverDiv p {
+        margin: 5px;
+      }
+      .gameoverDiv h4 {
+        padding: 0;
+        margin: 10px;
+      }
+
+      .statsScreen {
+        display: flex;
+        border-bottom: 2px solid black;
+      }
+      .statsScreen div:not(:first-child) {
+        border-left: solid 2px black;
+      }
+      .statsScreen div {
+        flex: 1;
+      }
+      .statsScreen div h2 {
+        text-align: center;
+        margin: 3px;
+      }
+    }
+    .flashing {
+      animation: redFlash 1s linear infinite;
+    }
+    @keyframes redFlash {
+      0% {
+        background-color: themed("cardBackground");
+      }
+      10% {
+        background-color: #f72a2a;
+      }
+      100% {
+        background-color: themed("cardBackground");
+      }
+    }
+  }
+}

@@ -25,6 +25,6 @@
   },
   "dependencies": {
     "jquery": "^3.7.1",
-    "pixelarticons": "^1.8.1"
+    "live-server": "^1.2.2"
   }
 }

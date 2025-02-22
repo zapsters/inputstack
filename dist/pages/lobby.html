@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<div class="lobbyContainer">
+  <header>
+    <h2>LOBBY</h2>
+    <span>Room Code<br />ABCD</span>
+  </header>
+  <div class="content">
+    <ul>
+      <li>
+        <span>player example<i>host</i><i>you</i></span>
+      </li>
+      <li>
+        <span>player example</span>
+        <span class="actionButtons">
+          <div>
+            <icon class="pixelart-icons-font-close-box"></icon>
+            <span>Remove User<i></i></span>
+          </div>
+        </span>
+      </li>
+    </ul>
+    <div style="text-align: center">
+      <h4 id="subtext2_players" style="padding: 10px; margin: 0">WAITING FOR HOST TO START</h4>
+
+      <div class="btnContainer">
+        <button id="creategame_btnid" class="buttonMain secondary" onclick="createroomFunction()">
+          LEAVE ROOM
+        </button>
+      </div>
+
+      <div class="btnContainer">
+        <button id="creategame_btnid" class="buttonMain secondary" onclick="createroomFunction()">
+          DELETE ROOM
+        </button>
+        <button
+          class="startbtn buttonMain"
+          onclick="firebase.database().ref(databasePrefix + roomcode + '/data').update({_startgame: 1});"
+          id="startbtn"
+          style="float: right">
+          START GAME
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

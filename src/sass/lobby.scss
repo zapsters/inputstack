@@ -1,0 +1,106 @@
+@use "themes.scss" as *;
+@use "variables.scss" as *;
+
+.lobbyContainer {
+  @include themify($themes) {
+    border: 3px solid themed("border");
+    width: 80%;
+    margin: 80px auto;
+    max-width: 800px;
+    border-radius: 20px;
+    padding-bottom: 15px;
+
+    header {
+      border-radius: 17px 17px 0 0;
+      background-color: themed("secondary");
+      border-bottom: 3px solid themed("border");
+      display: flex;
+      align-items: center;
+      justify-content: space-evenly;
+      text-align: center;
+      position: relative;
+      padding: 10px;
+      span {
+        position: absolute;
+        right: 10px;
+        line-height: 1.3em;
+      }
+      h2 {
+        margin: 0;
+      }
+    }
+    .content {
+      ul {
+        li {
+          border-bottom: 3px solid themed("border");
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 13px;
+          span {
+            padding: 18px 0px;
+          }
+          i {
+            background-color: #494646;
+            padding: 1px 4px;
+            color: #f5eaea;
+            border-radius: 4px;
+            margin-left: 5px;
+          }
+          .actionButtons {
+            padding: 0;
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-evenly;
+            cursor: pointer;
+            div {
+              position: relative;
+              display: flex;
+              align-items: center;
+              justify-content: space-evenly;
+              flex-direction: column;
+              &:hover {
+                icon {
+                  opacity: 1;
+                }
+                span {
+                  display: flex;
+                }
+              }
+              span {
+                transform: translateX(-2px);
+                background-color: #494646;
+                color: #f5eaea;
+                padding: 1px 4px;
+                display: none;
+                top: -30px;
+                border-radius: 10px;
+                word-wrap: none;
+                white-space: pre;
+                position: absolute;
+                align-items: center;
+                justify-content: space-evenly;
+                flex-direction: column;
+                i {
+                  bottom: 0;
+                  transform: translateY(70%);
+                  position: absolute;
+                  background-color: inherit;
+                  clip-path: polygon(50% 100%, 0 0, 100% 0);
+                  height: 12px;
+                  width: 40px;
+                }
+              }
+              icon {
+                font-size: 40px;
+                opacity: 0.5;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

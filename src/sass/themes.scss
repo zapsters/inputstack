@@ -7,7 +7,8 @@ $themes: (
     primary: #d83046,
     secondary: #fa7b8c,
     accent: #e4576e,
-    buttonBackground: #d83046,
+    border: #666,
+    buttonBackground: #e34d61,
     // BackgroundHover (primary, secondary
     buttonBackgroundHover:
       (
@@ -18,14 +19,17 @@ $themes: (
       #f7f7f7,
       #110d09,
     ),
+    cardHeaderBackground: #ffacb7,
+    cardBackground: #ffe3e3,
   ),
   dark: (
     text: #f6f2ee,
-    background: #111120,
+    background: #1a021a,
     primary: #e090ad,
     secondary: #cd5666,
     accent: #b34557,
-    buttonBackground: #e66666,
+    border: #ac8282,
+    buttonBackground: #c46f6f,
     buttonBackgroundHover: (
       #f59090,
       #b7b6c525,
@@ -34,6 +38,8 @@ $themes: (
       #25252e,
       #777680,
     ),
+    cardHeaderBackground: #ad4c5c,
+    cardBackground: #785e61,
   ),
 );
 

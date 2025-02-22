@@ -1,4 +1,41 @@
 <!DOCTYPE html>
-<center>
-  <h3>Home Page</h3>
-</center>
+<div id="joinGameContainer">
+  <!-- Front Page Join Game -->
+  <div class="" id="joingame_div">
+    <h1 style="font-size: 40px">JOIN GAME</h1>
+    <div class="inputContainer">
+      <label for="name_input">NAME</label>
+      <input
+        id="name_input"
+        maxlength="30"
+        style="text-transform: uppercase"
+        autocomplete="off"
+        onkeydown="if(event.key === 'Enter') {roomcode_input.focus()}" /><br />
+    </div>
+    <div class="inputContainer">
+      <label for="name_input">ROOM</label>
+      <input
+        id="roomcode_input"
+        maxlength="6"
+        style="text-transform: uppercase"
+        autocomplete="off"
+        onkeydown="if(event.key === 'Enter') {joingame_btnid.click()}" />
+    </div>
+    <div class="btnContainer">
+      <button id="creategame_btnid" class="buttonMain secondary" onclick="createroomFunction()">
+        Create Room
+      </button>
+      <button
+        id="joingame_btnid"
+        class="buttonMain"
+        onclick="joinroomFunction()"
+        style="cursor: pointer; float: right">
+        Join Room
+      </button>
+    </div>
+    <p class="TosInfo">
+      By selecting either option, you agree to our <a href="#tos">Terms of Service</a>
+    </p>
+    <p id="subtext_joingame" class="question" style="font-size: 20px"></p>
+  </div>
+</div>

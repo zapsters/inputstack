@@ -21,6 +21,12 @@ button {
   margin: 2px 0px;
   font-size: 18px;
   cursor: pointer;
+
+  &:active {
+    @include themify($themes) {
+      border-color: themed("accent") !important;
+    }
+  }
 }
 button.secondary {
   @include themify($themes) {
@@ -38,11 +44,6 @@ button:hover {
     &.secondary {
       background-color: list.nth(themed("buttonBackgroundHover"), 2);
     }
-  }
-}
-button:active {
-  @include themify($themes) {
-    border-color: themed("secondary") !important;
   }
 }
 
@@ -73,4 +74,13 @@ input {
   button {
     padding: 4px 5px;
   }
+}
+.btnContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 800px;
 }

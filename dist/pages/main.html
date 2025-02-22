@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<div class="screen_main_gameplay">
+  <header class="main headerContainer headerSTICKY" id="header">
+    <span id="game_health_text">HEALTH: 100</span>
+    <span id="game_moduleCount_text">Modules: 0</span>
+    <span id="game_timeTillNextModule_text">Time till next module: 0</span>
+    <span id="game_gameTimer_text">00:00</span>
+  </header>
+  <div class="moduleContainer" id="moduleContainer">
+    <!-- DIV for all inputGroups -->
+  </div>
+  <br /><br />
+  <div id="extraDEBUG" style="display: none">
+    <hr />
+    <button onclick="toggleGameLoop(false);">toggleGameLoop(false)</button>
+    <button onclick="toggleGameLoop(true);">toggleGameLoop(true)</button>
+    <br />
+    <button onclick="startGame();">Start Game</button>
+    <button onclick="resetGame();">Reset Game</button>
+    <button onclick="initializeModule();">Create Module</button>
+    <button onclick="initializeGame();">initializeGame()</button>
+    <button
+      onclick="host = !host; createText(' ---- host = '+host); this.innerHTML = 'Set host = ' + !host;">
+      Set host = true
+    </button>
+    <br /><br />
+    <button onclick="takeDamage(5)">Deal 5 damage</button>
+    <button onclick="takeDamage(-5)">Heal by 5</button>
+    <button onclick="damageDisabled = false">Enable Damage</button>
+    <button onclick="damageDisabled = true">Disable Damage</button>
+    <br />
+    <br />
+    <span>MODULE LIST</span>
+    <br />
+    <button onclick="initializeModule('module_simple')">Spawn Slider Div</button>
+    <button onclick="initializeModule('module_reset')">Spawn Reset Div</button>
+    <button onclick="initializeModule('module_unscramble')">Spawn Unscramble Div</button>
+    <button onclick="initializeModule('module_math')">Spawn Math Div</button>
+    <button onclick="initializeModule('module_color')">Spawn Color Match Div</button>
+    <button onclick="initializeModule('module_cardswipe')">Spawn CardSwipe</button>
+    <br />
+    <span onclick="resetInputFields()">
+      resetInputFields() [Click to reset the database and current fields]
+    </span>
+    <span onclick="resetGame()">GAME_RESET() [Database and local]</span>
+    <!-- TEMPLATE DIV -->
+    <div class="moduleContainer" id="TEMPLATEmoduleContainer">
+      <!-- TEMPLATE_module_simple -->
+      <div class="inputGroup" id="TEMPLATE_module_simple">
+        <span class="inputmodule_DEVtitle"> module_simple </span>
+        <header>
+          <span class="inputmodule_title" data-id="title">KEEP ABOVE</span>
+        </header>
+        <div class="content">
+          <input type="range" class="slider" data-id="input_range_01" value="100" />
+          <input type="range" class="slider" data-id="input_range_02" value="100" />
+        </div>
+      </div>
+      <!-- TEMPLATE_reset_module -->
+      <div class="inputGroup" id="TEMPLATE_module_reset">
+        <span class="inputmodule_DEVtitle" id="TEMPLATE_module_reset_DEVtitle"> module_reset </span>
+        <header>
+          <span class="inputmodule_title" data-id="title">TIMER</span>
+          <span class="inputmodule_title" data-id="timer">30</span>
+        </header>
+        <div class="content">
+          <button class="secondary" data-id="input_reset_button">RESET</button>
+        </div>
+      </div>
+      <!-- TEMPLATE_module_unscramble -->
+      <div class="inputGroup" id="TEMPLATE_module_unscramble">
+        <span class="inputmodule_DEVtitle" id="TEMPLATE_module_unscramble_DEVtitle">
+          module_unscramble
+        </span>
+        <header>
+          <span class="inputmodule_title" data-id="title">UNSCRAMBLE</span>
+          <span class="inputmodule_title" data-id="timer">100</span>
+        </header>
+        <div class="content">
+          <span class="center" data-id="results_text"></span>
+          <span class="center" data-id="scrambled_word_text">WORD</span>
+          <span class="center" data-id="UNscrambled_word_text">WORD</span>
+          <span
+            class="material-icons md-18"
+            onclick="openDiv('unscrambleKey')"
+            style="cursor: pointer; width: fit-content; position: absolute; top: 4px; right: 4px"
+            >view_list</span
+          >
+          <input
+            type="text"
+            class="input"
+            data-id="input_unscrambledWord"
+            placeholder="Type Here..." />
+          <button class="secondary" data-id="input_submit_button">Submit</button>
+        </div>
+      </div>
+      <!-- TEMPLATE_module_math -->
+      <div class="inputGroup" id="TEMPLATE_module_math">
+        <span class="inputmodule_DEVtitle" id="TEMPLATE_module_math_DEVtitle"> module_math </span>
+        <header>
+          <span class="inputmodule_title" data-id="title">SIMPLE MATH</span>
+          <span class="inputmodule_title" data-id="timer">60</span>
+        </header>
+        <div class="content">
+          <span class="center" data-id="results_text"></span>
+          <span class="center" data-id="math_question_text">MATH QUESTION</span>
+          <span class="center" data-id="math_answer_text">ANSWER</span>
+          <input
+            type="text"
+            class="input"
+            data-id="input_math_response"
+            placeholder="Type Here..." />
+          <button class="secondary" data-id="input_submit_button">Submit</button>
+        </div>
+      </div>
+      <!-- TEMPLATE_module_color -->
+      <div class="inputGroup" id="TEMPLATE_module_color">
+        <span class="inputmodule_DEVtitle" id="TEMPLATE_module_color_DEVtitle"> module_color </span>
+        <header>
+          <span class="inputmodule_title">COLOR MATCH</span>
+          <span class="inputmodule_title" data-id="timer">60</span>
+        </header>
+        <div class="content">
+          <span class="center" data-id="results_text"></span>
+          <div class="colorSwatchContainer">
+            <div class="colorSwatch" data-id="module_colorSwatchKey"></div>
+            <span class="center">&rarr;</span>
+            <div class="colorSwatch" data-id="module_colorSwatch_result"></div>
+          </div>
+          <table>
+            <tr>
+              <td>R:</td>
+              <td>
+                <input
+                  type="range"
+                  class="slider"
+                  data-onupdate="updateColorResult"
+                  data-id="input_colorval_01"
+                  value="0" />
+              </td>
+            </tr>
+            <tr>
+              <td>G:</td>
+              <td>
+                <input
+                  type="range"
+                  class="slider"
+                  data-onupdate="updateColorResult"
+                  data-id="input_colorval_02"
+                  value="0" />
+              </td>
+            </tr>
+            <tr>
+              <td>B:</td>
+              <td>
+                <input
+                  type="range"
+                  class="slider"
+                  data-onupdate="updateColorResult"
+                  data-id="input_colorval_03"
+                  value="0" />
+              </td>
+            </tr>
+          </table>
+          <button data-id="input_submit_button">Submit</button>
+        </div>
+      </div>
+      <!-- TEMPLATE_module_cardswipe -->
+      <div class="inputGroup" id="TEMPLATE_module_cardswipe">
+        <span class="inputmodule_DEVtitle" id="TEMPLATE_module_cardswipe_DEVtitle">
+          module_cardswipe
+        </span>
+        <header>
+          <span class="inputmodule_title">CARD SWIPE</span>
+          <span class="inputmodule_title" data-id="timer">60</span>
+        </header>
+        <div class="content">
+          <span class="center" data-id="results_text">WRONG</span>
+          <div>
+            <input
+              type="range"
+              class="slider cardSwipe"
+              data-onupdate="cardswipeSpeedCalc"
+              data-id="input_cardSwipe_01"
+              value="0"
+              onmouseup="cardswipeSpeedCalcEnd(this)" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <p>GOOGLE'S ICONS! See https://fonts.google.com/icons!</p>
+    <p>
+      <span class="material-icons md-18">face</span>
+      <span class="material-icons md-18">search</span>
+      <span class="material-icons md-18">info</span>
+      <span class="material-icons md-18">visibility</span>
+      <span class="material-icons md-18">description</span>
+      <span class="material-icons md-18">help_outline</span>
+      <span class="material-icons md-18">list</span>
+      <span class="material-icons md-18">help</span>
+      <span class="material-icons md-18">article</span>
+      <span class="material-icons md-18">question_answer</span>
+      <span class="material-icons md-18">view_list</span>
+      <span class="material-icons md-18">text_snippet</span>
+      <span class="material-icons md-18">notes</span>
+    </p>
+    <hr />
+    <input type="text" id="input_textbox_01" value="testing input" />
+    <input type="checkbox" id="input_checkbox_01" checked="true" />
+    <hr />
+    <div>
+      <p><u>INPUT-OBJECTS</u></p>
+      <p id="INPUT_OBJECTS">UserInputObjects =</p>
+      <p id="CURRENT_GROUPSDIV">CurrentGroups =</p>
+    </div>
+    <hr />
+    <div>
+      <p><u>DATABASE-STUFF</u></p>
+      <p id="DATABASE_OBJECTS">DatabaseObjects</p>
+    </div>
+    <hr />
+    <p>TODO:</p>
+    <p>
+      Modifier tab? Change Tick Speed, Initial Module Count ETC. New module? - secret key on one
+      person's screen, a input on a different person.
+    </p>
+    <hr />
+    <p>LOG</p>
+    <div id="textLayer" style="white-space: nowrap"></div>
+  </div>
+</div>
