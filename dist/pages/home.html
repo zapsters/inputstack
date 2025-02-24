@@ -22,20 +22,14 @@
         onkeydown="if(event.key === 'Enter') {joingame_btnid.click()}" />
     </div>
     <div class="btnContainer">
-      <button id="creategame_btnid" class="buttonMain secondary" onclick="createroomFunction()">
-        Create Room
-      </button>
-      <button
-        id="joingame_btnid"
-        class="buttonMain"
-        onclick="joinroomFunction()"
-        style="cursor: pointer; float: right">
+      <button id="creategame_btnid" class="buttonMain secondary">Create Room</button>
+      <button id="joingame_btnid" class="buttonMain" style="cursor: pointer; float: right">
         Join Room
       </button>
     </div>
     <p class="TosInfo">
       By selecting either option, you agree to our <a href="#tos">Terms of Service</a>
     </p>
-    <p id="subtext_joingame" class="question" style="font-size: 20px"></p>
+    <p id="subtext_joingame"></p>
   </div>
 </div>

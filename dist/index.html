@@ -12,7 +12,17 @@
     <nav id="screen_title">
       <!-- HEADER -->
       <div class="header">
+        <a href="#" style="margin: 0; padding: 0">
+          <img src="./images/InputStackLogo.png" height="90px" alt="" srcset="" />
+        </a>
         <!-- <p onclick="toggleDebugMenu()">Input Stack!</p> -->
+        <a style="position: absolute; right: 10px" class="loggedOut" href="#signin">Login</a>
+        <a style="position: absolute; right: 10px; display: none" class="loggedIn" href="#account"
+          >Logged in as <span class="displayName"></span
+        ></a>
+        <!-- <a style="position: absolute; left: 10px; display: block" class="homeBtn" href="#home"
+          >Play</a
+        > -->
       </div>
     </nav>
 
@@ -98,6 +108,6 @@
     <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-database.js"></script>
 
     <!-- SCRIPT REFERENCES -->
-    <script src="app/app.js"></script>
+    <script type="module" src="app/app.js"></script>
   </body>
 </html>

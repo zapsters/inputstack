@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+  <div class="mainContainer mainContainer-alt account">
+    <header>
+      <h1><span>Account</span></h1>
+    </header>
+    <div class="content">
+      <h2>Hi <span class="displayName">###</span>,</h2>
+      <section>
+        <h3>Display Name</h3>
+        <div class="inline">
+          <input type="text" maxlength="30" autocomplete="off" id="displayNameInput" />
+          <button
+            type="button"
+            class="button changeDisplayName"
+            id="displayNameChangeButton"
+            autocomplete="nickname">
+            Change Display Name
+          </button>
+          <span id="displayNameChangeStatusText"></span>
+        </div>
+        <h3>Password</h3>
+        <div class="inline">
+          <input class="readOnly" type="password" readonly id="passwordInput" />
+          <button type="button" class="button changePasswordBtn" id="passwordChangeButton">
+            Change Password
+          </button>
+          <span id="passwordStatusText"></span>
+        </div>
+        <h3>Email</h3>
+        <div class="inline">
+          <input class="readOnly" type="email" readonly id="emailInput" />
+          <button type="button" class="button changeEmailBtn">Change Email</button>
+          <span id="emailStatusText"></span>
+        </div>
+        <button type="button" class="button signoutBtn">Signout</button>
+        <button
+          type="button"
+          style="margin-top: 15px"
+          id="deleteAccountBtn"
+          class="button dangerous">
+          Delete Account
+        </button>
+      </section>
+    </div>
+  </div>
+</html>

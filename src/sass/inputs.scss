@@ -84,3 +84,11 @@ input {
   width: 100%;
   max-width: 800px;
 }
+.button svg {
+  display: inline;
+  width: 1.3rem;
+  background-color: red;
+  height: 1.3rem;
+  margin-right: 0.75rem;
+  color: white;
+}

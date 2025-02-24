@@ -1,0 +1,187 @@
+@use "themes.scss" as *;
+.modalContainer {
+  position: fixed;
+  display: table;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  transform: scale(0);
+  z-index: 10;
+  .modalBackground {
+    display: table-cell;
+    text-align: center;
+    vertical-align: middle;
+    .modal {
+      z-index: 10;
+      @include themify($themes) {
+        color: themed("text");
+        background-color: themed("background");
+      }
+      border: 4px solid black;
+      padding: 20px;
+      display: inline-block;
+      border-radius: 13px;
+      font-weight: 300;
+      position: relative;
+      max-width: 650px;
+      width: 86%;
+      icon {
+        font-size: 80px !important;
+        @include themify($themes) {
+          filter: themed("filterToBlack");
+        }
+      }
+      .closeBtn {
+        position: absolute;
+        right: 7px;
+        height: 33px;
+        font-size: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        top: 7px;
+        @include themify($themes) {
+          filter: themed("filterToBlack");
+        }
+        cursor: pointer;
+        opacity: 0.7;
+        &:hover {
+          opacity: 1;
+        }
+      }
+      #modalMainButtons {
+        margin: 20px 0 10px 0;
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-evenly;
+      }
+      h2 {
+        font-size: 40px;
+        margin-bottom: 10px;
+      }
+      h3 {
+        font-size: 32px;
+        margin-bottom: 13px;
+        font-weight: 300;
+      }
+      p {
+        font-size: 18px;
+        line-height: 22px;
+        font-weight: 500;
+      }
+      .modal-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        border-radius: 3px;
+        rect {
+          stroke: #fff;
+          stroke-width: 2px;
+          stroke-dasharray: 778;
+          stroke-dashoffset: 778;
+        }
+      }
+    }
+  }
+
+  &.active {
+    transform: scale(1);
+    .modalBackground {
+      background: rgba(0, 0, 0, 0);
+      animation: fadeIn 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+      .modal {
+        opacity: 0;
+        animation: scaleUp 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+      }
+    }
+    + .content {
+      animation: scaleBack 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    }
+    &.out {
+      animation: quickScaleDown 0s 0.5s linear forwards;
+      .modalBackground {
+        animation: fadeOut 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        .modal {
+          animation: scaleDown 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+      }
+      + .content {
+        animation: scaleForward 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+      }
+    }
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    background: rgba(0, 0, 0, 0);
+  }
+  100% {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  100% {
+    background: rgba(0, 0, 0, 0);
+  }
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(0.8) translateY(1000px);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1) translateY(0px);
+    opacity: 1;
+  }
+}
+
+@keyframes scaleDown {
+  0% {
+    transform: scale(1) translateY(0px);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8) translateY(1000px);
+    opacity: 0;
+  }
+}
+
+@keyframes scaleBack {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.85);
+  }
+}
+
+@keyframes scaleForward {
+  0% {
+    transform: scale(0.85);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes quickScaleDown {
+  0% {
+    transform: scale(1);
+  }
+  99.9% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
