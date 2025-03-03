@@ -526,6 +526,172 @@ function createText(string) {
   document.getElementById("textLayer").appendChild(div);
 }
 
+// LOBBY LOGIC ===============================================================================================
+// Create Lobby Logic
+function createroomFunction(dev) {
+  if (isCreatingRoom) return;
+  username = document.getElementById("username_input").value;
+  response_text_obj = document.getElementById("subtext_joingame");
+  //Check if username and roomcode are filled out
+  if (username == "") {
+    showTextForTime(response_text_obj, "ENTER A USERNAME", 1200);
+    return;
+  }
+
+  var room_to_create = Math.random().toString(20).substr(2, 6);
+  if (dev) room_to_create = "dev";
+  create_roomcode_ref = firebase.database().ref(databasePrefix + room_to_create + "/users");
+  create_roomcode_ref.once(
+    "value",
+    function (doc) {
+      create_roomcode_data = doc.val();
+      // Success...
+      document.getElementById("roomcode_input").value = room_to_create;
+      if (create_roomcode_data == null) {
+        isCreatingRoom = true;
+        roomcode = create_roomcode_data;
+        showTextForTime(response_text_obj, "Creating room '" + room_to_create + "'", 1200);
+        setTimeout(() => {
+          document.getElementById("joingame_btnid").click();
+        }, 1000);
+        createRoom(room_to_create);
+      } else {
+        showTextForTime(response_text_obj, "That Room Already Exists", 5000);
+        return;
+      }
+    },
+    (error) => {
+      if (error) {
+        console.log(error);
+        showTextForTime(response_text_obj, error.toString().split(" ")[1], 2000);
+      }
+    }
+  );
+}
+
+//Create room data in the database.
+function createRoom(roomcode) {
+  console.log("CREATING ROOM!");
+  firebase
+    .database()
+    .ref(databasePrefix + roomcode + "/users")
+    .set({});
+  firebase
+    .database()
+    .ref(databasePrefix + roomcode + "/data")
+    .update({
+      _usercount: 0,
+      _state: 1,
+      _startgame: 0,
+      _roomcode_reload: 0,
+      _timerCurrent: 0,
+      _moduleTimer: 0,
+    });
+}
+
+//JOIN GAME BUTTON
+function joinroomFunction() {
+  if (isJoining) return;
+  username = document.getElementById("username_input").value;
+  roomcode = document.getElementById("roomcode_input").value.toLowerCase();
+  response_text_obj = document.getElementById("subtext_joingame");
+  //Check if username and roomcode are filled out
+  if (username == "") {
+    showTextForTime(response_text_obj, "ENTER A USERNAME", 1200);
+    return;
+  }
+  if (roomcode == "") {
+    showTextForTime(response_text_obj, "ENTER A ROOMCODE", 1200);
+    return;
+  }
+
+  //Get Room Data!
+  room_data_ref = firebase.database().ref(databasePrefix + roomcode + "/data");
+  room_data_ref.once(
+    "value",
+    function (doc) {
+      room_data = doc.val();
+      roomcode_data_data = doc.val();
+      if (room_data != null) {
+        isJoining = true;
+        showTextForTime(response_text_obj, "Joining Room!", 1200);
+        userscount_read = roomcode_data_data._usercount;
+        newusercount = userscount_read + 1;
+        usernum = newusercount;
+        userPath = "user" + usernum;
+        //Writes user info as roomcode/users/user[usernum]
+        firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/users/user" + usernum)
+          .set({
+            username: username,
+            interactions: 0,
+            wordsUnscrambled: 0,
+            resetButtonClicks: 0,
+            problemsSolved: 0,
+          });
+        //Adds one to the usercount
+        firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/data/")
+          .update({
+            _usercount: newusercount,
+          });
+        state = 1;
+        createGameScreen();
+
+        //Start the check to check if _startgame is updated!
+        roomcode_data_startgame_ref = firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/data/_startgame");
+        roomcode_data_startgame_ref.on("value", function (snapshot) {
+          if (state == 1) {
+            startGameFunction();
+          }
+        });
+
+        //Start the check to check if _state is updated!
+        roomcode_data_startgame_ref = firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/data/_state");
+        roomcode_data_startgame_ref.on("value", function (snapshot) {
+          recieveStateUpdate(snapshot.val());
+        });
+
+        //Start the check for _roomcode_reload = 1. If it is, quit the game
+        roomcode_data_reload_ref = firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/data/_roomcode_reload");
+        roomcode_data_reload_ref.on("value", function (doc) {
+          roomcodeReloadval = doc.val();
+          if (roomcodeReloadval == "1" || roomcodeReloadval == 1) {
+            onRoomcodeReload();
+          }
+        });
+
+        //Start to check if Roomcode/users/_usercount is updated. If updated, call the playerlist_reload() function
+        roomcode_users_usercount_ref = firebase
+          .database()
+          .ref(databasePrefix + roomcode + "/data/_usercount");
+        roomcode_users_usercount_ref.on("value", function (snapshot) {
+          if (state == 1) {
+            playerlist_reload();
+          }
+        });
+      } else {
+        showTextForTime(response_text_obj, "Room does not exist", 1200);
+        return;
+      }
+    },
+    (error) => {
+      if (error) {
+        console.log(error);
+        showTextForTime(response_text_obj, error.toString().split(" ")[1], 2000);
+      }
+    }
+  );
+}
+
 //Called by all players when _roomcode_reload == 1. Reloads page when the host leaves.
 function onRoomcodeReload() {
   if (roomcodeReload) return;
@@ -731,6 +897,9 @@ function takeDamage(amount) {
       });
   }
 }
+
+const headerColor = document.getElementById("header").style.backgroundColor;
+
 //Used to animate the header's backgroundColor indicating damage
 function healthChangeAnimation(healthChange, newHealth) {
   var headerDIV = document.getElementById("header");
@@ -747,7 +916,6 @@ function healthChangeAnimation(healthChange, newHealth) {
       .getElementById("header")
       .animate([{ backgroundColor: flashColor }], {
         fill: "forwards",
-        easing: "steps(20, end)",
         duration: 70,
         iterationStart: 0,
         playbackRate: 0,
@@ -755,7 +923,7 @@ function healthChangeAnimation(healthChange, newHealth) {
   } else {
     let damageHeaderAnimation = document
       .getElementById("header")
-      .animate([{ backgroundColor: flashColor }, { backgroundColor: "white" }], {
+      .animate([{ backgroundColor: flashColor }, { backgroundColor: headerColor }], {
         fill: "forwards",
         easing: "steps(20, end)",
         duration: 800,

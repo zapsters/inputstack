@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html class="theme-dark">
+  <head>
+    <title>Input Stack</title>
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
+    <link rel="shortcut icon" type="image/png" href="images/InputStackIcon.png" />
+    <!-- GOOGLE'S MATERIAL ICONS SHEET https://fonts.google.com/icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+  </head>
+
+  <body>
+    <!-- DIV POPUPS -->
+    <div class="grayOutDivScreen" onclick="closeDiv();" id="grayOutDivScreen" style="display: none">
+      <p style="color: white; text-align: center; text-shadow: 2px 2px 2px rgb(0, 0, 0)">
+        Click anywhere to close...
+      </p>
+      <div class="popupDiv" onclick="event.stopPropagation();" id="unscrambleKey">
+        <div class="closeButton" onclick="this.parentElement.style.display='none'; closeDiv();">
+          <p>X</p>
+        </div>
+        <p>UNSCRAMBLE KEY</p>
+        <hr />
+        <div class="popupDivTable" id="uncrambleKey_content"></div>
+      </div>
+    </div>
+
+    <div class="popupDiv gameoverDiv" style="display: none" id="gameover_div">
+      <div class="gameoverHeader">
+        <h1>Game Over!</h1>
+        <p>Score: <span id="gameover_scoreText">####</span></p>
+      </div>
+      <div class="statsScreen">
+        <div>
+          <h2>Stats</h2>
+          <p>Time Survived: <span id="gameover_timerText"></span></p>
+          <p>Module Count: <span id="gameover_moduleCount"></span></p>
+          <p>Words Unscrambled: <span id="gameover_totalWordsUnscrambled"></span></p>
+          <p>
+            Math Problems Solved:
+            <span id="gameover_totalProblemsSolved"></span>
+          </p>
+          <p>
+            Reset Buttons Clicked:
+            <span id="gameover_totalResetBtnClicks"></span>
+          </p>
+        </div>
+        <div>
+          <h2>Player Data</h2>
+          <p>Most Active Player: <span id="gameover_mostActivePlayer"></span></p>
+          <p>Word Master: <span id="gameover_wordMaster"></span></p>
+          <p>Math Genius: <span id="gameover_mathGenius"></span></p>
+          <p>Reset Button Camper: <span id="gameover_playerResetCamper"></span></p>
+          <p>Least Active: <span id="gameover_leastActive"></span></p>
+        </div>
+      </div>
+      <div>
+        <div id="gameover_NotHost" style="display: block">
+          <h4>Waiting for the host.</h4>
+        </div>
+        <div id="gameover_hostOptions" style="display: none">
+          <h4 style="margin-bottom: 0px">Host Options:</h4>
+          <div style="padding: 0 0 0 10px">
+            <button type="button" class="buttonMain" onclick="if(host) resetGame();">
+              Restart Game
+            </button>
+            <button type="button" class="buttonMain" onclick="if(host) abandonRoom();">
+              Quit Game
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HEADER -->
+    <nav id="screen_title">
+      <!-- HEADER -->
+      <div class="header">
+        <a href="#" style="margin: 0; padding: 0">
+          <img src="./images/InputStackLogo.png" height="90px" alt="" srcset="" />
+        </a>
+        <!-- <p onclick="toggleDebugMenu()">Input Stack!</p> -->
+        <!-- <a style="position: absolute; right: 10px" class="loggedOut" href="#signin">Login</a> -->
+        <a style="position: absolute; right: 10px; display: none" class="loggedIn" href="#account"
+          >Logged in as <span class="displayName"></span
+        ></a>
+        <!-- <a style="position: absolute; left: 10px; display: block" class="homeBtn" href="#home"
+          >Play</a
+        > -->
+      </div>
+    </nav>
+
+    <!-- DEBUG MENU -->
+    <div class="debug_div" id="debug_menu_div" style="display: none">
+      <p class="noSpace">DEBUG</p>
+      <p id="debug_menu_text" class="noSpace">Hi</p>
+    </div>
+    <center>
+      <!-- BOTTOM DIV -->
+      <div class="bottom_div flex-container" id="game_info">
+        <div>
+          <p class="noSpace" style="display: none" id="footer_host">
+            <u>You are the host</u>
+          </p>
+          <p class="noSpace" style="display: none" id="footer_username">Logged in as: *username*</p>
+          <p class="noSpace" style="display: none" id="footer_roomcode">Roomcode: *roomcode*</p>
+          <p class="noSpace" style="display: block" id="footer_credit">
+            Created by Erin Ballinger 2023
+          </p>
+        </div>
+        <div>
+          <p class="noSpace" id="front_page_mainText">In Development</p>
+          <p class="noSpace" id="versionDiv"></p>
+        </div>
+      </div>
+
+      <div id="screen_joinGame">
+        <!-- Front Page Message -->
+        <div class="centeredHoriz flex-container" style="margin: 0px 0px 0px 0px">
+          <div style="text-align: right; display: none">
+            <p class="noSpace">
+              <a
+                class="noSpace"
+                style="font-size: 20px; text-decoration: underline; cursor: pointer"
+                id="auth_signIn"
+                onclick="signInButton();">
+                Sign in with Google
+              </a>
+            </p>
+            <p class="noSpace" style="font-size: 20px; display: none" id="auth_signedInAs">
+              Signed in as <span id="auth_signedInAs_displayName">???</span>
+            </p>
+            <p style="max-width: 280px; float: right">
+              Note: Google accounts are used purely for authentication and no sensitive info is
+              passed to this site.
+            </p>
+          </div>
+          <!--<p class="noSpace" id="front_page_subText" style="font-size: 20px; height: 20px; padding: 3px 0px;">Actively being updated.</p>-->
+        </div>
+
+        <!-- Front Page Join Game -->
+        <div class="centered_div" style="display: block" id="joingame_div">
+          <br />
+          <br />
+          <div class="writableContent" style="max-width: 600px">
+            <p class="noSpace" style="font-size: 40px">JOIN GAME</p>
+
+            <div class="inputContainer">
+              <input
+                id="username_input"
+                class="messagebox"
+                maxlength="30"
+                placeholder="USERNAME"
+                style="margin: 10px 0px"
+                autocomplete="off"
+                onkeydown="if(event.key === 'Enter') {roomcode_input.focus()}" /><br />
+            </div>
+            <div class="inputContainer">
+              <input
+                id="roomcode_input"
+                class="messagebox"
+                maxlength="6"
+                placeholder="ROOM CODE"
+                autocomplete="off"
+                onkeydown="if(event.key === 'Enter') {joingame_btnid.click()}" />
+            </div>
+            <div class="btnContainer">
+              <button
+                id="creategame_btnid"
+                class="buttonMain secondary"
+                onclick="createroomFunction()"
+                style="cursor: pointer; float: left">
+                CREATE ROOM
+              </button>
+              <button
+                id="joingame_btnid"
+                class="buttonMain"
+                onclick="joinroomFunction()"
+                style="cursor: pointer; float: right">
+                JOIN ROOM
+              </button>
+            </div>
+            <br />
+            <p id="subtext_joingame" class="question" style="font-size: 20px"></p>
+          </div>
+        </div>
+      </div>
+    </center>
+
+    <center>
+      <!-- PLAYER SCREEN -->
+      <div class="" style="display: none" id="playerlist_div">
+        <p class="" style="font-size: 40px; margin: 0; padding: 0px 0px">
+          <u>PLAYERS</u>
+        </p>
+        <br />
+        <li class="playerlist" id="playerlist_li">
+          <div>
+            <p>player example</p>
+          </div>
+          <div>
+            <p>player example</p>
+          </div>
+          <div class="trans">
+            <p>player example</p>
+          </div>
+        </li>
+
+        <p
+          id="subtext2_players"
+          class="question"
+          style="font-size: 30px; padding: 0px 0px 0px 0px; margin: 0px 0 -7px 0">
+          WAITING FOR HOST<br />TO START
+        </p>
+        <button
+          class="startbtn buttonMain"
+          onclick="firebase.database().ref(databasePrefix + roomcode + '/data').update({_startgame: 1});"
+          id="startbtn"
+          style="cursor: pointer; display: none">
+          START GAME
+        </button>
+      </div>
+    </center>
+
+    <!-- MAIN GAMEPLAY SCREEN ==================================== -->
+    <div
+      id="screen_main_gameplay"
+      class="screen_main_gameplay"
+      style="
+        position: flex;
+        margin: auto;
+        text-align: center;
+        max-width: 1300px;
+        display: none;
+        position: relative;
+        top: -80px;
+      ">
+      <header class="main headerContainer headerSTICKY" id="header">
+        <span id="game_health_text"> HEALTH: 100 </span>
+        <span id="game_moduleCount_text"> Modules: 0 </span>
+        <span id="game_timeTillNextModule_text"> Time till next module: </span>
+        <span id="game_gameTimer_text"> 00:00 </span>
+      </header>
+      <br />
+      <div class="moduleContainer" id="moduleContainer">
+        <!-- DIV for all inputGroups -->
+      </div>
+      <br /><br />
+      <div id="extraDEBUG" style="display: none">
+        <hr />
+        <button onclick="toggleGameLoop(false);">toggleGameLoop(false)</button>
+        <button onclick="toggleGameLoop(true);">toggleGameLoop(true)</button>
+        <br />
+        <button onclick="startGame();">Start Game</button>
+        <button onclick="resetGame();">Reset Game</button>
+        <button onclick="initializeModule();">Create Module</button>
+        <button onclick="initializeGame();">initializeGame()</button>
+        <button
+          onclick="host = !host; createText(' ---- host = '+host); this.innerHTML = 'Set host = ' + !host;">
+          Set host = true
+        </button>
+        <br /><br />
+        <button onclick="takeDamage(5)">Deal 5 damage</button>
+        <button onclick="takeDamage(-5)">Heal by 5</button>
+        <button onclick="damageDisabled = false">Enable Damage</button>
+        <button onclick="damageDisabled = true">Disable Damage</button>
+        <br />
+        <button
+          onclick="var display = document.getElementById('TEMPLATEmoduleContainer').style.display; if(display == 'block'){document.getElementById('TEMPLATEmoduleContainer').style.display='none'}else{document.getElementById('TEMPLATEmoduleContainer').style.display='block'}">
+          ToggleTemplate Div</button
+        ><br />
+        <br />
+        <p style="padding: 0px; margin: 0px">MODULE LIST</p>
+        <button onclick="initializeModule('module_simple_01')">Spawn Slider Div</button>
+        <button onclick="initializeModule('module_reset_01')">Spawn Reset Div</button>
+        <button onclick="initializeModule('module_unscramble_01')">Spawn Unscramble Div</button>
+        <button onclick="initializeModule('module_math_01')">Spawn Math Div</button>
+        <button onclick="initializeModule('module_color_01')">Spawn Color Match Div</button>
+        <button onclick="initializeModule('module_cardswipe_01')">Spawn CardSwipe</button>
+        <br />
+        <p onclick="resetInputFields()">
+          resetInputFields() [Click to reset the database and current fields]
+        </p>
+        <p onclick="resetGame()">GAME_RESET() [Database and local]</p>
+        <hr />
+        <!-- TEMPLATE DIV -->
+        <div class="moduleContainer" id="TEMPLATEmoduleContainer">
+          <!-- TEMPLATE_module_simple_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_simple_01">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_simple_01_DEVtitle">
+              TEMPLATE_module_simple_01
+            </span>
+
+            <header>
+              <span class="inputmodule_title" data-id="title">KEEP ABOVE</span>
+            </header>
+            <div class="content">
+              <input type="range" class="slider" data-id="input_range_01" value="100" />
+              <input type="range" class="slider" data-id="input_range_02" value="100" />
+            </div>
+          </div>
+          <!-- TEMPLATE_reset_module_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_reset_01">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_reset_01_DEVtitle">
+              TEMPLATE_module_reset_01
+            </span>
+            <header>
+              <span class="inputmodule_title" data-id="title">TIMER</span>
+              <span class="inputmodule_title" style="right: 10px" data-id="timer">30</span>
+            </header>
+            <div class="content">
+              <button
+                data-id="input_reset_button"
+                class="secondary"
+                style="width: 80%; height: 78%; margin: auto">
+                RESET
+              </button>
+            </div>
+          </div>
+          <!-- TEMPLATE_module_unscramble_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_unscramble_01">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_unscramble_01_DEVtitle">
+              TEMPLATE_module_unscramble_01
+            </span>
+            <header style="top: 0">
+              <span class="inputmodule_title" data-id="title">UNSCRAMBLE</span>
+              <span class="inputmodule_title" data-id="timer">100</span>
+            </header>
+            <span
+              class="inputmodule_clickableIcon"
+              onclick="openDiv('unscrambleKey');"
+              style="text-align: center">
+            </span>
+            <center>
+              <p class="center" data-id="results_text"></p>
+              <p class="center" data-id="scrambled_word_text">WORD</p>
+              <p class="center" data-id="UNscrambled_word_text" style="display: none">WORD</p>
+              <div class="RangeGroup" style="margin: auto; width: 100%">
+                <span class="material-icons md-18">view_list</span>
+                <input
+                  type="text"
+                  style="
+                    width: 95%;
+                    text-align: center;
+                    margin-bottom: 6px;
+                    -ms-transform: translate(50%, 60%);
+                    transform: translate(-0px, 0%);
+                    font-size: 16px;
+                  "
+                  class="input"
+                  data-id="input_unscrambledWord"
+                  placeholder="Type Here..." />
+                <button
+                  type="button"
+                  style="width: 95%"
+                  class="secondary"
+                  data-id="input_submit_button">
+                  Submit
+                </button>
+              </div>
+            </center>
+          </div>
+          <!-- TEMPLATE_module_math_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_math_01">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_math_01_DEVtitle">
+              TEMPLATE_module_math_01
+            </span>
+            <header>
+              <span class="inputmodule_title" data-id="title">SIMPLE MATH</span>
+              <span class="inputmodule_title" style="right: 10px" data-id="timer">60</span>
+            </header>
+            <div class="content">
+              <p
+                class="center"
+                data-id="results_text"
+                style="
+                  font-weight: bold;
+                  font-size: 23px;
+                  margin: 0;
+                  color: #b50000;
+                  text-decoration: underline;
+                "></p>
+              <p
+                class="center"
+                data-id="math_question_text"
+                style="width: 100%; height: 40px; font-weight: bold; font-size: 20px; margin: 0">
+                MATH QUESTION
+              </p>
+              <p
+                class="center"
+                data-id="math_answer_text"
+                style="display: none; font-size: 20px; margin: 0">
+                ANSWER
+              </p>
+              <div
+                class="RangeGroup"
+                style="margin: auto; width: 100%; display: inline; bottom: 20px; left: 0px">
+                <input
+                  type="text"
+                  style="
+                    width: 95%;
+                    text-align: center;
+                    margin-bottom: 6px;
+                    -ms-transform: translate(50%, 60%);
+                    transform: translate(-0px, 0%);
+                    font-size: 16px;
+                  "
+                  class="input"
+                  data-id="input_math_response"
+                  placeholder="Type Here..." />
+                <button
+                  type="button"
+                  style="width: 95%"
+                  class="button"
+                  data-id="input_submit_button">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- TEMPLATE_module_color_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_color_01">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_color_01_DEVtitle">
+              TEMPLATE_module_color_01
+            </span>
+            <header>
+              <span class="inputmodule_title">COLOR MATCH</span>
+              <span class="inputmodule_title" style="right: 10px" data-id="timer">60</span>
+            </header>
+            <div class="content">
+              <div class="colorSwatchContainer">
+                <div class="colorSwatch" data-id="module_colorSwatchKey"></div>
+                <span class="center">&rarr;</span>
+                <div class="colorSwatch" data-id="module_colorSwatch_result"></div>
+              </div>
+              <table>
+                <tr>
+                  <td>R:</td>
+                  <td>
+                    <input
+                      type="range"
+                      class="slider"
+                      data-onupdate="updateColorResult"
+                      data-id="input_colorval_01"
+                      value="0" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>G:</td>
+                  <td>
+                    <input
+                      type="range"
+                      class="slider"
+                      data-onupdate="updateColorResult"
+                      data-id="input_colorval_02"
+                      value="0" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>B:</td>
+                  <td>
+                    <input
+                      type="range"
+                      class="slider"
+                      data-onupdate="updateColorResult"
+                      data-id="input_colorval_03"
+                      value="0" />
+                  </td>
+                </tr>
+              </table>
+              <button data-id="input_submit_button">Submit</button>
+            </div>
+          </div>
+          <!-- TEMPLATE_module_cardswipe_01 -->
+          <div class="inputGroup" id="TEMPLATE_module_cardswipe_01">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_cardswipe_01_DEVtitle">
+              TEMPLATE_module_cardswipe_01
+            </span>
+            <header>
+              <span class="inputmodule_title">CARD SWIPE</span>
+              <span class="inputmodule_title" style="right: 10px" data-id="timer">60</span>
+            </header>
+            <div class="content">
+              <span class="center" data-id="results_text">WRONG</span>
+              <div>
+                <input
+                  type="range"
+                  class="slider cardSwipe"
+                  data-onupdate="cardswipeSpeedCalc"
+                  data-id="input_cardSwipe_01"
+                  value="0"
+                  onmouseup="cardswipeSpeedCalcEnd(this)" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <hr />
+        <p>GOOGLE'S ICONS See https://fonts.google.com/icons</p>
+        <p>
+          <span class="material-icons md-18">face</span>
+          <span class="material-icons md-18">search</span>
+          <span class="material-icons md-18">info</span>
+          <span class="material-icons md-18">visibility</span>
+          <span class="material-icons md-18">description</span>
+          <span class="material-icons md-18">help_outline</span>
+          <span class="material-icons md-18">list</span>
+          <span class="material-icons md-18">help</span>
+          <span class="material-icons md-18">article</span>
+          <span class="material-icons md-18">question_answer</span>
+          <span class="material-icons md-18">view_list</span>
+          <span class="material-icons md-18">text_snippet</span>
+          <span class="material-icons md-18">notes</span>
+        </p>
+        <hr />
+        <input type="text" id="input_textbox_01" value="testing input" />
+        <input type="checkbox" id="input_checkbox_01" checked="true" />
+        <hr />
+        <div>
+          <p style="margin-bottom: 3px"><u>INPUT-OBJECTS</u></p>
+          <p id="INPUT_OBJECTS" class="indented">UserInputObjects =</p>
+          <p id="CURRENT_GROUPSDIV" class="indented">CurrentGroups =</p>
+        </div>
+        <hr />
+        <div>
+          <p style="margin-bottom: 3px"><u>DATABASE-STUFF</u></p>
+          <p id="DATABASE_OBJECTS" class="indented">DatabaseObjects</p>
+        </div>
+        <hr />
+        <p style="margin-bottom: 0px; padding-bottom: 0px">TODO:</p>
+        <p class="indented">
+          Modifier tab? Change Tick Speed, Initial Module Count ETC. New module? - secret key on one
+          person's screen, a input on a different person.
+        </p>
+        <hr />
+        <p>LOG</p>
+        <div id="textLayer" style="white-space: nowrap"></div>
+      </div>
+    </div>
+    <!-- DATABASE SCRIPTS -->
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-functions.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.22.1/firebase-database.js"></script>
+
+    <!-- SCRIPT REFERENCES -->
+    <script src="scripts/firebase.js"></script>
+    <script src="scripts/wordBank.js"></script>
+    <script src="scripts/gameScreens.js"></script>
+    <script src="scripts/gameoverScreen.js"></script>
+    <script src="scripts/userDatabaseData.js"></script>
+
+    <script src="scripts/gameData.js"></script>
+    <script>
+      versionText.innerHTML = version;
+    </script>
+  </body>
+</html>

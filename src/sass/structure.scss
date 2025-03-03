@@ -37,3 +37,83 @@ a {
 #app {
   padding-bottom: 100px;
 }
+
+// OLD STUFF
+.bottom_div {
+  bottom: 0;
+  width: 100%;
+  position: fixed;
+  z-index: 20;
+}
+.bottom_div .bottom_div p {
+  font-size: 20px;
+  bottom: 0;
+  margin: 0;
+  z-index: 10;
+}
+
+.flex-container {
+  display: flex;
+  text-align: left;
+  align-items: flex-end;
+  background-color: red;
+  height: 0px;
+}
+.flex-container div {
+  flex: 1;
+  padding: 8px;
+}
+.flex-container div:nth-child(2) {
+  text-align: right;
+}
+
+.gameoverDiv {
+  @include themify($themes) {
+    color: themed("accent");
+    background-color: themed("text");
+  }
+  z-index: 200;
+  max-width: 700px;
+  text-align: left;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 600px;
+}
+.gameoverDiv h1 {
+  font-size: 30px;
+  padding: 0;
+  margin: 0;
+}
+.gameoverDiv .gameoverHeader {
+  padding-top: 5px;
+  @include themify($themes) {
+    color: themed("text");
+    background-color: themed("accent");
+  }
+  text-align: center;
+  border-bottom: black 2px solid;
+}
+.gameoverDiv p {
+  margin: 5px;
+}
+.gameoverDiv h4 {
+  padding: 0;
+  margin: 10px;
+}
+
+.statsScreen {
+  display: flex;
+  border-bottom: 2px solid black;
+}
+.statsScreen div:not(:first-child) {
+  border-left: solid 2px black;
+}
+.statsScreen div {
+  flex: 1;
+}
+.statsScreen div h2 {
+  text-align: center;
+  margin: 3px;
+}
