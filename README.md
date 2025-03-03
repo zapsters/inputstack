@@ -1,9 +1,15 @@
 # InputStack
-Modules will slowly spawn and requires you, and or your friends, to manage multiple modules at once. Modules can be simple math to unscambling a word or even just keeping a slider up. All modules have some form of input such as an input box, a button, or anything else.'
 
-One of my main inspirations for this project was the game "Keep Talking and Nobody Explodes." I absolutely love the perfect mix of tension, urgency, and collaboration that game has and this project was my take on this type of games. I love accessability and having experiences and projects abailable just at someone's url is super powerful.
+### Link
 
-Using Google Firebase's realtime database, InputStack is made possible. Multiplayer works by syncing the modules between clients, so one person's change will sync to everyone else in the same game, allowing teamwork, constructive or frantic yelling.
-
-Check out InputStack for yourself!
 link: https://zapsters.github.io/inputstack/
+
+### Brief
+
+A frantic, real-time multiplayer game where players must work together to manage an ever-growing stack of tasks. These tasks, or "modules," range from simple math problems to word unscrambles, color pickers, and more, each requiring different types of input like buttons, sliders, and text fields. Think Keep Talking and Nobody Explodes, but fully browser-based and playable instantly.
+
+To make multiplayer seamless, I used Google Firebase's real-time database, ensuring that any changes made by one player sync instantly with everyone else in the game. Whether you're collaborating or frantically yelling at your teammates, the game thrives on teamwork and pressure.
+
+### THE ENHANCED BREACH
+
+InputStack started development in Highschool which led to... interesting coding choices. I am reworking this project under the 'enhanced' branch where I am remaking the project an MVC model combined with what I have learned in college so far. Along with restyling the site.
