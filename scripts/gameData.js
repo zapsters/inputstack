@@ -22,7 +22,7 @@ var timer = document.getElementById("game_gameTimer_text");
 var versionText = document.getElementById("versionDiv");
 
 // Game Vars
-var version = "Release 1.00 - TESTING 1.01 Card Swipe Module!";
+var version = "1.2.1 Big Style Update!";
 var host = false;
 var defaultHealth = 100;
 var health = defaultHealth;
