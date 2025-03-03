@@ -1,6 +1,6 @@
 {
   "name": "inputstack",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A frantic, real-time multiplayer game where players must work together to manage an ever-growing stack of tasks.",
   "main": "index.js",
   "scripts": {
