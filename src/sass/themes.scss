@@ -1,0 +1,68 @@
+@use "sass:map";
+
+$themes: (
+  light: (
+    text: #110d09,
+    background: #f5eaea,
+    primary: #d83046,
+    secondary: #fa7b8c,
+    accent: #e4576e,
+    border: #666,
+    buttonBackground: #e34d61,
+    // BackgroundHover (primary, secondary
+    buttonBackgroundHover:
+      (
+        #a02c40,
+        #e6dee0,
+      ),
+    inputBoxColor: (
+      #f7f7f7,
+      #110d09,
+    ),
+    cardHeaderBackground: #ffacb7,
+    cardBackground: #ffe3e3,
+  ),
+  dark: (
+    text: #f6f2ee,
+    background: #1a021a,
+    primary: #e090ad,
+    secondary: #cd5666,
+    accent: #b34557,
+    border: #ac8282,
+    buttonBackground: #c46f6f,
+    buttonBackgroundHover: (
+      #f59090,
+      #b7b6c525,
+    ),
+    inputBoxColor: (
+      #25252e,
+      #777680,
+    ),
+    cardHeaderBackground: #ad4c5c,
+    cardBackground: #785e61,
+  ),
+);
+
+@mixin themify($themes: $themes) {
+  @each $theme, $map in $themes {
+    .theme-#{$theme} & {
+      $theme-map: () !global;
+      @each $key, $submap in $map {
+        $value: map.get(map.get($themes, $theme), "#{$key}");
+        $theme-map: map.merge(
+          $theme-map,
+          (
+            $key: $value,
+          )
+        ) !global;
+      }
+
+      @content;
+      $theme-map: null !global;
+    }
+  }
+}
+
+@function themed($key) {
+  @return map.get($theme-map, $key);
+}

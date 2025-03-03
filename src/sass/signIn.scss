@@ -1,0 +1,199 @@
+@use "themes.scss" as *;
+@use "variables.scss" as *;
+
+.signIn {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  max-width: 800px;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 5vh;
+  font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+  input {
+    font-size: 18px;
+    padding: 10px 0;
+    font-family: "Roboto Condensed", Arial, Helvetica, sans-serif;
+    color: inherit;
+    border-radius: 0;
+  }
+  h1 {
+    font-size: 35px;
+    margin-bottom: 0px;
+    font-weight: 500;
+  }
+  h2 {
+    font-weight: 500;
+    font-size: 20px;
+    margin-bottom: 19px;
+    @include themify($themes) {
+      color: themed("primary");
+    }
+  }
+  .orBox {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    margin: 28px 0 28px 0;
+    opacity: 1;
+    position: relative;
+    hr {
+      @include themify($themes) {
+        border: 1px solid themed("primary");
+        width: 100%;
+        opacity: 0.2;
+      }
+    }
+    span {
+      @include themify($themes) {
+        background-color: themed("background") !important;
+        display: block;
+        padding: 0;
+        position: absolute;
+        font-size: 24px;
+        z-index: 10;
+        padding: 4px 15px;
+        color: themed("primary");
+      }
+    }
+  }
+  form {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    flex-direction: column;
+    gap: 15px;
+    font-size: 20px;
+    width: 100%;
+    span {
+      @include themify($themes) {
+        color: themed("alertRed");
+      }
+    }
+    label {
+      position: absolute;
+      left: 0px;
+      scale: 1;
+      opacity: 1;
+      font-size: 17px;
+      transition-property: left, top, transform, scale, opacity;
+      transition-duration: 0.2s;
+      transition-timing-function: ease;
+      z-index: 10;
+      top: 50%;
+      font-weight: 200 !important;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .input-container {
+      width: 85%;
+      max-width: 380px;
+      position: relative;
+      margin: 10px 0;
+      height: 100%;
+      input {
+        width: 100%;
+        max-width: unset;
+      }
+
+      .toggleVisibility {
+        position: absolute;
+        right: 3px;
+        top: 0;
+        width: 35px;
+        font-size: 30px;
+        height: 35px;
+        &:focus {
+          border: 1px solid white;
+        }
+        img {
+          width: 100%;
+          cursor: pointer;
+          filter: none;
+          transform: translateY(2px);
+          @include themify($themes) {
+            filter: themed("filterToBlack");
+          }
+        }
+      }
+    }
+    @include themify($themes) {
+      color: themed("text");
+      input[type="text"],
+      input[type="password"],
+      input[type="email"] {
+        width: 100%;
+        background-color: transparent;
+        border: none;
+        border-bottom: solid 2px #4db68a;
+        outline: none;
+      }
+
+      input[type="text"]:focus ~ label,
+      input[type="text"]:valid ~ label,
+      input[type="password"]:focus ~ label,
+      input[type="password"]:valid ~ label,
+      input[type="email"]:focus ~ label,
+      input[type="email"]:valid ~ label {
+        top: -10px;
+        left: 0px;
+        opacity: 0.6;
+      }
+
+      input[type="submit"] {
+        cursor: pointer;
+        margin: auto;
+        width: 100%;
+        background-color: themed("primary");
+        color: #e0f2f1;
+        padding: 10px 0;
+        border: solid themed("secondary");
+        border-width: 0 0 4px 0;
+        border-radius: 3px;
+        outline: none;
+        text-align: center !important;
+        font-size: 23px;
+      }
+
+      input[type="submit"]:hover {
+        border: solid themed("accent");
+        border: solid themed("secondary");
+        background-color: themed("secondary");
+        border-width: 0 0 4px 0;
+      }
+      input[type="submit"]:focus {
+        border-width: 0 0 4px 0;
+        border-color: themed("accent");
+        background-color: themed("accent");
+      }
+
+      input[type="submit"]:active {
+        background-color: themed("secondary");
+        border-width: 0 0 4px 0;
+        border-color: themed("accent");
+      }
+    }
+  }
+}
+
+// @media (max-width: $mobileBreakPoint) {
+//   .signIn {
+//     margin: 65px auto 0 auto;
+//     h1 {
+//       font-size: 40px;
+//       margin-bottom: 8px;
+//     }
+//     h2 {
+//       font-size: 20px;
+//     }
+//     input[type="submit"] {
+//       font-size: 20px !important;
+//       max-width: 90%;
+//     }
+//   }
+// }

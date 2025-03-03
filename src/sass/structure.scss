@@ -1,0 +1,39 @@
+@use "themes.scss" as *;
+@use "variables.scss" as *;
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html,
+body {
+  min-height: 100%;
+  font-family: $inputFontFamily;
+  @include themify($themes) {
+    background-color: themed("background");
+    color: themed("text");
+  }
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-bottom: 16px;
+}
+/* End of Reset */
+a {
+  @include themify($themes) {
+    color: themed("accent");
+    &:hover {
+      color: themed("secondary");
+    }
+  }
+}
+#app {
+  padding-bottom: 100px;
+}
