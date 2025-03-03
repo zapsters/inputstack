@@ -21,6 +21,7 @@ var healthDiv = document.getElementById("game_health_text");
 var timer = document.getElementById("game_gameTimer_text");
 
 // Game Vars
+var version = "1.3.0 Big Style Update!";
 var host = false;
 var defaultHealth = 100;
 var health = defaultHealth;
