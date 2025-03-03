@@ -4,8 +4,8 @@
   "description": "A frantic, real-time multiplayer game where players must work together to manage an ever-growing stack of tasks.",
   "main": "index.js",
   "scripts": {
-    "liveserver": "live-server dist --port=8000",
-    "sass": "sass src/sass/styles.scss dist/css/styles.css -w"
+    "liveserver": "live-server --port=8000",
+    "sass": "sass src/sass/styles.scss css/styles.css -w"
   },
   "repository": {
     "type": "git",

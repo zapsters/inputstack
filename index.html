@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html>
+<html class="theme-dark">
   <head>
-    <title>Input Stack!</title>
+    <title>Input Stack</title>
     <link rel="stylesheet" type="text/css" href="css/styles.css" />
     <link rel="shortcut icon" type="image/png" href="images/InputStackIcon.png" />
     <!-- GOOGLE'S MATERIAL ICONS SHEET https://fonts.google.com/icons -->
@@ -18,13 +18,13 @@
         <div class="closeButton" onclick="this.parentElement.style.display='none'; closeDiv();">
           <p>X</p>
         </div>
-        <p>UNSCRAMBLE KEY!</p>
+        <p>UNSCRAMBLE KEY</p>
         <hr />
         <div class="popupDivTable" id="uncrambleKey_content"></div>
       </div>
     </div>
 
-    <div class="popupDiv gameoverDiv" id="gameover_div">
+    <div class="popupDiv gameoverDiv" style="display: none" id="gameover_div">
       <div class="gameoverHeader">
         <h1>Game Over!</h1>
         <p>Score: <span id="gameover_scoreText">####</span></p>
@@ -60,28 +60,35 @@
         <div id="gameover_hostOptions" style="display: none">
           <h4 style="margin-bottom: 0px">Host Options:</h4>
           <div style="padding: 0 0 0 10px">
-            <input
-              type="button"
-              class="buttonMain"
-              onclick="if(host) resetGame();"
-              value="Restart Game" />
-            <input
-              type="button"
-              class="buttonMain"
-              onclick="if(host) abandonRoom();"
-              value="Quit Game" />
+            <button type="button" class="buttonMain" onclick="if(host) resetGame();">
+              Restart Game
+            </button>
+            <button type="button" class="buttonMain" onclick="if(host) abandonRoom();">
+              Quit Game
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- TITLE SCREEN -->
-    <div id="screen_title">
+    <!-- HEADER -->
+    <nav id="screen_title">
       <!-- HEADER -->
       <div class="header">
+        <a href="#" style="margin: 0; padding: 0">
+          <img src="./images/InputStackLogo.png" height="90px" alt="" srcset="" />
+        </a>
         <!-- <p onclick="toggleDebugMenu()">Input Stack!</p> -->
+        <!-- <a style="position: absolute; right: 10px" class="loggedOut" href="#signin">Login</a> -->
+        <a style="position: absolute; right: 10px; display: none" class="loggedIn" href="#account"
+          >Logged in as <span class="displayName"></span
+        ></a>
+        <!-- <a style="position: absolute; left: 10px; display: block" class="homeBtn" href="#home"
+          >Play</a
+        > -->
       </div>
-    </div>
+    </nav>
+
     <!-- DEBUG MENU -->
     <div class="debug_div" id="debug_menu_div" style="display: none">
       <p class="noSpace">DEBUG</p>
@@ -92,7 +99,7 @@
       <div class="bottom_div flex-container" id="game_info">
         <div>
           <p class="noSpace" style="display: none" id="footer_host">
-            <u>You are the host!</u>
+            <u>You are the host</u>
           </p>
           <p class="noSpace" style="display: none" id="footer_username">Logged in as: *username*</p>
           <p class="noSpace" style="display: none" id="footer_roomcode">Roomcode: *roomcode*</p>
@@ -132,37 +139,47 @@
 
         <!-- Front Page Join Game -->
         <div class="centered_div" style="display: block" id="joingame_div">
+          <br />
+          <br />
           <div class="writableContent" style="max-width: 600px">
             <p class="noSpace" style="font-size: 40px">JOIN GAME</p>
-            <input
-              id="username_input"
-              class="messagebox"
-              maxlength="30"
-              placeholder="USERNAME"
-              style="margin: 10px 0px"
-              autocomplete="off"
-              onkeydown="if(event.key === 'Enter') {roomcode_input.focus()}" /><br />
-            <input
-              id="roomcode_input"
-              class="messagebox"
-              maxlength="6"
-              placeholder="ROOM CODE"
-              autocomplete="off"
-              onkeydown="if(event.key === 'Enter') {joingame_btnid.click()}" />
-            <button
-              id="joingame_btnid"
-              class="buttonMain"
-              onclick="joinroomFunction()"
-              style="cursor: pointer; float: right">
-              JOIN ROOM
-            </button>
-            <button
-              id="creategame_btnid"
-              class="buttonMain"
-              onclick="createroomFunction()"
-              style="cursor: pointer; float: left">
-              CREATE ROOM</button
-            ><br /><br /><br /><br />
+
+            <div class="inputContainer">
+              <input
+                id="username_input"
+                class="messagebox"
+                maxlength="30"
+                placeholder="USERNAME"
+                style="margin: 10px 0px"
+                autocomplete="off"
+                onkeydown="if(event.key === 'Enter') {roomcode_input.focus()}" /><br />
+            </div>
+            <div class="inputContainer">
+              <input
+                id="roomcode_input"
+                class="messagebox"
+                maxlength="6"
+                placeholder="ROOM CODE"
+                autocomplete="off"
+                onkeydown="if(event.key === 'Enter') {joingame_btnid.click()}" />
+            </div>
+            <div class="btnContainer">
+              <button
+                id="creategame_btnid"
+                class="buttonMain secondary"
+                onclick="createroomFunction()"
+                style="cursor: pointer; float: left">
+                CREATE ROOM
+              </button>
+              <button
+                id="joingame_btnid"
+                class="buttonMain"
+                onclick="joinroomFunction()"
+                style="cursor: pointer; float: right">
+                JOIN ROOM
+              </button>
+            </div>
+            <br />
             <p id="subtext_joingame" class="question" style="font-size: 20px"></p>
           </div>
         </div>
@@ -171,7 +188,7 @@
 
     <center>
       <!-- PLAYER SCREEN -->
-      <div class="writableContent horizontal" style="display: none" id="playerlist_div">
+      <div class="" style="display: none" id="playerlist_div">
         <p class="" style="font-size: 40px; margin: 0; padding: 0px 0px">
           <u>PLAYERS</u>
         </p>
@@ -207,6 +224,7 @@
     <!-- MAIN GAMEPLAY SCREEN ==================================== -->
     <div
       id="screen_main_gameplay"
+      class="screen_main_gameplay"
       style="
         position: flex;
         margin: auto;
@@ -216,33 +234,13 @@
         position: relative;
         top: -80px;
       ">
-      <div class="headerContainer headerSTICKY" id="header">
-        <p id="game_health_text" style="position: flex; margin-right: auto; top: 4px">
-          HEALTH: 100
-        </p>
-        <p
-          id="game_gameTimer_text"
-          style="position: absolute; right: 0px; padding-right: 10px; top: 4px">
-          00:00
-        </p>
-        <p
-          id="game_moduleCount_text"
-          style="position: absolute; left: 0px; padding-left: 10px; top: 4px">
-          Modules: 0
-        </p>
-      </div>
+      <header class="main headerContainer headerSTICKY" id="header">
+        <span id="game_health_text"> HEALTH: 100 </span>
+        <span id="game_moduleCount_text"> Modules: 0 </span>
+        <span id="game_timeTillNextModule_text"> Time till next module: </span>
+        <span id="game_gameTimer_text"> 00:00 </span>
+      </header>
       <br />
-      <span>
-        <p id="game_timeTillNextModule_text" style="display: inline; padding: 0px; margin: 0px">
-          Time till next module:
-        </p>
-        <!-- <p style="display: inline; padding: 0px 10px 0px 10px; margin: 0px">
-          |
-        </p>
-        <p style="display: inline; padding: 0px; margin: 0px">
-          Unused Text Here.
-        </p> -->
-      </span>
       <div class="moduleContainer" id="moduleContainer">
         <!-- DIV for all inputGroups -->
       </div>
@@ -285,117 +283,59 @@
         <p onclick="resetGame()">GAME_RESET() [Database and local]</p>
         <hr />
         <!-- TEMPLATE DIV -->
-        <div class="moduleContainer" id="TEMPLATEmoduleContainer" style="display: block">
+        <div class="moduleContainer" id="TEMPLATEmoduleContainer">
           <!-- TEMPLATE_module_simple_01 -->
           <div class="inputGroup" id="TEMPLATE_module_simple_01">
-            <p class="inputmodule_DEVtitle" id="TEMPLATE_module_simple_01_DEVtitle">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_simple_01_DEVtitle">
               TEMPLATE_module_simple_01
-            </p>
-            <p class="inputmodule_title" data-id="title">KEEP ABOVE!</p>
-            <hr style="top: 25px" />
-            <div class="RangeGroup" style="width: 80%; position: absolute; top: 41px; left: 10px">
-              <p
-                style="
-                  margin-bottom: 12px;
-                  text-decoration: underline;
-                  font-weight: bold;
-                  margin-left: 3px;
-                ">
-                Keep High
-              </p>
+            </span>
+
+            <header>
+              <span class="inputmodule_title" data-id="title">KEEP ABOVE</span>
+            </header>
+            <div class="content">
               <input type="range" class="slider" data-id="input_range_01" value="100" />
               <input type="range" class="slider" data-id="input_range_02" value="100" />
             </div>
           </div>
           <!-- TEMPLATE_reset_module_01 -->
           <div class="inputGroup" id="TEMPLATE_module_reset_01">
-            <p class="inputmodule_DEVtitle" id="TEMPLATE_module_reset_01_DEVtitle">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_reset_01_DEVtitle">
               TEMPLATE_module_reset_01
-            </p>
-            <p class="inputmodule_title" data-id="title">TIMER!</p>
-            <p class="inputmodule_title" style="right: 10px" data-id="timer">30</p>
-            <hr style="top: 25px" />
-            <button
-              data-id="input_reset_button"
-              class="button"
-              style="
-                width: 70%;
-                height: 60%;
-                margin: 0;
-                position: absolute;
-                bottom: 50%;
-                left: 50%;
-                -ms-transform: translate(-50%, 60%);
-                transform: translate(-50%, 60%);
-              ">
-              RESET!!
-            </button>
+            </span>
+            <header>
+              <span class="inputmodule_title" data-id="title">TIMER</span>
+              <span class="inputmodule_title" style="right: 10px" data-id="timer">30</span>
+            </header>
+            <div class="content">
+              <button
+                data-id="input_reset_button"
+                class="secondary"
+                style="width: 80%; height: 78%; margin: auto">
+                RESET
+              </button>
+            </div>
           </div>
           <!-- TEMPLATE_module_unscramble_01 -->
           <div class="inputGroup" id="TEMPLATE_module_unscramble_01">
-            <p class="inputmodule_DEVtitle" id="TEMPLATE_module_unscramble_01_DEVtitle">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_unscramble_01_DEVtitle">
               TEMPLATE_module_unscramble_01
-            </p>
-            <p class="inputmodule_title" data-id="title">UNSCRAMBLE!</p>
-            <p class="inputmodule_title" style="right: 10px" data-id="timer">100</p>
-            <p
+            </span>
+            <header style="top: 0">
+              <span class="inputmodule_title" data-id="title">UNSCRAMBLE</span>
+              <span class="inputmodule_title" data-id="timer">100</span>
+            </header>
+            <span
               class="inputmodule_clickableIcon"
               onclick="openDiv('unscrambleKey');"
               style="text-align: center">
-              <span class="material-icons md-18">view_list</span>
-            </p>
-            <hr style="top: 25px" />
+            </span>
             <center>
-              <p
-                class="center"
-                data-id="results_text"
-                style="
-                  font-weight: bold;
-                  font-size: 23px;
-                  margin: 0;
-                  position: absolute;
-                  top: 52px;
-                  left: 50%;
-                  -ms-transform: translate(-50%, -50%);
-                  transform: translate(-50%, -50%);
-                  color: #b50000;
-                  text-decoration: underline;
-                "></p>
-              <p
-                class="center"
-                data-id="scrambled_word_text"
-                style="
-                  width: 100%;
-                  height: 40px;
-                  font-weight: bold;
-                  font-size: 20px;
-                  margin: 0;
-                  position: absolute;
-                  bottom: 45%;
-                  left: 50%;
-                  -ms-transform: translate(-50%, 0%);
-                  transform: translate(-50%, 0%);
-                ">
-                WORD
-              </p>
-              <p
-                class="center"
-                data-id="UNscrambled_word_text"
-                style="
-                  display: none;
-                  font-size: 20px;
-                  margin: 0;
-                  position: absolute;
-                  bottom: 70px;
-                  left: 50%;
-                  -ms-transform: translate(-50%, -50%);
-                  transform: translate(-50%, -50%);
-                ">
-                WORD
-              </p>
-              <div
-                class="RangeGroup"
-                style="margin: auto; width: 100%; display: inline; bottom: 20px; left: 0px">
+              <p class="center" data-id="results_text"></p>
+              <p class="center" data-id="scrambled_word_text">WORD</p>
+              <p class="center" data-id="UNscrambled_word_text" style="display: none">WORD</p>
+              <div class="RangeGroup" style="margin: auto; width: 100%">
+                <span class="material-icons md-18">view_list</span>
                 <input
                   type="text"
                   style="
@@ -409,24 +349,26 @@
                   class="input"
                   data-id="input_unscrambledWord"
                   placeholder="Type Here..." />
-                <input
+                <button
                   type="button"
                   style="width: 95%"
-                  class="button"
-                  value="Submit"
-                  data-id="input_submit_button" />
+                  class="secondary"
+                  data-id="input_submit_button">
+                  Submit
+                </button>
               </div>
             </center>
           </div>
           <!-- TEMPLATE_module_math_01 -->
           <div class="inputGroup" id="TEMPLATE_module_math_01">
-            <p class="inputmodule_DEVtitle" id="TEMPLATE_module_math_01_DEVtitle">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_math_01_DEVtitle">
               TEMPLATE_module_math_01
-            </p>
-            <p class="inputmodule_title" data-id="title">SIMPLE MATH!</p>
-            <p class="inputmodule_title" style="right: 10px" data-id="timer">60</p>
-            <hr style="top: 25px" />
-            <center>
+            </span>
+            <header>
+              <span class="inputmodule_title" data-id="title">SIMPLE MATH</span>
+              <span class="inputmodule_title" style="right: 10px" data-id="timer">60</span>
+            </header>
+            <div class="content">
               <p
                 class="center"
                 data-id="results_text"
@@ -434,44 +376,19 @@
                   font-weight: bold;
                   font-size: 23px;
                   margin: 0;
-                  position: absolute;
-                  top: 22%;
-                  left: 50%;
-                  -ms-transform: translate(-50%, -50%);
-                  transform: translate(-50%, -50%);
                   color: #b50000;
                   text-decoration: underline;
                 "></p>
               <p
                 class="center"
                 data-id="math_question_text"
-                style="
-                  width: 100%;
-                  height: 40px;
-                  font-weight: bold;
-                  font-size: 20px;
-                  margin: 0;
-                  position: absolute;
-                  bottom: 45%;
-                  left: 50%;
-                  -ms-transform: translate(-50%, 0%);
-                  transform: translate(-50%, 0%);
-                ">
+                style="width: 100%; height: 40px; font-weight: bold; font-size: 20px; margin: 0">
                 MATH QUESTION
               </p>
               <p
                 class="center"
                 data-id="math_answer_text"
-                style="
-                  display: none;
-                  font-size: 20px;
-                  margin: 0;
-                  position: absolute;
-                  bottom: 70px;
-                  left: 50%;
-                  -ms-transform: translate(-50%, -50%);
-                  transform: translate(-50%, -50%);
-                ">
+                style="display: none; font-size: 20px; margin: 0">
                 ANSWER
               </p>
               <div
@@ -490,160 +407,94 @@
                   class="input"
                   data-id="input_math_response"
                   placeholder="Type Here..." />
-                <input
+                <button
                   type="button"
                   style="width: 95%"
                   class="button"
-                  value="Submit"
-                  data-id="input_submit_button" />
+                  data-id="input_submit_button">
+                  Submit
+                </button>
               </div>
-            </center>
+            </div>
           </div>
           <!-- TEMPLATE_module_color_01 -->
           <div class="inputGroup" id="TEMPLATE_module_color_01">
-            <p class="inputmodule_DEVtitle" id="TEMPLATE_module_color_01_DEVtitle">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_color_01_DEVtitle">
               TEMPLATE_module_color_01
-            </p>
-            <p class="inputmodule_title">COLOR MATCH!</p>
-            <p class="inputmodule_title" style="right: 10px" data-id="timer">60</p>
-            <hr style="top: 25px" />
-            <p
-              class="center"
-              data-id="results_text"
-              style="
-                font-weight: bold;
-                font-size: 18px;
-                margin: 0;
-                position: absolute;
-                top: 22%;
-                left: 50%;
-                -ms-transform: translate(-50%, -50%);
-                transform: translate(-50%, -50%);
-                color: #b50000;
-                text-decoration: underline;
-                z-index: 10;
-              "></p>
-            <div class="colorSwatch" data-id="module_colorSwatchKey"></div>
-            <div class="colorSwatch" data-id="module_colorSwatch_result" style="right: 0px"></div>
-            <center>
-              <p
-                class="center"
-                style="
-                  width: 100%;
-                  height: 40px;
-                  font-weight: bold;
-                  font-size: 35px;
-                  margin: 0;
-                  position: absolute;
-                  top: 50px;
-                  left: 50%;
-                  -ms-transform: translate(-50%, 0%);
-                  transform: translate(-50%, 0%);
-                ">
-                &rarr;
-              </p>
-              <div
-                class="RangeGroup"
-                style="
-                  height: 120px;
-                  bottom: 0;
-                  left: 50%;
-                  transform: translateX(-50%);
-                  width: 94%;
-                  bottom: 20px;
-                ">
-                <div style="display: inline-flex">
-                  <div style="line-height: 10px; margin-top: -4px; padding-top: 0px">
-                    <p>R:</p>
-                    <p>G:</p>
-                    <p>B:</p>
-                  </div>
-                  <div>
+            </span>
+            <header>
+              <span class="inputmodule_title">COLOR MATCH</span>
+              <span class="inputmodule_title" style="right: 10px" data-id="timer">60</span>
+            </header>
+            <div class="content">
+              <div class="colorSwatchContainer">
+                <div class="colorSwatch" data-id="module_colorSwatchKey"></div>
+                <span class="center">&rarr;</span>
+                <div class="colorSwatch" data-id="module_colorSwatch_result"></div>
+              </div>
+              <table>
+                <tr>
+                  <td>R:</td>
+                  <td>
                     <input
                       type="range"
-                      style="margin-top: 4px"
                       class="slider"
                       data-onupdate="updateColorResult"
                       data-id="input_colorval_01"
                       value="0" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>G:</td>
+                  <td>
                     <input
                       type="range"
-                      style="margin-top: 4px"
                       class="slider"
                       data-onupdate="updateColorResult"
                       data-id="input_colorval_02"
                       value="0" />
+                  </td>
+                </tr>
+                <tr>
+                  <td>B:</td>
+                  <td>
                     <input
                       type="range"
-                      style="margin-top: 4px"
                       class="slider"
                       data-onupdate="updateColorResult"
                       data-id="input_colorval_03"
                       value="0" />
-                  </div>
-                </div>
-                <input
-                  type="button"
-                  style="width: 100%; margin-top: 4px"
-                  class="button"
-                  value="Submit"
-                  data-id="input_submit_button" />
-              </div>
-            </center>
+                  </td>
+                </tr>
+              </table>
+              <button data-id="input_submit_button">Submit</button>
+            </div>
           </div>
           <!-- TEMPLATE_module_cardswipe_01 -->
           <div class="inputGroup" id="TEMPLATE_module_cardswipe_01">
-            <p class="inputmodule_DEVtitle" id="TEMPLATE_module_cardswipe_01_DEVtitle">
+            <span class="inputmodule_DEVtitle" id="TEMPLATE_module_cardswipe_01_DEVtitle">
               TEMPLATE_module_cardswipe_01
-            </p>
-            <p class="inputmodule_title">CARD SWIPE!</p>
-            <p class="inputmodule_title" style="right: 10px" data-id="timer">60</p>
-            <hr style="top: 25px" />
-            <p
-              class="center"
-              data-id="results_text"
-              style="
-                font-weight: bold;
-                font-size: 18px;
-                margin: 0;
-                position: absolute;
-                top: 22%;
-                left: 50%;
-                -ms-transform: translate(-50%, -50%);
-                transform: translate(-50%, -50%);
-                color: #b50000;
-                text-decoration: underline;
-                z-index: 10;
-              ">
-              WRONG!
-            </p>
-            <center>
-              <div
-                class="RangeGroup"
-                style="
-                  height: 120px;
-                  bottom: 0;
-                  left: 50%;
-                  transform: translateX(-50%);
-                  width: 94%;
-                  bottom: 20px;
-                ">
-                <div>
-                  <input
-                    type="range"
-                    style="margin-top: 4px"
-                    class="slider cardSwipe"
-                    data-onupdate="cardswipeSpeedCalc"
-                    data-id="input_cardSwipe_01"
-                    value="0"
-                    onmouseup="cardswipeSpeedCalcEnd(this)" />
-                </div>
+            </span>
+            <header>
+              <span class="inputmodule_title">CARD SWIPE</span>
+              <span class="inputmodule_title" style="right: 10px" data-id="timer">60</span>
+            </header>
+            <div class="content">
+              <span class="center" data-id="results_text">WRONG</span>
+              <div>
+                <input
+                  type="range"
+                  class="slider cardSwipe"
+                  data-onupdate="cardswipeSpeedCalc"
+                  data-id="input_cardSwipe_01"
+                  value="0"
+                  onmouseup="cardswipeSpeedCalcEnd(this)" />
               </div>
-            </center>
+            </div>
           </div>
         </div>
         <hr />
-        <p>GOOGLE'S ICONS! See https://fonts.google.com/icons!</p>
+        <p>GOOGLE'S ICONS See https://fonts.google.com/icons</p>
         <p>
           <span class="material-icons md-18">face</span>
           <span class="material-icons md-18">search</span>

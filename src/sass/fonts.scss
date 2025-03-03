@@ -1,0 +1,39 @@
+@use "pixelart-icons-font.scss";
+@import url("https://fonts.googleapis.com/css2?family=Monomakh&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: "Poppins";
+  font-weight: 700;
+}
+
+html {
+  font-size: 100%;
+} /* 16px */
+
+h1 {
+  font-size: 3.366rem; /* 53.92px */
+}
+
+h2 {
+  font-size: 2.525rem; /* 40.32px */
+}
+
+h3 {
+  font-size: 1.894rem; /* 30.24px */
+}
+
+h4 {
+  font-size: 1.421rem; /* 22.72px */
+}
+
+h5 {
+  font-size: 1.066rem; /* 17.12px */
+}
+
+small {
+  font-size: 0.6rem; /* 9.6px */
+}

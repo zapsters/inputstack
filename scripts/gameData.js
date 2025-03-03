@@ -142,12 +142,8 @@ function onTick() {
     var module_id = "module_" + i;
     switch (value) {
       case "module_simple_01":
-        var slider01 = groupReferences[i].querySelector(
-          "#" + module_id + "_input_range_01"
-        );
-        var slider02 = groupReferences[i].querySelector(
-          "#" + module_id + "_input_range_02"
-        );
+        var slider01 = groupReferences[i].querySelector("#" + module_id + "_input_range_01");
+        var slider02 = groupReferences[i].querySelector("#" + module_id + "_input_range_02");
         if (host) {
           if (slider01.value <= 0 && slider02.value > 0) {
             //console.log("TAKING DAMAGE!");
@@ -184,9 +180,8 @@ function onTick() {
         if (host) {
           if (module_timer_current > 0) {
             module_timer_current--;
-            groupReferences[i].querySelector(
-              "#" + module_id + "_timer"
-            ).innerHTML = module_timer_current;
+            groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML =
+              module_timer_current;
             databaseTextObjects(module_id + "_timer", module_timer_current);
           } else {
             //console.log("TAKING DAMAGE!");
@@ -195,9 +190,7 @@ function onTick() {
         }
         //The module will flash red is low on time.
         if (module_timer_current > 0) {
-          groupReferences[i].querySelector(
-            "#" + module_id + "_timer"
-          ).style.color = "#000";
+          groupReferences[i].querySelector("#" + module_id + "_timer").style.color = "#000";
           if (module_timer_current <= reset_timer_graceTime) {
             if (!groupReferences[i].classList.contains("flashing"))
               groupReferences[i].classList.add("flashing");
@@ -210,13 +203,10 @@ function onTick() {
             groupReferences[i].classList.add("flashing");
         }
 
-        if (host)
-          databaseTextObjects(module_id + "_timer", module_timer_current);
+        if (host) databaseTextObjects(module_id + "_timer", module_timer_current);
         break;
       case "module_unscramble_01":
-        resultsText = groupReferences[i].querySelector(
-          "#" + module_id + "_results_text"
-        );
+        resultsText = groupReferences[i].querySelector("#" + module_id + "_results_text");
         module_timer_current = parseInt(
           groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML
         );
@@ -246,18 +236,15 @@ function onTick() {
               "#" + module_id + "_input_unscrambledWord"
             );
             randomWORD =
-              scrambled_words_list[
-                Math.floor(Math.random() * scrambled_words_list.length)
-              ];
+              scrambled_words_list[Math.floor(Math.random() * scrambled_words_list.length)];
 
             writeToDatabase("modules/" + module_id + "/isCorrect", null, false);
             //Scrambledtext.innerHTML = randomWORD;
             databaseTextObjects(ScrambledtextOBJ.id, randomWORD.shuffle());
             databaseTextObjects(UNScrambledtextOBJ.id, randomWORD);
           }
-          groupReferences[i].querySelector(
-            "#" + module_id + "_timer"
-          ).innerHTML = var_unscramble_timerLength;
+          groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML =
+            var_unscramble_timerLength;
           databaseTextObjects(module_id + "_timer", module_timer_current);
         }
 
@@ -279,17 +266,13 @@ function onTick() {
               groupReferences[i].classList.remove("flashing");
           }, 1000);
           if (host != true) resultsText.innerHTML = "";
-          inputfield = groupReferences[i].querySelector(
-            "#" + module_id + "_input_unscrambledWord"
-          );
+          inputfield = groupReferences[i].querySelector("#" + module_id + "_input_unscrambledWord");
           inputfield.value = "";
         }
 
         break;
       case "module_math_01":
-        resultsText = groupReferences[i].querySelector(
-          "#" + module_id + "_results_text"
-        );
+        resultsText = groupReferences[i].querySelector("#" + module_id + "_results_text");
         module_timer_current = parseInt(
           groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML
         );
@@ -310,10 +293,7 @@ function onTick() {
             }
 
             //GET A NEW PROBLEM
-            randomPROBLEM =
-              math_problem_list[
-                Math.floor(Math.random() * math_problem_list.length)
-              ];
+            randomPROBLEM = math_problem_list[Math.floor(Math.random() * math_problem_list.length)];
             math_question_text = groupReferences[i].querySelector(
               "#" + module_id + "_math_question_text"
             );
@@ -328,9 +308,8 @@ function onTick() {
             //SET THE ANSWER TEXT
             databaseTextObjects(math_answer_text.id, randomPROBLEM[1]);
           }
-          groupReferences[i].querySelector(
-            "#" + module_id + "_timer"
-          ).innerHTML = module_timer_current;
+          groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML =
+            module_timer_current;
           databaseTextObjects(module_id + "_timer", module_timer_current);
         }
         //The module will flash red is low on time.
@@ -351,9 +330,7 @@ function onTick() {
               groupReferences[i].classList.remove("flashing");
           }, 1000);
           if (host != true) resultsText.innerHTML = "";
-          inputfield = groupReferences[i].querySelector(
-            "#" + module_id + "_input_math_response"
-          );
+          inputfield = groupReferences[i].querySelector("#" + module_id + "_input_math_response");
           inputfield.value = "";
           inputfield.disabled = false;
         }
@@ -371,9 +348,7 @@ function onTick() {
             var keyDiv = groupReferences[i].querySelector(
               "#" + module_id + "_module_colorSwatchKey"
             );
-            var resultsText = groupReferences[i].querySelector(
-              "#" + module_id + "_results_text"
-            );
+            var resultsText = groupReferences[i].querySelector("#" + module_id + "_results_text");
             if (resultsText.innerHTML != "CORRECT!") {
               takeDamage(var_color_01_healthPenalty);
             }
@@ -389,15 +364,9 @@ function onTick() {
           }
 
           //Unlock stuff when the module restarts
-          var color01 = groupReferences[i].querySelector(
-            "#" + module_id + "_input_colorval_01"
-          );
-          color02 = groupReferences[i].querySelector(
-            "#" + module_id + "_input_colorval_02"
-          );
-          color03 = groupReferences[i].querySelector(
-            "#" + module_id + "_input_colorval_03"
-          );
+          var color01 = groupReferences[i].querySelector("#" + module_id + "_input_colorval_01");
+          color02 = groupReferences[i].querySelector("#" + module_id + "_input_colorval_02");
+          color03 = groupReferences[i].querySelector("#" + module_id + "_input_colorval_03");
           groupReferences[i].querySelector(
             "#" + module_id + "_input_submit_button"
           ).disabled = false;
@@ -406,9 +375,8 @@ function onTick() {
           color03.disabled = false;
         }
         if (host) {
-          groupReferences[i].querySelector(
-            "#" + module_id + "_timer"
-          ).innerHTML = module_timer_current;
+          groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML =
+            module_timer_current;
           databaseTextObjects(module_id + "_timer", module_timer_current);
         }
         break;
@@ -424,9 +392,7 @@ function onTick() {
             var keyDiv = groupReferences[i].querySelector(
               "#" + module_id + "_module_colorSwatchKey"
             );
-            var resultsText = groupReferences[i].querySelector(
-              "#" + module_id + "_results_text"
-            );
+            var resultsText = groupReferences[i].querySelector("#" + module_id + "_results_text");
             if (resultsText.innerHTML != "CORRECT!") {
               takeDamage(var_color_01_healthPenalty);
             }
@@ -442,15 +408,9 @@ function onTick() {
           }
 
           //Unlock stuff when the module restarts
-          var color01 = groupReferences[i].querySelector(
-            "#" + module_id + "_input_colorval_01"
-          );
-          color02 = groupReferences[i].querySelector(
-            "#" + module_id + "_input_colorval_02"
-          );
-          color03 = groupReferences[i].querySelector(
-            "#" + module_id + "_input_colorval_03"
-          );
+          var color01 = groupReferences[i].querySelector("#" + module_id + "_input_colorval_01");
+          color02 = groupReferences[i].querySelector("#" + module_id + "_input_colorval_02");
+          color03 = groupReferences[i].querySelector("#" + module_id + "_input_colorval_03");
           groupReferences[i].querySelector(
             "#" + module_id + "_input_submit_button"
           ).disabled = false;
@@ -459,9 +419,8 @@ function onTick() {
           color03.disabled = false;
         }
         if (host) {
-          groupReferences[i].querySelector(
-            "#" + module_id + "_timer"
-          ).innerHTML = module_timer_current;
+          groupReferences[i].querySelector("#" + module_id + "_timer").innerHTML =
+            module_timer_current;
           databaseTextObjects(module_id + "_timer", module_timer_current);
         }
         break;
@@ -579,9 +538,7 @@ function createroomFunction(dev) {
 
   var room_to_create = Math.random().toString(20).substr(2, 6);
   if (dev) room_to_create = "dev";
-  create_roomcode_ref = firebase
-    .database()
-    .ref(databasePrefix + room_to_create + "/users");
+  create_roomcode_ref = firebase.database().ref(databasePrefix + room_to_create + "/users");
   create_roomcode_ref.once(
     "value",
     function (doc) {
@@ -591,11 +548,7 @@ function createroomFunction(dev) {
       if (create_roomcode_data == null) {
         isCreatingRoom = true;
         roomcode = create_roomcode_data;
-        showTextForTime(
-          response_text_obj,
-          "Creating room '" + room_to_create + "'",
-          1200
-        );
+        showTextForTime(response_text_obj, "Creating room '" + room_to_create + "'", 1200);
         setTimeout(() => {
           document.getElementById("joingame_btnid").click();
         }, 1000);
@@ -608,11 +561,7 @@ function createroomFunction(dev) {
     (error) => {
       if (error) {
         console.log(error);
-        showTextForTime(
-          response_text_obj,
-          error.toString().split(" ")[1],
-          2000
-        );
+        showTextForTime(response_text_obj, error.toString().split(" ")[1], 2000);
       }
     }
   );
@@ -735,11 +684,7 @@ function joinroomFunction() {
     (error) => {
       if (error) {
         console.log(error);
-        showTextForTime(
-          response_text_obj,
-          error.toString().split(" ")[1],
-          2000
-        );
+        showTextForTime(response_text_obj, error.toString().split(" ")[1], 2000);
       }
     }
   );
@@ -787,9 +732,7 @@ function deleteRoom(roomcode) {
 function playerlist_reload() {
   if (state == 1) {
     document.getElementById("playerlist_li").innerHTML = "";
-    roomcode_users_ref = firebase
-      .database()
-      .ref(databasePrefix + roomcode + "/data");
+    roomcode_users_ref = firebase.database().ref(databasePrefix + roomcode + "/data");
     roomcode_users_ref.once("value", function (doc) {
       if (state == 1) {
         roomcode_users_data = doc.val();
@@ -808,20 +751,14 @@ function playerlist_reload() {
             .ref(databasePrefix + roomcode + "/users/user" + i);
           roomcode_users_user_ref.once("value", function (doc) {
             roomcode_users_user_data = doc.val();
-            roomcode_users_user_username_data =
-              roomcode_users_user_data.username;
+            roomcode_users_user_username_data = roomcode_users_user_data.username;
             usersArray.push(roomcode_users_user_username_data);
             //Create a div with the player's name inside of it
             var node = document.createElement("div");
             var divText = document.createElement("p");
             divText.innerHTML = roomcode_users_user_username_data;
-            var playerUsername = roomcode_users_user_username_data
-              .toString()
-              .toLowerCase();
-            if (
-              playerUsername.includes("erin") ||
-              playerUsername.includes("kat")
-            ) {
+            var playerUsername = roomcode_users_user_username_data.toString().toLowerCase();
+            if (playerUsername.includes("erin") || playerUsername.includes("kat")) {
               node.classList.add("trans");
             }
             node.appendChild(divText);
@@ -855,28 +792,21 @@ function startGame() {
 //This is called when joining a room and subscribes to the _startgame variable in the database.
 function startGameFunction() {
   if (state == 1 && starting == 0) {
-    roomcode_data_startgame_ref = firebase
-      .database()
-      .ref(databasePrefix + roomcode + "/data");
+    roomcode_data_startgame_ref = firebase.database().ref(databasePrefix + roomcode + "/data");
     roomcode_data_startgame_ref.on("value", function (doc) {
       roomcode_data_startgame_data = doc.val();
       roomcode_data_startgame_value = roomcode_data_startgame_data._startgame;
       if (roomcode_data_startgame_value == 1 && starting == 0 && state == 1) {
         starting = 1;
-        document.getElementById("subtext2_players").innerHTML =
-          "STARTING IN<br>3...";
+        document.getElementById("subtext2_players").innerHTML = "STARTING IN<br>3...";
         setTimeout(function () {
-          document.getElementById("subtext2_players").innerHTML =
-            "STARTING IN<br>2...";
+          document.getElementById("subtext2_players").innerHTML = "STARTING IN<br>2...";
           setTimeout(function () {
-            document.getElementById("subtext2_players").innerHTML =
-              "STARTING IN<br>1...";
+            document.getElementById("subtext2_players").innerHTML = "STARTING IN<br>1...";
             setTimeout(function () {
-              document.getElementById("subtext2_players").innerHTML =
-                "STARTING!<br>";
+              document.getElementById("subtext2_players").innerHTML = "STARTING!<br>";
               setTimeout(function () {
-                document.getElementById("playerlist_div").style.display =
-                  "none";
+                document.getElementById("playerlist_div").style.display = "none";
                 setTimeout(function () {
                   //Ran by everyone to start the game on their end.
                   console.log("STARTING GAME!");
@@ -899,10 +829,8 @@ function startGameFunction() {
 
 function updateFooter() {
   if (state <= 1) {
-    document.getElementById("footer_username").innerHTML =
-      "Logged in as: " + username;
-    document.getElementById("footer_roomcode").innerHTML =
-      "Roomcode: " + roomcode;
+    document.getElementById("footer_username").innerHTML = "Logged in as: " + username;
+    document.getElementById("footer_roomcode").innerHTML = "Roomcode: " + roomcode;
     document.getElementById("footer_username").style.display = "block";
     document.getElementById("footer_roomcode").style.display = "block";
     if (host) document.getElementById("footer_host").style.display = "block";
@@ -940,8 +868,7 @@ function gameplay_loop() {
 function updateHeader() {
   game_moduleCount_text.innerHTML = "Modules: " + currentModuleNUM;
   game_gameTimer_text.innerHTML = timerText;
-  game_timeTillNextModule_text.innerHTML =
-    "Time till next module: " + game_timeTillNextModule;
+  game_timeTillNextModule_text.innerHTML = "Time till next module: " + game_timeTillNextModule;
 }
 
 function gameOver() {
@@ -968,6 +895,9 @@ function takeDamage(amount) {
       });
   }
 }
+
+const headerColor = document.getElementById("header").style.backgroundColor;
+
 //Used to animate the header's backgroundColor indicating damage
 function healthChangeAnimation(healthChange, newHealth) {
   var headerDIV = document.getElementById("header");
@@ -984,7 +914,6 @@ function healthChangeAnimation(healthChange, newHealth) {
       .getElementById("header")
       .animate([{ backgroundColor: flashColor }], {
         fill: "forwards",
-        easing: "steps(20, end)",
         duration: 70,
         iterationStart: 0,
         playbackRate: 0,
@@ -992,16 +921,13 @@ function healthChangeAnimation(healthChange, newHealth) {
   } else {
     let damageHeaderAnimation = document
       .getElementById("header")
-      .animate(
-        [{ backgroundColor: flashColor }, { backgroundColor: "white" }],
-        {
-          fill: "forwards",
-          easing: "steps(20, end)",
-          duration: 800,
-          iterationStart: 0,
-          playbackRate: 0,
-        }
-      );
+      .animate([{ backgroundColor: flashColor }, { backgroundColor: headerColor }], {
+        fill: "forwards",
+        easing: "steps(20, end)",
+        duration: 800,
+        iterationStart: 0,
+        playbackRate: 0,
+      });
   }
 }
 
@@ -1053,9 +979,7 @@ function initializeGame() {
   retrieves the updated data and updates the corresponding input fields in the HTML document. It
   also performs additional actions based on the `dataset.onupdate` value of each input field.
   Finally, it prints the updated object list to a specific div in the HTML document. */
-  database_objects_instances_ref = firebase
-    .database()
-    .ref(databasePrefix + roomcode + "/objects/");
+  database_objects_instances_ref = firebase.database().ref(databasePrefix + roomcode + "/objects/");
   database_objects_instances_ref.on("value", function (doc) {
     inputData = doc.val();
     //Get each input field in the database folder
@@ -1122,8 +1046,7 @@ function initializeGame() {
 
           //Add object to array, then update list
           DEVobjectList = document.getElementById("DATABASE_OBJECTS");
-          DEVobjectList.innerHTML +=
-            objectID + " = " + databaseInputValue + "<br>";
+          DEVobjectList.innerHTML += objectID + " = " + databaseInputValue + "<br>";
         } else {
           alert(objectID + " doesn't exist.");
         }
@@ -1136,9 +1059,7 @@ function initializeGame() {
   /* The above code is listening for changes in the "MainVars" section of a Firebase database. When a
   change occurs, it retrieves the updated values and performs different actions based on the
   variable name. */
-  database_important_vars_ref = firebase
-    .database()
-    .ref(databasePrefix + roomcode + "/MainVars/");
+  database_important_vars_ref = firebase.database().ref(databasePrefix + roomcode + "/MainVars/");
   database_important_vars_ref.on("value", function (doc) {
     inputData = doc.val();
     if (inputData == null) return;
@@ -1178,9 +1099,7 @@ function initializeGame() {
 
   // Check for data updates.
   // Update timer text
-  database_data_instances_ref = firebase
-    .database()
-    .ref(databasePrefix + roomcode + "/data/");
+  database_data_instances_ref = firebase.database().ref(databasePrefix + roomcode + "/data/");
   database_data_instances_ref.on("value", function (doc) {
     gameData = doc.val();
     //Timer
@@ -1241,8 +1160,7 @@ function initInput(fieldID) {
     //Add object to array, then update list
     inputObjects.push(fieldID);
     InputObjectsList = document.getElementById("INPUT_OBJECTS");
-    InputObjectsList.innerHTML =
-      "UserInputObjects = " + inputObjects.join(" | ");
+    InputObjectsList.innerHTML = "UserInputObjects = " + inputObjects.join(" | ");
     //userUpdateField(fieldID);
   } else {
     alert("Problem initInput for " + fieldID + " (Doesn't Exist?)");
@@ -1252,9 +1170,7 @@ function initInput(fieldID) {
 function databaseModuleChecking() {
   //CHECKS AND CREATES ANY MODULES IN THE GROUPS FOLDER!!! ===================================
   //Check for when the group folder is updated in the database. ==================
-  database_groups_instances_ref = firebase
-    .database()
-    .ref(databasePrefix + roomcode + "/modules/");
+  database_groups_instances_ref = firebase.database().ref(databasePrefix + roomcode + "/modules/");
   database_groups_instances_ref.on("value", function (doc) {
     inputData = doc.val();
 
@@ -1274,8 +1190,7 @@ function databaseModuleChecking() {
       currentModuleNUM = 0;
       //Update current groups DIV.
       CURRENT_GROUPSDIV = document.getElementById("CURRENT_GROUPSDIV");
-      CURRENT_GROUPSDIV.innerHTML =
-        "CurrentGroups = " + currentGroups.join(" | ");
+      CURRENT_GROUPSDIV.innerHTML = "CurrentGroups = " + currentGroups.join(" | ");
       groupReferences.forEach((groupReference) => {
         groupReference.remove();
       });
@@ -1293,23 +1208,17 @@ function databaseModuleChecking() {
           //Check if the group already exists, if not...
           groupType = doc.child(groupInDatabase).child("groupType").val();
           createText(
-            "# CREATE THE GROUP! TYPE of '<i>" +
-              groupType +
-              "</i>' as " +
-              groupInDatabase
+            "# CREATE THE GROUP! TYPE of '<i>" + groupType + "</i>' as " + groupInDatabase
           );
 
           //CREATING A NEW DIV FROM TEMPLATE
           var templateGroup = document.getElementById("TEMPLATE_" + groupType);
           var createdGroup = templateGroup.cloneNode(true);
           createdGroup.id = "MODULE_ENTRY_" + groupInDatabase;
-          createdGroup.querySelector(
-            "#" + templateGroup.id + "_DEVtitle"
-          ).innerHTML = createdGroup.id;
+          createdGroup.querySelector("#" + templateGroup.id + "_DEVtitle").innerHTML =
+            createdGroup.id;
           if (!DEV_showGroupTitles) {
-            createdGroup.querySelector(
-              "#" + templateGroup.id + "_DEVtitle"
-            ).style.display = "none";
+            createdGroup.querySelector("#" + templateGroup.id + "_DEVtitle").style.display = "none";
           }
           document.getElementById("moduleContainer").appendChild(createdGroup);
           var children = createdGroup.getElementsByTagName("*");
@@ -1336,8 +1245,7 @@ function databaseModuleChecking() {
 
     //Update current groups DIV.
     CURRENT_GROUPSDIV = document.getElementById("CURRENT_GROUPSDIV");
-    CURRENT_GROUPSDIV.innerHTML =
-      "CurrentGroups = " + currentGroups.join(" | ");
+    CURRENT_GROUPSDIV.innerHTML = "CurrentGroups = " + currentGroups.join(" | ");
   });
 }
 
@@ -1349,18 +1257,10 @@ function initializeModule(groupType) {
   }
   if (groupType == undefined) {
     //var groupTypeList = ["module_simple_01", "module_reset_01"];
-    var groupType =
-      groupTypeList[Math.floor(Math.random() * groupTypeList.length)];
+    var groupType = groupTypeList[Math.floor(Math.random() * groupTypeList.length)];
   }
   var groupID = currentModuleNUM;
-  createText(
-    "<br>[] initializeModule(" +
-      groupType +
-      ") " +
-      "as module_" +
-      groupID +
-      " | "
-  );
+  createText("<br>[] initializeModule(" + groupType + ") " + "as module_" + groupID + " | ");
   switch (groupType) {
     case "module_color_01":
       firebase
@@ -1393,12 +1293,8 @@ function initializeModuleMultiple(count) {
 function fullyInitGroup(createdGroupRef, module_id, groupType) {
   switch (groupType) {
     case "module_simple_01":
-      var range1 = createdGroupRef.querySelector(
-        "#" + module_id + "_input_range_01"
-      );
-      var range2 = createdGroupRef.querySelector(
-        "#" + module_id + "_input_range_02"
-      );
+      var range1 = createdGroupRef.querySelector("#" + module_id + "_input_range_01");
+      var range2 = createdGroupRef.querySelector("#" + module_id + "_input_range_02");
       range1.addEventListener("click", function () {
         interactions++;
         updateUserStats();
@@ -1409,12 +1305,9 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       });
       break;
     case "module_reset_01":
-      var ResetButton = createdGroupRef.querySelector(
-        "#" + module_id + "_input_reset_button"
-      );
+      var ResetButton = createdGroupRef.querySelector("#" + module_id + "_input_reset_button");
       ResetButton.addEventListener("click", function () {
-        createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
-          var_reset_timerLength;
+        createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML = var_reset_timerLength;
         databaseTextObjects(module_id + "_timer", var_reset_timerLength);
         if (createdGroupRef.classList.contains("flashing"))
           createdGroupRef.classList.remove("flashing");
@@ -1423,8 +1316,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         updateUserStats();
       });
       var module_timer_current = var_reset_timerLength;
-      createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
-        var_reset_timerLength;
+      createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML = var_reset_timerLength;
       break;
     case "module_unscramble_01":
       var ScrambledtextOBJ = createdGroupRef.querySelector(
@@ -1433,15 +1325,9 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       var UNScrambledtextOBJ = createdGroupRef.querySelector(
         "#" + module_id + "_UNscrambled_word_text"
       );
-      var resultsText = createdGroupRef.querySelector(
-        "#" + module_id + "_results_text"
-      );
-      var inputfield = createdGroupRef.querySelector(
-        "#" + module_id + "_input_unscrambledWord"
-      );
-      var submitButton = createdGroupRef.querySelector(
-        "#" + module_id + "_input_submit_button"
-      );
+      var resultsText = createdGroupRef.querySelector("#" + module_id + "_results_text");
+      var inputfield = createdGroupRef.querySelector("#" + module_id + "_input_unscrambledWord");
+      var submitButton = createdGroupRef.querySelector("#" + module_id + "_input_submit_button");
 
       var module_timer_current = var_unscramble_timerLength;
       createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
@@ -1450,16 +1336,10 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       //Add event listener for the "isCorrect" var in the database
       var unscrambleIsCorrectEvent = firebase
         .database()
-        .ref(
-          databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect"
-        );
+        .ref(databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect");
       unscrambleIsCorrectEvent.on("value", function (doc) {
-        var resultsText = createdGroupRef.querySelector(
-          "#" + module_id + "_results_text"
-        );
-        var inputfield = createdGroupRef.querySelector(
-          "#" + module_id + "_input_unscrambledWord"
-        );
+        var resultsText = createdGroupRef.querySelector("#" + module_id + "_results_text");
+        var inputfield = createdGroupRef.querySelector("#" + module_id + "_input_unscrambledWord");
 
         var isCorrect = doc.child("data").val();
         if (isCorrect == true) {
@@ -1471,9 +1351,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
           resultsText.innerHTML = "WRONG!";
           setTimeout(function () {
             if (resultsText.innerHTML == "CORRECT!") return;
-            resultsText = createdGroupRef.querySelector(
-              "#" + module_id + "_results_text"
-            );
+            resultsText = createdGroupRef.querySelector("#" + module_id + "_results_text");
             resultsText.innerHTML = "";
             inputfield.disabled = false;
           }, 1000);
@@ -1489,9 +1367,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       if (host) {
         //GET A NEW TEXT
         var randomWORD =
-          scrambled_words_list[
-            Math.floor(Math.random() * scrambled_words_list.length)
-          ];
+          scrambled_words_list[Math.floor(Math.random() * scrambled_words_list.length)];
         //Scrambledtext.innerHTML = randomWORD;
         databaseTextObjects(ScrambledtextOBJ.id, randomWORD.shuffle());
         databaseTextObjects(UNScrambledtextOBJ.id, randomWORD);
@@ -1499,17 +1375,12 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
 
       //BUTTON
       submitButton.addEventListener("click", function () {
-        var inputfield = createdGroupRef.querySelector(
-          "#" + module_id + "_input_unscrambledWord"
-        );
+        var inputfield = createdGroupRef.querySelector("#" + module_id + "_input_unscrambledWord");
         if (inputfield.value == "") return;
         var UNScrambledtextOBJ = createdGroupRef.querySelector(
           "#" + module_id + "_UNscrambled_word_text"
         );
-        if (
-          inputfield.value.toLowerCase() ==
-          UNScrambledtextOBJ.innerHTML.toLowerCase()
-        ) {
+        if (inputfield.value.toLowerCase() == UNScrambledtextOBJ.innerHTML.toLowerCase()) {
           writeToDatabase("modules/" + module_id + "/isCorrect", true, false);
           if (createdGroupRef.classList.contains("flashing"))
             createdGroupRef.classList.remove("flashing");
@@ -1538,36 +1409,21 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
       var math_question_text = createdGroupRef.querySelector(
         "#" + module_id + "_math_question_text"
       );
-      var math_answer_text = createdGroupRef.querySelector(
-        "#" + module_id + "_math_answer_text"
-      );
-      var resultsText = createdGroupRef.querySelector(
-        "#" + module_id + "_results_text"
-      );
-      var inputfield = createdGroupRef.querySelector(
-        "#" + module_id + "_input_math_response"
-      );
-      var submitButton = createdGroupRef.querySelector(
-        "#" + module_id + "_input_submit_button"
-      );
+      var math_answer_text = createdGroupRef.querySelector("#" + module_id + "_math_answer_text");
+      var resultsText = createdGroupRef.querySelector("#" + module_id + "_results_text");
+      var inputfield = createdGroupRef.querySelector("#" + module_id + "_input_math_response");
+      var submitButton = createdGroupRef.querySelector("#" + module_id + "_input_submit_button");
 
       var module_timer_current = var_math_01_timerLength;
-      createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
-        module_timer_current;
+      createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML = module_timer_current;
 
       //Add event listener for the "isCorrect" var in the database
       var mathIsCorrectEvent = firebase
         .database()
-        .ref(
-          databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect"
-        );
+        .ref(databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect");
       mathIsCorrectEvent.on("value", function (doc) {
-        var resultsText = createdGroupRef.querySelector(
-          "#" + module_id + "_results_text"
-        );
-        var inputfield = createdGroupRef.querySelector(
-          "#" + module_id + "_input_math_response"
-        );
+        var resultsText = createdGroupRef.querySelector("#" + module_id + "_results_text");
+        var inputfield = createdGroupRef.querySelector("#" + module_id + "_input_math_response");
 
         var isCorrect = doc.child("data").val();
         if (isCorrect == true) {
@@ -1594,10 +1450,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
 
       if (host) {
         //GET A NEW PROBLEM
-        var randomPROBLEM =
-          math_problem_list[
-            Math.floor(Math.random() * math_problem_list.length)
-          ];
+        var randomPROBLEM = math_problem_list[Math.floor(Math.random() * math_problem_list.length)];
 
         //SET THE QUESTION TEXT
         databaseTextObjects(math_question_text.id, randomPROBLEM[0]);
@@ -1607,17 +1460,10 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
 
       //BUTTON
       submitButton.addEventListener("click", function () {
-        var inputfield = createdGroupRef.querySelector(
-          "#" + module_id + "_input_math_response"
-        );
+        var inputfield = createdGroupRef.querySelector("#" + module_id + "_input_math_response");
         if (inputfield.value == "") return;
-        var math_answer_text = createdGroupRef.querySelector(
-          "#" + module_id + "_math_answer_text"
-        );
-        if (
-          inputfield.value.toLowerCase() ==
-          math_answer_text.innerHTML.toLowerCase()
-        ) {
+        var math_answer_text = createdGroupRef.querySelector("#" + module_id + "_math_answer_text");
+        if (inputfield.value.toLowerCase() == math_answer_text.innerHTML.toLowerCase()) {
           writeToDatabase("modules/" + module_id + "/isCorrect", true, false);
           if (createdGroupRef.classList.contains("flashing"))
             createdGroupRef.classList.remove("flashing");
@@ -1645,38 +1491,23 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
     case "module_color_01":
       //Timer
       var module_timer_current = var_color_01_timerLength;
-      createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML =
-        module_timer_current;
+      createdGroupRef.querySelector("#" + module_id + "_timer").innerHTML = module_timer_current;
 
-      var submitButton = createdGroupRef.querySelector(
-        "#" + module_id + "_input_submit_button"
-      );
+      var submitButton = createdGroupRef.querySelector("#" + module_id + "_input_submit_button");
       var userColorDiv = createdGroupRef.querySelector(
         "#" + module_id + "_module_colorSwatch_result"
       );
-      var colorVal1 = createdGroupRef.querySelector(
-        "#" + module_id + "_input_colorval_01"
-      );
-      var colorVal2 = createdGroupRef.querySelector(
-        "#" + module_id + "_input_colorval_02"
-      );
-      var colorVal3 = createdGroupRef.querySelector(
-        "#" + module_id + "_input_colorval_03"
-      );
-      var keyDiv = createdGroupRef.querySelector(
-        "#" + module_id + "_module_colorSwatchKey"
-      );
+      var colorVal1 = createdGroupRef.querySelector("#" + module_id + "_input_colorval_01");
+      var colorVal2 = createdGroupRef.querySelector("#" + module_id + "_input_colorval_02");
+      var colorVal3 = createdGroupRef.querySelector("#" + module_id + "_input_colorval_03");
+      var keyDiv = createdGroupRef.querySelector("#" + module_id + "_module_colorSwatchKey");
 
       //Add event listener for the "isCorrect" var in the database
       var colorIsCorrectEvent = firebase
         .database()
-        .ref(
-          databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect"
-        );
+        .ref(databasePrefix + roomcode + "/modules/" + module_id + "/isCorrect");
       colorIsCorrectEvent.on("value", function (doc) {
-        var resultsText = createdGroupRef.querySelector(
-          "#" + module_id + "_results_text"
-        );
+        var resultsText = createdGroupRef.querySelector("#" + module_id + "_results_text");
 
         var isCorrect = doc.child("data").val();
         if (isCorrect == true) {
@@ -1694,13 +1525,11 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
           submitButton.disabled = false;
           setTimeout(function () {
             if (
-              createdGroupRef.querySelector("#" + module_id + "_results_text")
-                .innerHTML == "CORRECT!"
+              createdGroupRef.querySelector("#" + module_id + "_results_text").innerHTML ==
+              "CORRECT!"
             )
               return;
-            var resultsText = createdGroupRef.querySelector(
-              "#" + module_id + "_results_text"
-            );
+            var resultsText = createdGroupRef.querySelector("#" + module_id + "_results_text");
             resultsText.innerHTML = "";
           }, 1000);
           resultsText.style.color = "#b50000";
@@ -1714,9 +1543,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
 
       //Submit button code.
       submitButton.addEventListener("click", function () {
-        resultsText = createdGroupRef.querySelector(
-          "#" + module_id + "_results_text"
-        );
+        resultsText = createdGroupRef.querySelector("#" + module_id + "_results_text");
 
         var keyColorCode = keyDiv.style.backgroundColor
           .substring(
@@ -1739,8 +1566,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
         ];
 
         var valid = colorDifference.every(
-          (el) =>
-            el < module_color_01_leniency && el > -module_color_01_leniency
+          (el) => el < module_color_01_leniency && el > -module_color_01_leniency
         );
         console.log("colorScore: " + colorDifference);
 
@@ -1774,9 +1600,7 @@ function fullyInitGroup(createdGroupRef, module_id, groupType) {
     case "module_cardswipe_01":
       break;
     default:
-      console.error(
-        "Unkown group in fullyInitGroup(). groupType: " + groupType
-      );
+      console.error("Unkown group in fullyInitGroup(). groupType: " + groupType);
       break;
   }
 }
@@ -1958,10 +1782,8 @@ function pad(val) {
 //Get date and time
 function dateTime(style) {
   var today = new Date();
-  var date =
-    today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-  var time =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  var date = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
   switch (style) {
     case 1:
       return time;
@@ -2002,34 +1824,23 @@ function showTextForTime(textObject, text, time) {
 }
 function updateColorResult(module_id, groupInDatabase) {
   var moduleReference = document.getElementById(module_id);
-  resultsText = moduleReference.querySelector(
-    "#" + groupInDatabase + "_results_text"
-  );
+  resultsText = moduleReference.querySelector("#" + groupInDatabase + "_results_text");
   userColorDiv = moduleReference.querySelector(
     "#" + groupInDatabase + "_module_colorSwatch_result"
   );
-  colorVal1 = moduleReference.querySelector(
-    "#" + groupInDatabase + "_input_colorval_01"
-  );
-  colorVal2 = moduleReference.querySelector(
-    "#" + groupInDatabase + "_input_colorval_02"
-  );
-  colorVal3 = moduleReference.querySelector(
-    "#" + groupInDatabase + "_input_colorval_03"
-  );
+  colorVal1 = moduleReference.querySelector("#" + groupInDatabase + "_input_colorval_01");
+  colorVal2 = moduleReference.querySelector("#" + groupInDatabase + "_input_colorval_02");
+  colorVal3 = moduleReference.querySelector("#" + groupInDatabase + "_input_colorval_03");
   redVal = (parseInt(colorVal1.value) / 100) * 255;
   greenVal = (parseInt(colorVal2.value) / 100) * 255;
   blueVal = (parseInt(colorVal3.value) / 100) * 255;
-  userColorDiv.style.backgroundColor =
-    "rgb(" + redVal + "," + greenVal + "," + blueVal + ")";
+  userColorDiv.style.backgroundColor = "rgb(" + redVal + "," + greenVal + "," + blueVal + ")";
 }
 
 var cardSwipeBeginTime = null;
 function cardswipeSpeedCalc(module_id, groupInDatabase) {
   var moduleReference = document.getElementById(module_id);
-  cardSwipeSlider = moduleReference.querySelector(
-    "#" + groupInDatabase + "_input_cardSwipe_01"
-  );
+  cardSwipeSlider = moduleReference.querySelector("#" + groupInDatabase + "_input_cardSwipe_01");
   if (cardSwipeSlider.value == 0) return;
   if (cardSwipeBeginTime == null) {
     cardSwipeBeginTime = Date.now();
