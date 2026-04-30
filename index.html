@@ -1,8 +1,8 @@
-<!DOCTYPE html>
-<html class="theme-dark">
+<!doctype html>
+<html class="theme-light">
   <head>
     <title>Input Stack</title>
-    <link rel="stylesheet" type="text/css" href="css/stylesOld.css" />
+    <link rel="stylesheet" type="text/css" href="css/styles.css" />
     <link rel="shortcut icon" type="image/png" href="images/InputStackIcon.png" />
     <!-- GOOGLE'S MATERIAL ICONS SHEET https://fonts.google.com/icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
@@ -10,12 +10,17 @@
 
   <body>
     <!-- DIV POPUPS -->
-    <div class="grayOutDivScreen" onclick="closeDiv();" id="grayOutDivScreen" style="display: none">
+    <div class="grayOutDivScreen" onclick="closeDiv()" id="grayOutDivScreen" style="display: none">
       <p style="color: white; text-align: center; text-shadow: 2px 2px 2px rgb(0, 0, 0)">
         Click anywhere to close...
       </p>
-      <div class="popupDiv" onclick="event.stopPropagation();" id="unscrambleKey">
-        <div class="closeButton" onclick="this.parentElement.style.display='none'; closeDiv();">
+      <div class="popupDiv" onclick="event.stopPropagation()" id="unscrambleKey">
+        <div
+          class="closeButton"
+          onclick="
+            this.parentElement.style.display = 'none';
+            closeDiv();
+          ">
           <p>X</p>
         </div>
         <p>UNSCRAMBLE KEY</p>
@@ -60,10 +65,10 @@
         <div id="gameover_hostOptions" style="display: none">
           <h4 style="margin-bottom: 0px">Host Options:</h4>
           <div style="padding: 0 0 0 10px">
-            <button type="button" class="buttonMain" onclick="if(host) resetGame();">
+            <button type="button" class="buttonMain" onclick="if (host) resetGame();">
               Restart Game
             </button>
-            <button type="button" class="buttonMain" onclick="if(host) abandonRoom();">
+            <button type="button" class="buttonMain" onclick="if (host) abandonRoom();">
               Quit Game
             </button>
           </div>
@@ -103,7 +108,11 @@
           </p>
           <p class="noSpace" style="display: none" id="footer_username">Logged in as: *username*</p>
           <p class="noSpace" style="display: none" id="footer_roomcode">Roomcode: *roomcode*</p>
-          <a href="https://erinballinger.com" class="noSpace" style="display: block" id="footer_credit">
+          <a
+            href="https://erinballinger.com"
+            class="noSpace"
+            style="display: block"
+            id="footer_credit">
             Apollo 2026
           </a>
         </div>
@@ -122,7 +131,7 @@
                 class="noSpace"
                 style="font-size: 20px; text-decoration: underline; cursor: pointer"
                 id="auth_signIn"
-                onclick="signInButton();">
+                onclick="signInButton()">
                 Sign in with Google
               </a>
             </p>
@@ -152,7 +161,11 @@
                 placeholder="USERNAME"
                 style="margin: 10px 0px"
                 autocomplete="off"
-                onkeydown="if(event.key === 'Enter') {roomcode_input.focus()}" /><br />
+                onkeydown="
+                  if (event.key === 'Enter') {
+                    roomcode_input.focus();
+                  }
+                " /><br />
             </div>
             <div class="inputContainer">
               <input
@@ -161,7 +174,11 @@
                 maxlength="6"
                 placeholder="ROOM CODE"
                 autocomplete="off"
-                onkeydown="if(event.key === 'Enter') {joingame_btnid.click()}" />
+                onkeydown="
+                  if (event.key === 'Enter') {
+                    joingame_btnid.click();
+                  }
+                " />
             </div>
             <div class="btnContainer">
               <button
@@ -213,7 +230,12 @@
         </p>
         <button
           class="startbtn buttonMain"
-          onclick="firebase.database().ref(databasePrefix + roomcode + '/data').update({_startgame: 1});"
+          onclick="
+            firebase
+              .database()
+              .ref(databasePrefix + roomcode + '/data')
+              .update({ _startgame: 1 })
+          "
           id="startbtn"
           style="cursor: pointer; display: none">
           START GAME
@@ -247,15 +269,19 @@
       <br /><br />
       <div id="extraDEBUG" style="display: none">
         <hr />
-        <button onclick="toggleGameLoop(false);">toggleGameLoop(false)</button>
-        <button onclick="toggleGameLoop(true);">toggleGameLoop(true)</button>
+        <button onclick="toggleGameLoop(false)">toggleGameLoop(false)</button>
+        <button onclick="toggleGameLoop(true)">toggleGameLoop(true)</button>
         <br />
-        <button onclick="startGame();">Start Game</button>
-        <button onclick="resetGame();">Reset Game</button>
-        <button onclick="initializeModule();">Create Module</button>
-        <button onclick="initializeGame();">initializeGame()</button>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="resetGame()">Reset Game</button>
+        <button onclick="initializeModule()">Create Module</button>
+        <button onclick="initializeGame()">initializeGame()</button>
         <button
-          onclick="host = !host; createText(' ---- host = '+host); this.innerHTML = 'Set host = ' + !host;">
+          onclick="
+            host = !host;
+            createText(' ---- host = ' + host);
+            this.innerHTML = 'Set host = ' + !host;
+          ">
           Set host = true
         </button>
         <br /><br />
@@ -265,7 +291,14 @@
         <button onclick="damageDisabled = true">Disable Damage</button>
         <br />
         <button
-          onclick="var display = document.getElementById('TEMPLATEmoduleContainer').style.display; if(display == 'block'){document.getElementById('TEMPLATEmoduleContainer').style.display='none'}else{document.getElementById('TEMPLATEmoduleContainer').style.display='block'}">
+          onclick="
+            var display = document.getElementById('TEMPLATEmoduleContainer').style.display;
+            if (display == 'block') {
+              document.getElementById('TEMPLATEmoduleContainer').style.display = 'none';
+            } else {
+              document.getElementById('TEMPLATEmoduleContainer').style.display = 'block';
+            }
+          ">
           ToggleTemplate Div</button
         ><br />
         <br />
@@ -327,7 +360,7 @@
             </header>
             <span
               class="inputmodule_clickableIcon"
-              onclick="openDiv('unscrambleKey');"
+              onclick="openDiv('unscrambleKey')"
               style="text-align: center">
             </span>
             <center>

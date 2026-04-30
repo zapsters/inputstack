@@ -150,9 +150,16 @@ p {
 @font-face {
   font-family: "pixelart-icons-font";
   src: url("fonts/pixelArtIcons/pixelart-icons-font.eot?t=1711815892278"); /* IE9*/
-  src: url("fonts/pixelArtIcons/pixelart-icons-font.eot?t=1711815892278#iefix") format("embedded-opentype"), url("fonts/pixelArtIcons/pixelart-icons-font.woff2?t=1711815892278") format("woff2"), url("fonts/pixelArtIcons/pixelart-icons-font.woff?t=1711815892278") format("woff"), url("fonts/pixelArtIcons/pixelart-icons-font.ttf?t=1711815892278") format("truetype"), url("fonts/pixelArtIcons/pixelart-icons-font.svg?t=1711815892278#pixelart-icons-font") format("svg"); /* iOS 4.1- */
+  src:
+    url("fonts/pixelArtIcons/pixelart-icons-font.eot?t=1711815892278#iefix")
+      format("embedded-opentype"),
+    url("fonts/pixelArtIcons/pixelart-icons-font.woff2?t=1711815892278") format("woff2"),
+    url("fonts/pixelArtIcons/pixelart-icons-font.woff?t=1711815892278") format("woff"),
+    url("fonts/pixelArtIcons/pixelart-icons-font.ttf?t=1711815892278") format("truetype"),
+    url("fonts/pixelArtIcons/pixelart-icons-font.svg?t=1711815892278#pixelart-icons-font")
+      format("svg"); /* iOS 4.1- */
 }
-[class^=pixelart-icons-font-],
+[class^="pixelart-icons-font-"],
 [class*=" pixelart-icons-font-"] {
   font-family: "pixelart-icons-font" !important;
   font-size: 24px;
@@ -2588,8 +2595,8 @@ input {
   row-gap: 30px;
 }
 .theme-light .screen_main_gameplay .moduleContainer {
-  border: 2px solid #666;
-  padding: 4px 2px;
+  /* border: 2px solid #666; */
+  padding: 4px 0px;
   margin: auto;
   text-align: center;
   font-size: 0px;
@@ -2598,12 +2605,13 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 9px;
 }
 .theme-light .screen_main_gameplay .moduleContainer .inputGroup {
   text-align: center;
   width: 240px;
   height: 240px;
-  border: 3px solid black;
+  border: 3px solid rgba(94, 54, 54, 0.842);
   background-color: #ffe3e3;
   padding: 0;
   margin: 0;
@@ -2646,7 +2654,12 @@ input {
   position: relative;
   color: #110d09;
 }
-.theme-light .screen_main_gameplay .moduleContainer .inputGroup .content .inputmodule_clickableIcon {
+.theme-light
+  .screen_main_gameplay
+  .moduleContainer
+  .inputGroup
+  .content
+  .inputmodule_clickableIcon {
   position: absolute;
   right: 6px;
   bottom: 60px;
@@ -2654,7 +2667,12 @@ input {
   color: #434343;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
-.theme-light .screen_main_gameplay .moduleContainer .inputGroup .content .inputmodule_clickableIcon:hover {
+.theme-light
+  .screen_main_gameplay
+  .moduleContainer
+  .inputGroup
+  .content
+  .inputmodule_clickableIcon:hover {
   color: #838383;
 }
 .theme-light .screen_main_gameplay .moduleContainer .inputGroup .colorSwatchContainer {
@@ -2710,7 +2728,11 @@ input {
 .theme-light .screen_main_gameplay .moduleContainer .inputGroup .slider:disabled {
   background: #cbcbcb;
 }
-.theme-light .screen_main_gameplay .moduleContainer .inputGroup .slider:disabled::-webkit-slider-thumb {
+.theme-light
+  .screen_main_gameplay
+  .moduleContainer
+  .inputGroup
+  .slider:disabled::-webkit-slider-thumb {
   background: #035839;
   cursor: auto;
 }
@@ -2726,7 +2748,8 @@ input {
   border-color: #f5eaea;
   padding: 6px 30px;
 }
-.theme-light .screen_main_gameplay .moduleContainer .inputGroup button:hover, .theme-light .screen_main_gameplay .moduleContainer .inputGroup button:focus {
+.theme-light .screen_main_gameplay .moduleContainer .inputGroup button:hover,
+.theme-light .screen_main_gameplay .moduleContainer .inputGroup button:focus {
   background-color: #e4576e !important;
 }
 .theme-light .screen_main_gameplay .moduleContainer .inputGroup button:active {
@@ -2979,7 +3002,12 @@ input {
   color: #434343;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
-.theme-dark .screen_main_gameplay .moduleContainer .inputGroup .content .inputmodule_clickableIcon:hover {
+.theme-dark
+  .screen_main_gameplay
+  .moduleContainer
+  .inputGroup
+  .content
+  .inputmodule_clickableIcon:hover {
   color: #838383;
 }
 .theme-dark .screen_main_gameplay .moduleContainer .inputGroup .colorSwatchContainer {
@@ -3035,7 +3063,11 @@ input {
 .theme-dark .screen_main_gameplay .moduleContainer .inputGroup .slider:disabled {
   background: #cbcbcb;
 }
-.theme-dark .screen_main_gameplay .moduleContainer .inputGroup .slider:disabled::-webkit-slider-thumb {
+.theme-dark
+  .screen_main_gameplay
+  .moduleContainer
+  .inputGroup
+  .slider:disabled::-webkit-slider-thumb {
   background: #035839;
   cursor: auto;
 }
@@ -3051,7 +3083,8 @@ input {
   border-color: #1a021a;
   padding: 6px 30px;
 }
-.theme-dark .screen_main_gameplay .moduleContainer .inputGroup button:hover, .theme-dark .screen_main_gameplay .moduleContainer .inputGroup button:focus {
+.theme-dark .screen_main_gameplay .moduleContainer .inputGroup button:hover,
+.theme-dark .screen_main_gameplay .moduleContainer .inputGroup button:focus {
   background-color: #b34557 !important;
 }
 .theme-dark .screen_main_gameplay .moduleContainer .inputGroup button:active {
@@ -3347,26 +3380,26 @@ input {
 .theme-light .signIn form {
   color: #110d09;
 }
-.theme-light .signIn form input[type=text],
-.theme-light .signIn form input[type=password],
-.theme-light .signIn form input[type=email] {
+.theme-light .signIn form input[type="text"],
+.theme-light .signIn form input[type="password"],
+.theme-light .signIn form input[type="email"] {
   width: 100%;
   background-color: transparent;
   border: none;
   border-bottom: solid 2px #4db68a;
   outline: none;
 }
-.theme-light .signIn form input[type=text]:focus ~ label,
-.theme-light .signIn form input[type=text]:valid ~ label,
-.theme-light .signIn form input[type=password]:focus ~ label,
-.theme-light .signIn form input[type=password]:valid ~ label,
-.theme-light .signIn form input[type=email]:focus ~ label,
-.theme-light .signIn form input[type=email]:valid ~ label {
+.theme-light .signIn form input[type="text"]:focus ~ label,
+.theme-light .signIn form input[type="text"]:valid ~ label,
+.theme-light .signIn form input[type="password"]:focus ~ label,
+.theme-light .signIn form input[type="password"]:valid ~ label,
+.theme-light .signIn form input[type="email"]:focus ~ label,
+.theme-light .signIn form input[type="email"]:valid ~ label {
   top: -10px;
   left: 0px;
   opacity: 0.6;
 }
-.theme-light .signIn form input[type=submit] {
+.theme-light .signIn form input[type="submit"] {
   cursor: pointer;
   margin: auto;
   width: 100%;
@@ -3380,18 +3413,18 @@ input {
   text-align: center !important;
   font-size: 23px;
 }
-.theme-light .signIn form input[type=submit]:hover {
+.theme-light .signIn form input[type="submit"]:hover {
   border: solid #e4576e;
   border: solid #fa7b8c;
   background-color: #fa7b8c;
   border-width: 0 0 4px 0;
 }
-.theme-light .signIn form input[type=submit]:focus {
+.theme-light .signIn form input[type="submit"]:focus {
   border-width: 0 0 4px 0;
   border-color: #e4576e;
   background-color: #e4576e;
 }
-.theme-light .signIn form input[type=submit]:active {
+.theme-light .signIn form input[type="submit"]:active {
   background-color: #fa7b8c;
   border-width: 0 0 4px 0;
   border-color: #e4576e;
@@ -3399,26 +3432,26 @@ input {
 .theme-dark .signIn form {
   color: #f6f2ee;
 }
-.theme-dark .signIn form input[type=text],
-.theme-dark .signIn form input[type=password],
-.theme-dark .signIn form input[type=email] {
+.theme-dark .signIn form input[type="text"],
+.theme-dark .signIn form input[type="password"],
+.theme-dark .signIn form input[type="email"] {
   width: 100%;
   background-color: transparent;
   border: none;
   border-bottom: solid 2px #4db68a;
   outline: none;
 }
-.theme-dark .signIn form input[type=text]:focus ~ label,
-.theme-dark .signIn form input[type=text]:valid ~ label,
-.theme-dark .signIn form input[type=password]:focus ~ label,
-.theme-dark .signIn form input[type=password]:valid ~ label,
-.theme-dark .signIn form input[type=email]:focus ~ label,
-.theme-dark .signIn form input[type=email]:valid ~ label {
+.theme-dark .signIn form input[type="text"]:focus ~ label,
+.theme-dark .signIn form input[type="text"]:valid ~ label,
+.theme-dark .signIn form input[type="password"]:focus ~ label,
+.theme-dark .signIn form input[type="password"]:valid ~ label,
+.theme-dark .signIn form input[type="email"]:focus ~ label,
+.theme-dark .signIn form input[type="email"]:valid ~ label {
   top: -10px;
   left: 0px;
   opacity: 0.6;
 }
-.theme-dark .signIn form input[type=submit] {
+.theme-dark .signIn form input[type="submit"] {
   cursor: pointer;
   margin: auto;
   width: 100%;
@@ -3432,18 +3465,18 @@ input {
   text-align: center !important;
   font-size: 23px;
 }
-.theme-dark .signIn form input[type=submit]:hover {
+.theme-dark .signIn form input[type="submit"]:hover {
   border: solid #b34557;
   border: solid #cd5666;
   background-color: #cd5666;
   border-width: 0 0 4px 0;
 }
-.theme-dark .signIn form input[type=submit]:focus {
+.theme-dark .signIn form input[type="submit"]:focus {
   border-width: 0 0 4px 0;
   border-color: #b34557;
   background-color: #b34557;
 }
-.theme-dark .signIn form input[type=submit]:active {
+.theme-dark .signIn form input[type="submit"]:active {
   background-color: #cd5666;
   border-width: 0 0 4px 0;
   border-color: #b34557;
@@ -3472,8 +3505,14 @@ input {
   padding: 0 12px;
   position: relative;
   text-align: center;
-  -webkit-transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
-  transition: background-color 0.218s, border-color 0.218s, box-shadow 0.218s;
+  -webkit-transition:
+    background-color 0.218s,
+    border-color 0.218s,
+    box-shadow 0.218s;
+  transition:
+    background-color 0.218s,
+    border-color 0.218s,
+    box-shadow 0.218s;
   vertical-align: middle;
   white-space: nowrap;
   width: auto;
@@ -3548,8 +3587,12 @@ input {
 }
 
 .gsi-material-button:not(:disabled):hover {
-  -webkit-box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
-  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  -webkit-box-shadow:
+    0 1px 2px 0 rgba(60, 64, 67, 0.3),
+    0 1px 3px 1px rgba(60, 64, 67, 0.15);
+  box-shadow:
+    0 1px 2px 0 rgba(60, 64, 67, 0.3),
+    0 1px 3px 1px rgba(60, 64, 67, 0.15);
 }
 
 .gsi-material-button:not(:disabled):hover .gsi-material-button-state {
