@@ -2,7 +2,7 @@
 
 ## Link
 
-[Play InputStack](https://zapsters.github.io/inputstack/)
+[Play InputStack](https://apollocadet.github.io/inputstack/)
 
 ## Overview
 
